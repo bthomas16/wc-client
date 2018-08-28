@@ -1,0 +1,142 @@
+.p0 {
+    padding: 0 !important;
+}
+
+.p1 {
+    padding:0.5em;
+}
+
+.p2 {
+    padding: 1em;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.p3 {
+    padding: 2em;
+}
+
+.p4 {
+    padding: 3em;
+}
+
+.pl1 {
+    padding-left:.5em;
+}
+
+.pl2 {
+    padding-left:1em;
+}
+
+.py1 {
+    margin-top:.5em;
+    margin-bottom: .5em;
+}
+
+.py2 {
+    margin-top:1em;
+    margin-bottom: 1em;
+}
+
+.pr0 {
+    padding-right: 0;
+}
+
+.m0 {
+    margin:0 !important;
+}
+
+.mt1{
+    margin-top:0.5em;
+}
+
+.mt2 {
+    margin-top:1em;
+}
+
+.mt3 {
+    margin-top: 2em;
+}
+
+.mx-1 {
+    margin-left: .5em;
+    margin-right: .5em;
+}
+
+.m1 {
+    margin: .5em;
+}
+
+.m3 {
+    margin: 2em;
+}
+
+.ml1 {
+    margin-left: .5em;
+}
+
+.ml2 {
+    margin-left: 1em;
+}
+
+.ml3 {
+    margin-left: .5em;
+}
+
+.mr1 {
+    margin-right: .5em;
+}
+
+.mr2 {
+    margin-right: 1em;
+}
+
+.mr3 {
+    margin-right: .5em;
+}
+
+.my0 {
+    margin-top:0;
+    margin-bottom: 0;
+}
+
+.my1 {
+    margin-top: .5em;
+    margin-bottom: .5em;
+}
+
+.my2 {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.white {
+    color: white;
+}
+.full,.container {
+    width:100% !important;
+}
+
+.link {
+    text-decoration: underline;
+    color: blue;
+}
+
+.link:hover {
+    cursor: pointer;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+@media(min-width:767px) {
+    .d-absolute {
+        position: absolute;
+    }
+}
+
+
+

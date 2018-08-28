@@ -1,13 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const jwt = require('jsonwebtoken');
-const cors = require('cors');
+
+
 const passport = require('passport');
 
 const app = express();
-const UserController = require('./controllers/user');
+const UserController = require('./controllers/UserController');
 
-app.use(cors());
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, authorization");
+  next();
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -19,6 +24,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-app.listen(8080, ()=> {
-  console.log('listening on port 8080')
+app.listen(8081, ()=> {
+  console.log('listening on port 8081')
 })

@@ -4,11 +4,10 @@ exports.up = function(knex, Promise) {
       table.increments();
       table.string('firstName').notNullable();
       table.string('lastName').notNullable();
-      table.string('userName').notNullable();
       table.string('password').notNullable();
       table.string('email').notNullable();
-      table.string('phone').notNullable();
-      table.string('address').notNullable();
+      table.string('phone');
+      table.string('address');
   })
 };
 
