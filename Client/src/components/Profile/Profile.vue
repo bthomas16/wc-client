@@ -2,7 +2,7 @@
     <b-container class="p0 full">
        <b-row>
             <b-col xs="7 pr0" md="4" class="border">
-               <app-profile-info :User="User.user"></app-profile-info>
+               <app-profile-info :User="User"></app-profile-info>
             </b-col>
             <b-col xs="12" md="8" class="border" >
                 <app-collection :collection="collection"></app-collection>
@@ -45,14 +45,17 @@ export default {
                 {id: 5, title: 'Big Title', src: 'src1'},
                 {id: 6, title: 'Big Title', src: 'src1'},
                 {id: 7, title: 'Big Title', src: 'src1'}
-            ],
-            User: Cookies.GetCookies('User')
+            ]
         }
     },
     computed: {
-        GetJwt() {
-            return localStorage.getItem('watchJwt');
+        User: function() {
+            return this.$store.state.User
         }
+    },
+    created: function () {
+        console.log('created hook')
+        this.$store.dispatch('user');
     }
 }
 </script>
@@ -62,14 +65,4 @@ export default {
         padding-right: 0 !important;
     }
 </style>
-
-
-// created: function () {
-        
-//         return this.$store.dispatch('user', this.GetJwt).then(res => {
-//             this.User = this.$store.getters.getUser;
-//         }).catch(err => {
-//             console.log(err, 'oops')
-//         })
-//     },
 

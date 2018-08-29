@@ -28,7 +28,7 @@ router.post('/login', async (req, res) =>
 });
 
 router.get('/validate-jwt', VerifyToken, async (req, res) => {
-  res.json({isValid: true})
+  res.json({success: true})
 })
 
 
@@ -36,10 +36,13 @@ router.get('/profile', VerifyToken, async (req, res) =>
 {
   try 
   {
-    User.FindUser(req.id, res);
+    console.log('trying')
+    await User.FindUser(req.id, res);
   }
   catch
   {
+    console.log('trying bad')
+    
     res.json({isSuccess: false, message: 'User is not valid'})  
   }
 });

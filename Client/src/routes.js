@@ -16,16 +16,18 @@ export const routes = [
     }
 ];
 
-function dissallowAuth(to, from, next) {
-    if(store.getters.getUserAuthStatus) next(false);
-    next()
-}
+// function dissallowAuth(to, from, next) {
+//     if(store.getters.getUserAuthStatus) next(false);
+//     next()
+// }
 
 function requireAuth(to, from, next) {
-    if(store.getters.getUserAuthStatus()) {
+    store.dispatch('validateJwt').then(res => {
+        console.log('yep', res);
         next();
-        }
-    else {
-        next('/');
-    }
+    }).catch(() => {
+        console.log('nope')
+        next('/')
+    })
+
 }

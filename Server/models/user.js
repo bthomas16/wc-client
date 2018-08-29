@@ -137,6 +137,7 @@ const User = module.exports = function () {
 
 
    function FindUser(id, res){
+       console.log('finding user by id', id)
     knex('peeps').where(
         'id', id
         ).first().then(function(user)
@@ -147,6 +148,7 @@ const User = module.exports = function () {
                 lastName: user.lastName,
                 email: user.email
             }
+            console.log('found user', userStore)
             res.json({isSuccess: true, message: 'User is valid', userStore})
         })
 } 

@@ -19,7 +19,7 @@ const state =
     isAuthorized: false,
     jwt: '',
     User: {},
-    userLoadStatus: 'not-loaded'
+    userLoadStatus: 'not-loaded',
 }
 
 const mutations = 
@@ -31,7 +31,7 @@ const mutations =
     [LOGIN_SUCCESS] (state, body) 
     {
         state.User = body;        
-        state.jwt = body.token;
+        state.jwt = localStorage.getItem('watchJwt');
         state.isAuthorized = true;
         state.isLoading = false;
         state.userLoadStatus = 'loaded';
@@ -50,8 +50,10 @@ const mutations =
 
     [GET_USER](state, body)
     {
+        state.isLoading = false;        
         state.User = body;
-        state.jwt = body.token;
+        state.isAuthorized = true;
+        state.jwt = localStorage.getItem('watchJwt');
         state.userloadStatus = 'loaded';
     },
 
@@ -89,7 +91,7 @@ const actions =
                 }).catch(err => {
                     console.log('err', err)
                     context.commit(LOGIN_FAILURE);
-                        reject(res.data);
+                        reject(err.data);
                 })
             }
         )
@@ -103,14 +105,13 @@ const actions =
     },
 
 
-    validateJwt(context, jwt) 
+    validateJwt(context) 
     {
-        console.log('ummm real')
         return new Promise((resolve, reject) => {
             axios.get('/api/user/validate-jwt', {
                 headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': jwt
+                'Content-Type': 'application/json',
+                'authorization': localStorage.getItem('watchJwt')
                 }
             }).then(res => {
                 if(res.data.success) {
@@ -125,30 +126,27 @@ const actions =
         })
     },
 
-    user(context, jwt) {
-        return new Promise((resolve, reject) => {
-            axios.get('/api/user/profile', {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': jwt
-                }
-            }).then(res => {
-                console.log('showing profile', res.data)
-                context.commit(GET_USER, res.data.userStore)
-                resolve(res.data)
-            }).catch(err => {
-                reject(err)
-            })
+    user(context) {
+        state.isLoading = true;
+        axios.get('/api/user/profile', {
+            headers: {
+            'Content-Type': 'application/json',
+            'authorization': localStorage.getItem('watchJwt')
+            }
+        }).then(res => {
+            console.log('showing profile', res.data)
+            context.commit(GET_USER, res.data.userStore)
+        }).catch(err => {
+            // context.commit(INVALID_USER, res.data.userStore)
+            console.log(err)
         })
-    },
+    }
 }
 
 const getters = 
 {
-    getUserAuthStatus(state) {
-        return function() {        
-            return state.isAuthorized;
-        }
+    getUserAuthStatus(state) {    
+        return state.isAuthorized;
     },
 
     getUserLoadStatus(state) {
@@ -157,16 +155,22 @@ const getters =
         }
     },
 
-    getJwtToken(state) {
-        return function() {
-            return state.jwt;
-        }
+    getJwt(state) {
+        return state.jwt;
     },
 
     getUser(state) {
         return function() {
             return state.User;
         }
+    },
+
+    createAuthHeader() {
+        let authHeader = {
+            'Content-Type': 'application/json',
+            'authorization': jwt
+        }
+        return authHeader;
     }
 }
 

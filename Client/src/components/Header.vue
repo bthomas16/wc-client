@@ -5,7 +5,6 @@
 
 
   <b-navbar-brand class="ml2"><router-link :to="getAuth ? '/profile' : '/'">WC</router-link></b-navbar-brand>
-  <p>{{getAuth}}</p>
 
   <b-collapse is-nav id="nav_collapse">  
 
@@ -25,12 +24,6 @@
 
 <script>
 export default {
-  data: function() {
-    return {
-      user: this.$store.state.user,
-      jwt: localStorage.getItem('watchJwt'),
-    }
-  },
   methods: {
     logout() {
       this.$store.dispatch('logout').then(() => {
@@ -40,7 +33,7 @@ export default {
   },
   computed: {
     getAuth: function() {
-      return this.$store.getters.getUserAuthStatus();
+      return this.$store.getters.getUserAuthStatus;
     }
   }
   
