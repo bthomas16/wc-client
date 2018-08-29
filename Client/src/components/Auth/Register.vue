@@ -69,38 +69,26 @@
         showAlert: false,
         responseMessage: '',
         responseStyle: 'light',
-        userCookie: '',
         showForm: true
-        }
-    },
-    computed: {
-        count: function() 
-        {
-            return this.$store.state.count
         }
     },
     methods: {
         onSubmit () 
         {
+            this.showAlert = false;
             this.form.email.toLowerCase();
-            axios.post('/api/user/register', this.form)
-                .then(res => {
-                    let body = res.data;
-                    this.responseMessage = body.message;
+            this.$store.dispatch('register', this.form).then(res => {
+                if(res.isSuccess) this.$router.push({path: '/profile'})
+                else {
                     this.showAlert = true;
-                    if(body.isSuccess) {
-                        localStorage.setItem('watchJwt', body.token);
-                        this.responseStyle = 'success';
-                        let id = body.id;
-                        this.$router.push({ path: `/profile/${id}` })
-                    }
-                    else this.responseStyle = 'danger'
-                    this.form = {}; 
-                })
-                .catch(err => {
-                    console.log(err)
+                    this.responseMessage = res.message;
+                    this.responseStyle = 'danger';
                 }
-            )
+            }).catch(err => {
+                this.showAlert = true;
+                this.responseMessage = err.message;
+                this.responseStyle = 'danger';
+            })
         },
         toggleAuthChild ()
         {

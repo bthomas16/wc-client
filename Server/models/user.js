@@ -28,7 +28,7 @@ const User = module.exports = function () {
                 if(duplicate)
                 {
                     console.log('found duplicate', duplicate.email, tempEmail)
-                    DuplicateError(duplicate, formData, res)
+                    res.json({isSuccess: false, message: 'An account with this email already exists'})
                 }
                 else 
                 {
@@ -36,12 +36,6 @@ const User = module.exports = function () {
                 }
         });
     };
-
-    function DuplicateError(duplicate, formData, res) 
-    {
-        if(duplicate.email == formData.email)  res.json({isSuccess: false, message: 'An account with this email already exists'});
-        else res.json({isSuccess: false, message: 'Something went wrong. Please try again later'});
-    }
 
     function HashPasswordSaveUser(formData, res) 
     {
@@ -61,13 +55,13 @@ const User = module.exports = function () {
     {
         let tempEmail = formData.email.toLowerCase();
         return knex.insert
-                ({
-                    firstName: formData.firstName,
-                    lastName: formData.lastName,
-                    email: tempEmail,
-                    password: hashPassword
-                })
-            .into('peeps');
+        ({
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: tempEmail,
+            password: hashPassword
+        })
+        .into('peeps');
     }
 
     // LOGIN LOGIN LOGIN LOGIN

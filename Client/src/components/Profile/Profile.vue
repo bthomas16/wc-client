@@ -2,7 +2,7 @@
     <b-container class="p0 full">
        <b-row>
             <b-col xs="7 pr0" md="4" class="border">
-               <app-profile-info :User="User"></app-profile-info>
+               <app-profile-info :User="GetUser"></app-profile-info>
             </b-col>
             <b-col xs="12" md="8" class="border" >
                 <app-collection :collection="collection"></app-collection>
@@ -21,7 +21,6 @@ import ProfileInfo from './ProfileInfo.vue';
 import Collection from './Collection/Collection.vue';
 import Sidebar from './Sidebar.vue';
 import Feed from './Feed/Feed.vue';
-import Cookies from '../../State/cookies.js';
 
 
 export default {
@@ -34,7 +33,6 @@ export default {
     data () {
         return {
             jwt: localStorage.getItem('watchJwt'),
-            profPic: 'http://www.bistiproofpage.com/wp-content/uploads/2018/04/cute-profile-pics-for-whatsapp-images.png',
             collection: 
             [
                 {id: 0, title: 'Big Title', src: 'src1'},
@@ -49,7 +47,7 @@ export default {
         }
     },
     computed: {
-        User: function() {
+        GetUser: function() {
             return this.$store.state.User
         }
     },

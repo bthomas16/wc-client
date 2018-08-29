@@ -1,13 +1,12 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import Cookies from './cookies.js';
 
 Vue.use(Vuex);
 
 const axios = require('axios');
-const LOGIN = "LOGIN";
-const LOGIN_SUCCESS = "LOGIN_SUCCESS";
-const LOGIN_FAILURE = "LOGIN_FAILURE";
+const AUTHENTICATING = "AUTHENTICATING";
+const AUTH_SUCCESS = "AUTH_SUCCESS";
+const AUTH_FAILURE = "AUTH_FAILURE";
 const LOGOUT = "LOGOUT";
 const GET_USER = "GET_USER";
 const VALIDATE_JWT = "VALIDATE_JWT";
@@ -24,11 +23,12 @@ const state =
 
 const mutations = 
 {
-    [LOGIN] (state) {
+
+    [AUTHENTICATING] (state) {
         state.isLoading = true;
     },
 
-    [LOGIN_SUCCESS] (state, body) 
+    [AUTH_SUCCESS] (state, body) 
     {
         state.User = body;        
         state.jwt = localStorage.getItem('watchJwt');
@@ -37,7 +37,7 @@ const mutations =
         state.userLoadStatus = 'loaded';
     },
 
-    [LOGIN_FAILURE] (state) 
+    [AUTH_FAILURE] (state) 
     {
         state.isAuthorized = false;
         state.isLoading = false;    
@@ -72,31 +72,54 @@ const actions =
     login(context, formData) 
     {
         return new Promise((resolve, reject) => {
-            context.commit(LOGIN); // show spinner
+            context.commit(AUTHENTICATING); // show spinner
                 axios.post('/api/user/login', formData)
                 .then(res => {
                     if(res.data.isSuccess)
                     {
                         console.log(res.data)
                         localStorage.setItem('watchJwt', res.data.token);
-                        context.commit(LOGIN_SUCCESS, res.data);
-                        Cookies.SetCookies('User', res.data)
+                        context.commit(AUTH_SUCCESS, res.data);
                         resolve(res.data)
                     }
                     else 
                     {
-                        context.commit(LOGIN_FAILURE);
+                        context.commit(AUTH_FAILURE);
                         reject(res.data);
                     }  
                 }).catch(err => {
                     console.log('err', err)
-                    context.commit(LOGIN_FAILURE);
+                    context.commit(AUTH_FAILURE);
                         reject(err.data);
                 })
             }
         )
     },
 
+    register(context, formData) 
+    {
+        return new Promise((resolve, reject) => {
+            context.commit(AUTHENTICATING); // show spinner
+            axios.post('/api/user/register', formData)
+            .then(res => {
+                console.log('registtreee', res.data)
+                localStorage.setItem('watchJwt', res.data.token);
+                context.commit(AUTH_SUCCESS, res.data);
+                resolve(res.data)
+            })
+            .catch(err => {
+                this.responseStyle = 'danger';
+                this.responseMessage = err.data.message;
+                this.form = {}; 
+                console.log(err.data)
+                context.commit(AUTH_FAILURE );     
+                reject(res.data)
+                                           
+            }
+        )
+            }
+        )
+    },
 
     logout(context) 
     {   
@@ -163,14 +186,6 @@ const getters =
         return function() {
             return state.User;
         }
-    },
-
-    createAuthHeader() {
-        let authHeader = {
-            'Content-Type': 'application/json',
-            'authorization': jwt
-        }
-        return authHeader;
     }
 }
 
