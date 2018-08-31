@@ -1,16 +1,21 @@
 <template>
-    <b-container class="p0 full">
-       <b-row>
-            <b-col xs="7 pr0" md="4" class="border">
+    <b-container fluid>
+       <b-row class="mr-0">
+            <b-col lg="2" md="3" xs="12" class="border bg-lightgray">
                <app-profile-info :User="GetUser"></app-profile-info>
+               <b-row class="d-none d-md-block">
+                    <b-col class="mx-auto" cols="12"><app-sidebar></app-sidebar></b-col>
+               </b-row>
+               <b-row class="d-none d-md-block mt-50">
+                    <b-col class="mx-auto" cols="12"><app-sidebar></app-sidebar></b-col>
+               </b-row>
             </b-col>
-            <b-col xs="12" md="8" class="border" >
+            <b-col lg="10" md="9" xs="12" class="border" >
                 <app-collection :collection="collection"></app-collection>
             </b-col>
        </b-row>
-       <b-row>
-           <b-col class="d-none d-md-block" md="3"><app-sidebar></app-sidebar></b-col>
-           <b-col cols="12" md="9" class="p2"><app-feed></app-feed></b-col>
+       <b-row class="mr-0">
+           <b-col cols="12" md="9"><app-feed></app-feed></b-col>
        </b-row>
     </b-container>
 </template>
@@ -33,17 +38,220 @@ export default {
     data () {
         return {
             jwt: localStorage.getItem('watchJwt'),
-            collection: 
-            [
-                {id: 0, title: 'Big Title', src: 'src1'},
-                {id: 1, title: 'Bigger Title', src: 'src2'},
-                {id: 2, title: 'Big Title', src: 'src1'},
-                {id: 3, title: 'Big Title', src: 'src1'},
-                {id: 4, title: 'Big Title', src: 'src1'},
-                {id: 5, title: 'Big Title', src: 'src1'},
-                {id: 6, title: 'Big Title', src: 'src1'},
-                {id: 7, title: 'Big Title', src: 'src1'}
-            ]
+            collection: {
+                name: "Boppity's Beuaitful Collection",
+                totalValue: "$4,756",
+                favoritePiece: 4,
+                pieces:
+                [
+                    {
+                        id: 0,
+                        brand: "Rolex",
+                        name: 'Rolex Submariner',
+                        ref: 'jhg23424Silv__hg23424Silv___#$2r_#$2r',
+                        model: 'Model_Number_Fake675869780',
+                        acquiredFor: 469,
+                        lowestOfferAccepting: 525,
+                        dateAcquired: '4/11/17',
+                        condition: 8.5,
+                        isFullKit: true,
+                        sizeWide: 41,
+                        sizeHeight: 12,
+                        movement: 'ETA 2824-2',
+                        movementType: 'Automatic',
+                        crystal: 'Sapphire, Domed Crystal',
+                        band: 'Black Crocoidla Leather',
+                        value: 590,
+                        accuracy: '4',
+                        forSalePrice: 575,
+                        forTradeValue: 590,
+                        src: 'https://n3.sdlcdn.com/imgs/e/v/o/SDL044502225_1-6ee47.jpg'
+                     },
+                     {
+                        id: 1,
+                        brand: "Omega",
+                        name: 'Omega Planet Ocean',
+                        ref: 'jhg23424Silv__hg23424Silv___#$2r_#$2r',
+                        model: 'Model_Number_Fake675869780',
+                        acquiredFor: 469,
+                        lowestOfferAccepting: 525,
+                        dateAcquired: '4/11/17',
+                        condition: 8.5,
+                        isFullKit: true,
+                        sizeWide: 41,
+                        sizeHeight: 12,
+                        movement: 'ETA 2824-2',
+                        crystal: 'Sapphire, Domed Crystal',
+                        band: 'Black Crocoidla Leather',
+                        value: 590,
+                        accuracy: '4',
+                        forSalePrice: 575,
+                        forTradeValue: 590,
+                        src: 'https://n3.sdlcdn.com/imgs/e/v/o/SDL044502225_1-6ee47.jpg'
+                     },
+                     {
+                        id: 2,
+                        brand: "Rolex",
+                        name: 'Rolex Submariner',
+                        ref: 'jhg23424Silv__hg23424Silv___#$2r_#$2r',
+                        model: 'Model_Number_Fake675869780',
+                        acquiredFor: 469,
+                        lowestOfferAccepting: 525,
+                        dateAcquired: '4/11/17',
+                        condition: 8.5,
+                        isFullKit: true,
+                        sizeWide: 41,
+                        sizeHeight: 12,
+                        movement: 'ETA 2824-2',
+                        movementType: 'Automatic',
+                        crystal: 'Sapphire, Domed Crystal',
+                        band: 'Black Crocoidla Leather',
+                        value: 590,
+                        accuracy: '4',
+                        forSalePrice: 575,
+                        forTradeValue: 590,
+                        src: 'https://n3.sdlcdn.com/imgs/e/v/o/SDL044502225_1-6ee47.jpg'
+                     },
+                     {
+                        id: 3,
+                        brand: "Rolex",
+                        name: 'Rolex Submariner',
+                        ref: 'jhg23424Silv__hg23424Silv___#$2r_#$2r',
+                        model: 'Model_Number_Fake675869780',
+                        acquiredFor: 469,
+                        lowestOfferAccepting: 525,
+                        dateAcquired: '4/11/17',
+                        condition: 8.5,
+                        isFullKit: true,
+                        sizeWide: 41,
+                        sizeHeight: 12,
+                        movement: 'ETA 2824-2',
+                        movementType: 'Automatic',
+                        crystal: 'Sapphire, Domed Crystal',
+                        band: 'Black Crocoidla Leather',
+                        value: 590,
+                        accuracy: '4',
+                        forSalePrice: 575,
+                        forTradeValue: 590,
+                        src: 'https://n3.sdlcdn.com/imgs/e/v/o/SDL044502225_1-6ee47.jpg'
+                     },
+                     {
+                        id: 4,
+                        brand: "Rolex",
+                        name: 'Rolex Submariner',
+                        ref: 'jhg23424Silv__hg23424Silv___#$2r_#$2r',
+                        model: 'Model_Number_Fake675869780',
+                        acquiredFor: 469,
+                        lowestOfferAccepting: 525,
+                        dateAcquired: '4/11/17',
+                        condition: 8.5,
+                        isFullKit: true,
+                        sizeWide: 41,
+                        sizeHeight: 12,
+                        movement: 'ETA 2824-2',
+                        movementType: 'Automatic',
+                        crystal: 'Sapphire, Domed Crystal',
+                        band: 'Black Crocoidla Leather',
+                        value: 590,
+                        accuracy: '4',
+                        forSalePrice: 575,
+                        forTradeValue: 590,
+                        src: 'https://n3.sdlcdn.com/imgs/e/v/o/SDL044502225_1-6ee47.jpg'
+                     },
+                     {
+                        id: 5,
+                        brand: "Rolex",
+                        name: 'Rolex Submariner',
+                        ref: 'jhg23424Silv__hg23424Silv___#$2r_#$2r',
+                        model: 'Model_Number_Fake675869780',
+                        acquiredFor: 469,
+                        lowestOfferAccepting: 525,
+                        dateAcquired: '4/11/17',
+                        condition: 8.5,
+                        isFullKit: true,
+                        sizeWide: 41,
+                        sizeHeight: 12,
+                        movement: 'ETA 2824-2',
+                        movementType: 'Automatic',
+                        crystal: 'Sapphire, Domed Crystal',
+                        band: 'Black Crocoidla Leather',
+                        value: 590,
+                        accuracy: '4',
+                        forSalePrice: 575,
+                        forTradeValue: 590,
+                        src: 'https://n3.sdlcdn.com/imgs/e/v/o/SDL044502225_1-6ee47.jpg'
+                     },
+                     {
+                        id: 6,
+                        brand: "Rolex",
+                        name: 'Rolex Submariner',
+                        ref: 'jhg23424Silv__hg23424Silv___#$2r_#$2r',
+                        model: 'Model_Number_Fake675869780',
+                        acquiredFor: 469,
+                        lowestOfferAccepting: 525,
+                        dateAcquired: '4/11/17',
+                        condition: 8.5,
+                        isFullKit: true,
+                        sizeWide: 41,
+                        sizeHeight: 12,
+                        movement: 'ETA 2824-2',
+                        movementType: 'Automatic',
+                        crystal: 'Sapphire, Domed Crystal',
+                        band: 'Black Crocoidla Leather',
+                        value: 590,
+                        accuracy: '4',
+                        forSalePrice: 575,
+                        forTradeValue: 590,
+                        src: 'https://n3.sdlcdn.com/imgs/e/v/o/SDL044502225_1-6ee47.jpg'
+                     },
+                     {
+                        id: 7,
+                        brand: "Rolex",
+                        name: 'Rolex Submariner',
+                        ref: 'jhg23424Silv__hg23424Silv___#$2r_#$2r',
+                        model: 'Model_Number_Fake675869780',
+                        acquiredFor: 469,
+                        lowestOfferAccepting: 525,
+                        dateAcquired: '4/11/17',
+                        condition: 8.5,
+                        isFullKit: true,
+                        sizeWide: 41,
+                        sizeHeight: 12,
+                        movement: 'ETA 2824-2',
+                        movementType: 'Automatic',
+                        crystal: 'Sapphire, Domed Crystal',
+                        band: 'Black Crocoidla Leather',
+                        value: 590,
+                        accuracy: '4',
+                        forSalePrice: 575,
+                        forTradeValue: 590,
+                        src: 'https://n3.sdlcdn.com/imgs/e/v/o/SDL044502225_1-6ee47.jpg'
+                     },
+                     {
+                        id: 8,
+                        brand: "Rolex",
+                        name: 'Rolex Submariner',
+                        ref: 'jhg23424Silv__hg23424Silv___#$2r_#$2r',
+                        model: 'Model_Number_Fake675869780',
+                        acquiredFor: 469,
+                        lowestOfferAccepting: 525,
+                        dateAcquired: '4/11/17',
+                        condition: 8.5,
+                        isFullKit: true,
+                        sizeWide: 41,
+                        sizeHeight: 12,
+                        movement: 'ETA 2824-2',
+                        movementType: 'Automatic',
+                        crystal: 'Sapphire, Domed Crystal',
+                        band: 'Black Crocoidla Leather',
+                        value: 590,
+                        accuracy: '4',
+                        forSalePrice: 575,
+                        forTradeValue: 590,
+                        src: 'https://n3.sdlcdn.com/imgs/e/v/o/SDL044502225_1-6ee47.jpg'
+                     }
+                ]
+            }
         }
     },
     computed: {
@@ -51,16 +259,16 @@ export default {
             return this.$store.state.User
         }
     },
-    created: function () {
-        console.log('created hook')
-        this.$store.dispatch('user');
+        created: function () {
+            console.log('created hook')
+            this.$store.dispatch('user');
     }
 }
 </script>
 
 <style>
-    .pr0 {
-        padding-right: 0 !important;
-    }
+.mt-50 {
+    margin-top: 20em;
+}
 </style>
 

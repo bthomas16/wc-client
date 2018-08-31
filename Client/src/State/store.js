@@ -11,6 +11,7 @@ const LOGOUT = "LOGOUT";
 const GET_USER = "GET_USER";
 const VALIDATE_JWT = "VALIDATE_JWT";
 const INVALIDATE_JWT = "INVALIDATE_JWT";
+const SEE_MORE_WATCH = "SEE_MORE_WATCH";
 
 const state = 
 {
@@ -19,6 +20,7 @@ const state =
     jwt: '',
     User: {},
     userLoadStatus: 'not-loaded',
+    selectedWatch: {}
 }
 
 const mutations = 
@@ -63,6 +65,10 @@ const mutations =
 
     [INVALIDATE_JWT](state) {
         state.isAuthorized = false;
+    },
+
+    [SEE_MORE_WATCH](state, selectedWatch) {
+        state.selectedWatch = selectedWatch;
     }
 }
 
@@ -145,7 +151,10 @@ const actions =
                     context.commit(INVALIDATE_JWT);
                     reject(res.data)
                 }
-            }).catch(err => console.log(err))
+            }).catch(err => {
+                reject()
+                console.log(err)
+            })
         })
     },
 
@@ -163,7 +172,13 @@ const actions =
             // context.commit(INVALID_USER, res.data.userStore)
             console.log(err)
         })
-    }
+    },
+
+    selectWatch(context, watch) {
+        if(watch != null || '') 
+        console.log('selectingWatch:', watch)
+            context.commit(SEE_MORE_WATCH, watch)
+        }
 }
 
 const getters = 
@@ -186,7 +201,10 @@ const getters =
         return function() {
             return state.User;
         }
-    }
+    },
+     getSelectedWatch(){
+         return state.selectedWatch;
+     }
 }
 
 

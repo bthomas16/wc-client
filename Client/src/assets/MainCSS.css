@@ -112,9 +112,19 @@
     margin-bottom: 1em;
 }
 
-.white {
-    color: white;
+.mb0 {
+    margin-bottom: 0;
 }
+
+.mb1 {
+    margin-bottom: .5em;
+}
+
+.mb2 {
+    margin-bottom: 1em;
+}
+
+
 .full,.container {
     width:100% !important;
 }
@@ -131,6 +141,103 @@
 .pointer {
     cursor: pointer;
 }
+
+
+/* COLORS */
+
+
+.blue {
+    color: #56A3A6;
+}
+
+.bg-blue {
+    background-color: #56A3A6;
+}
+
+.brown {
+   color: #484538;
+}
+
+.bg-brown {
+   background-color: #484538;
+}
+
+.yellow {
+    color:#CAD49D
+}
+
+.bg-yellow {
+    background-color:#CAD49D
+}
+
+.green{
+    color: green
+}
+
+.red{
+    color: red;
+}
+
+.light-green {
+    color: #d4EAC8;
+}
+
+.bg-light-green {
+    background-color: #d4EAC8;
+}
+
+.light-blue {
+    color: #C0D8E0;
+}
+
+.bg-light-blue {
+    background-color: #C0D8E0;
+}
+
+.lightgray {
+    color: lightgray;
+}
+
+.bg-lightgray {
+    background-color: rgba(215,215,215,.3);
+}
+
+.white {
+    color: white;
+}
+
+.bg-white {
+    background-color: white;
+}
+
+.op-5 {
+    opacity: .9
+}
+
+.op-4 {
+    opacity: .75
+}
+
+.op-3 {
+    opacity: .5
+}
+
+.op-2 {
+    opacity: .25
+}
+
+.op-1 {
+    opacity: .1
+}
+
+
+.form-control:focus {
+    border-color: inherit;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+
 
 @media(min-width:767px) {
     .d-absolute {
