@@ -111,7 +111,7 @@ const User = module.exports = function () {
             'email', user.email
             ).first().then(function(user){
                 console.log('logging in this user user by id', user.id)
-            res.json({isSuccess: true, message: "Route to Profile now!", user, token})
+            res.json({isSuccess: true, message: "Successfully logged in", user, token})
         })
    } 
 
@@ -130,22 +130,26 @@ const User = module.exports = function () {
 
 
 
-   function FindUser(id, res){
+   function FindUser(id, res)
+   {
        console.log('finding user by id', id)
-    knex('peeps').where(
-        'id', id
-        ).first().then(function(user)
-        {
-            let userStore = 
+        knex('peeps').where(
+            'id', id
+            )
+            .first().then(function(user)
             {
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email
+                console.log('read me pls', user)
+                let userStore = 
+                {
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email
+                }
+                console.log('found user', userStore)
+                res.json({isSuccess: true, message: 'User is valid', userStore})
             }
-            console.log('found user', userStore)
-            res.json({isSuccess: true, message: 'User is valid', userStore})
-        })
-} 
+        )
+    } 
 
     return {
         // REGISTER

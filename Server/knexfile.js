@@ -5,7 +5,7 @@ module.exports = {
   
   development: {
     client: 'postgresql',
-    connection: 'postgres://localhost/WatchCollection_db'
+    connection: 'postgres://localhost/watch_collection_db'
   }
 
 };

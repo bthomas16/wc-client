@@ -7,7 +7,8 @@ export const routes = [
     { 
         path: '/', 
         name: 'home',
-        component: Home
+        component: Home,
+        beforeEnter: dissallowAuth    
     },
     { 
         path: '/profile',
@@ -24,11 +25,11 @@ export const routes = [
     }
 ];
 
-function requireAuth(to, from, next) {
+function dissallowAuth(to, from, next) {
     store.dispatch('validateJwt').then(res => {
         if(res.success) next('/profile');
     }).catch(() => {
-        next('/')
+        next()
     })
 }
 

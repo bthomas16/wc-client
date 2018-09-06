@@ -36,7 +36,7 @@ router.get('/profile', VerifyToken, async (req, res) =>
 {
   try 
   {
-    console.log('trying')
+    console.log('trying', req.id)
     await User.FindUser(req.id, res);
   }
   catch

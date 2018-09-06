@@ -3,15 +3,25 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
-const axios = require('axios');
-const AUTHENTICATING = "AUTHENTICATING";
-const AUTH_SUCCESS = "AUTH_SUCCESS";
-const AUTH_FAILURE = "AUTH_FAILURE";
-const LOGOUT = "LOGOUT";
-const GET_USER = "GET_USER";
-const VALIDATE_JWT = "VALIDATE_JWT";
-const INVALIDATE_JWT = "INVALIDATE_JWT";
-const SEE_MORE_WATCH = "SEE_MORE_WATCH";
+const axios = require('axios'),
+    LOADING = "LOADING",
+    AUTHENTICATING = "AUTHENTICATING",
+    AUTH_SUCCESS = "AUTH_SUCCESS",
+    AUTH_FAILURE = "AUTH_FAILURE",
+    LOGOUT = "LOGOUT",
+    GET_USER = "GET_USER",
+    VALIDATE_JWT = "VALIDATE_JWT",
+    INVALIDATE_JWT = "INVALIDATE_JWT",
+    NAME_COLLECTION = "NAME_COLLECTION",
+    LOAD_COLLECTION = "LOAD_COLLECTION",
+    SUBMIT_WATCH = "SUBMIT_WATCH";
+
+const config = {
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('watchJwt')
+    }
+}
 
 const state = 
 {
@@ -19,20 +29,24 @@ const state =
     isAuthorized: false,
     jwt: '',
     User: {},
+    Collection: {},
     userLoadStatus: 'not-loaded',
     selectedWatch: {}
 }
 
 const mutations = 
 {
+    [LOADING](state) {
+        state.isLoading = true;
+    },
 
     [AUTHENTICATING] (state) {
         state.isLoading = true;
     },
 
-    [AUTH_SUCCESS] (state, body) 
+    [AUTH_SUCCESS] (state, user) 
     {
-        state.User = body;        
+        state.User = user;        
         state.jwt = localStorage.getItem('watchJwt');
         state.isAuthorized = true;
         state.isLoading = false;
@@ -50,10 +64,10 @@ const mutations =
         state.isAuthorized = false;
     },
 
-    [GET_USER](state, body)
+    [GET_USER](state, user)
     {
-        state.isLoading = false;        
-        state.User = body;
+        state.isLoading = false;            
+        state.User = user;
         state.isAuthorized = true;
         state.jwt = localStorage.getItem('watchJwt');
         state.userloadStatus = 'loaded';
@@ -67,8 +81,18 @@ const mutations =
         state.isAuthorized = false;
     },
 
-    [SEE_MORE_WATCH](state, selectedWatch) {
-        state.selectedWatch = selectedWatch;
+    [NAME_COLLECTION](state, collectionName) {
+        state.Collection.name = collectionName;
+    },
+
+    [SUBMIT_WATCH](state, watch) {
+        console.log(state.Collection, state.Collection.pieces)
+        return state.Collection.collection.push(watch);
+    },
+
+    [LOAD_COLLECTION](state, collection) {
+        state.isLoading = false;                    
+        state.Collection = collection;
     }
 }
 
@@ -119,12 +143,9 @@ const actions =
                 this.form = {}; 
                 console.log(err.data)
                 context.commit(AUTH_FAILURE );     
-                reject(res.data)
-                                           
-            }
-        )
-            }
-        )
+                reject(res.data)                              
+            })
+        })
     },
 
     logout(context) 
@@ -133,16 +154,10 @@ const actions =
         context.commit(LOGOUT);
     },
 
-
     validateJwt(context) 
     {
         return new Promise((resolve, reject) => {
-            axios.get('/api/user/validate-jwt', {
-                headers: {
-                'Content-Type': 'application/json',
-                'authorization': localStorage.getItem('watchJwt')
-                }
-            }).then(res => {
+            axios.get('/api/user/validate-jwt', config).then(res => {
                 if(res.data.success) {
                     context.commit(VALIDATE_JWT);
                     resolve(res.data)
@@ -159,14 +174,7 @@ const actions =
     },
 
     user(context) {
-        state.isLoading = true;
-        axios.get('/api/user/profile', {
-            headers: {
-            'Content-Type': 'application/json',
-            'authorization': localStorage.getItem('watchJwt')
-            }
-        }).then(res => {
-            console.log('showing profile', res.data)
+        axios.get('/api/user/profile', config).then(res => {
             context.commit(GET_USER, res.data.userStore)
         }).catch(err => {
             // context.commit(INVALID_USER, res.data.userStore)
@@ -174,11 +182,46 @@ const actions =
         })
     },
 
-    selectWatch(context, watch) {
-        if(watch != null || '') 
-        console.log('selectingWatch:', watch)
-            context.commit(SEE_MORE_WATCH, watch)
-        }
+    nameCollection(context, name) {
+        return new Promise((resolve, reject) => {
+            axios.post('/api/collection', { name }, config)
+                .then(res => {
+                    context.commit(NAME_COLLECTION, name)
+                    resolve(res.data)
+                }).catch(err => {
+                    reject(err.data)
+                })
+            })
+    },
+
+    submitWatch(context, watch) {
+        return new Promise((resolve, reject) => {
+            axios.post('/api/watch', { watch }, config).then((res) => {
+                if(res.data){
+                    console.log('submitting watch', res.data)
+                    context.commit(SUBMIT_WATCH, res.data)
+                    resolve(res.data)
+                }
+                else {
+                    console.log(err);
+                    reject(err.data)
+                }
+            })
+        })
+    },
+
+    loadUserCollection(context) {
+        context.commit(LOADING);
+        axios.get('/api/collection',  {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem('watchJwt')
+            }
+        }).then(res => {
+            console.log('collection be', res.data)
+            context.commit(LOAD_COLLECTION, res.data)
+        })
+    }
 }
 
 const getters = 
@@ -202,8 +245,8 @@ const getters =
             return state.User;
         }
     },
-     getSelectedWatch(){
-         return state.selectedWatch;
+     getUserCollection(state){
+         return state.Collection;
      }
 }
 

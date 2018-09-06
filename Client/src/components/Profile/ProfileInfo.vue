@@ -4,7 +4,7 @@
             <b-col cols="5" lg="8" md="12" class="m-0 mx-auto pt-lg-1">
                 <b-img :src="profPic" fluid style="height: auto; max-height: 200px;" class="profPic" rounded="circle"></b-img>
             </b-col>
-            <b-col cols="7" lg="12" md="12" class="center mx-auto p-0 pl-2 mt-2" >
+            <b-col cols="7" lg="12" md="12" class="left mx-auto p-0 pl-2 mt-2" >
                     <b-col class="p0 ml-1 h4 bold">{{User.firstName}} {{User.lastName}}</b-col>  
                     <b-col class="p0 ml-1">Rating</b-col>              
                     <b-col class="p0 ml-1"><strong>(4)</strong> Watches for Trade</b-col>
