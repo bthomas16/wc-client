@@ -2,7 +2,7 @@
 exports.up = function(knex, Promise) {
     return knex.schema.createTable('watch', (table) => {
         table.increments('id').primary();
-        table.integer('collection_id').references('id').inTable('collection');
+        table.integer('user_id').references('id').inTable('peeps');
         table.string('src')
         table.string('name')
         table.integer('acquiredFor')
@@ -29,6 +29,10 @@ exports.up = function(knex, Promise) {
         table.boolean('isLimitedEdition');
         table.integer('limitedEditionNumber');
         table.integer('limitedEditionTotal');
+        table.string('watchStyle');
+
+        table.integer('userPreferedOrder');
+        table.string('watchLabels');
     })
   };
   

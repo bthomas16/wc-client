@@ -15,14 +15,14 @@ export const routes = [
         name: 'profile',
         component: Profile,
         beforeEnter: requireAuth    
-    },
-
-    { 
-        path: '/collection',
-        name: 'collection',
-        component: Profile,
-        beforeEnter: requireAuth    
     }
+
+    // { 
+    //     path: '/collection',
+    //     name: 'collection',
+    //     component: Profile,
+    //     beforeEnter: requireAuth    
+    // }
 ];
 
 function dissallowAuth(to, from, next) {

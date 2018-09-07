@@ -86,8 +86,8 @@ const mutations =
     },
 
     [SUBMIT_WATCH](state, watch) {
-        console.log(state.Collection, state.Collection.pieces)
-        return state.Collection.collection.push(watch);
+        console.log(state.Collection, 'commiting new watch')
+        state.Collection.push(watch);
     },
 
     [LOAD_COLLECTION](state, collection) {
@@ -157,7 +157,12 @@ const actions =
     validateJwt(context) 
     {
         return new Promise((resolve, reject) => {
-            axios.get('/api/user/validate-jwt', config).then(res => {
+            axios.get('/api/user/validate-jwt', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('watchJwt')
+                }
+            }).then(res => {
                 if(res.data.success) {
                     context.commit(VALIDATE_JWT);
                     resolve(res.data)
@@ -182,18 +187,6 @@ const actions =
         })
     },
 
-    nameCollection(context, name) {
-        return new Promise((resolve, reject) => {
-            axios.post('/api/collection', { name }, config)
-                .then(res => {
-                    context.commit(NAME_COLLECTION, name)
-                    resolve(res.data)
-                }).catch(err => {
-                    reject(err.data)
-                })
-            })
-    },
-
     submitWatch(context, watch) {
         return new Promise((resolve, reject) => {
             axios.post('/api/watch', { watch }, config).then((res) => {
@@ -212,14 +205,15 @@ const actions =
 
     loadUserCollection(context) {
         context.commit(LOADING);
-        axios.get('/api/collection',  {
+        axios.get('/api/watch',  {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': localStorage.getItem('watchJwt')
             }
         }).then(res => {
-            console.log('collection be', res.data)
-            context.commit(LOAD_COLLECTION, res.data)
+            context.commit(LOAD_COLLECTION, res.data.collection);
+        }).catch(err => {
+            console.log(err);
         })
     }
 }
@@ -240,14 +234,13 @@ const getters =
         return state.jwt;
     },
 
-    getUser(state) {
-        return function() {
-            return state.User;
-        }
+    getCollection(state) {
+        return state.Collection;
     },
-     getUserCollection(state){
-         return state.Collection;
-     }
+
+    getCollectionLength(state) {
+        return state.Collection.length;
+    }
 }
 
 

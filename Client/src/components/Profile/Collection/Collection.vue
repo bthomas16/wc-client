@@ -1,25 +1,23 @@
 <template>
     <b-container id="collection-container bg-lightgray" fluid>
-
-
         <!-- WATCH COLLECTION SUMMARY -->
         <!-- WATCH COLLECTION SUMMARY -->
         <!-- WATCH COLLECTION SUMMARY -->
         <!-- WATCH COLLECTION SUMMARY -->
 
-    <b-row v-if="!hasWatchesInCollection" class="p-0">
-        <b-row class="border-bottom mb-3 py-2" align-v="center">
+    <b-row v-if="hasWatchesCollection" class="p0">
+        <b-row class="border-bottom mb-3 py-2 mx-2 ml-4" align-v="center">
             <b-col sm="7" xs="12" class="ml-2">
-                <h3>{{Collection.name}}</h3>
+                <h3>{{userName}} Collection</h3>
             </b-col>
             <b-col class="ml-2">
                 <b-row>
                     <b-col>
                         <b-col class="m-0 p-0 my-2 mb-md-3 ">
-                             <h5>Favorite Piece: <strong></strong> </h5> 
+                             <h5>Favorite Piece: <strong>Rolex Submariner</strong> </h5> 
                         </b-col>
                         <b-col class="p-0">
-                            <h5>  Total Value <strong class="green">{{Collection.totalValue}}</strong> </h5>
+                            <h5>  Total Value: <strong class="green">{{getCollectionTotalValue}}</strong> </h5>
                         </b-col>
                     </b-col>
                 </b-row>
@@ -33,9 +31,9 @@
         <!-- FILTER WATCH ARRAY / RESULTS -->
         <!-- FILTER WATCH ARRAY / RESULTS -->
         
-        <b-row>
+        <b-row class="px-4">
             <b-col cols="auto"  class="manage-btn-border pb-2 ml-2">
-                <b-button variant="primary">Manage</b-button>
+                <b-button variant="primary" v-b-modal.add-watch-modal>Manage</b-button>
             </b-col>
             <b-col class="ml-2">
                 <b-row align-v="end">
@@ -82,15 +80,14 @@
        <b-row align-h="center" class="px-3 pl-4">
            <b-col md="5" cols="12"
            class="watch border p-0 m-2 ml-3"
-            v-for="(watch) in Collection.pieces" 
-            :Collection="Collection" 
+            v-for="(watch) in Collection"   
             :key="watch.id"
             >
                 <b-row align-v="start" align-h="center" class="p-3">
                     <b-col sm="12" xs="4" class="order-1">
                         <b-row align-v="start" aling-h="start" class="pr-2 pr-sm-0">
                             <b-col cols="7" class="mx-auto p-0">
-                                <b-img :src="watch.src" fluid></b-img>
+                                <b-img src="https://www.bremont.com/images/collection/_1000x600_fit_center-center/AIRCO-MACH-3-BL-FRONT-1_180226_104014.png" fluid></b-img>
                             </b-col>
                             <b-col cols="5">
                                 <b-row align-h="end" class="pr-2">
@@ -98,8 +95,8 @@
                                     <b-col cols="12" class="mt-5 px-1">
                                         <b-button variant="outline-info" size="" block v-b-modal.see-more-modal @click="selectWatch(watch)">See More</b-button>
                                     </b-col>
-                                    <b-col cols="12" class="px-1"> 
-                                        <b-button variant="primary" class="mt-2" size="sm" block>Search Ref #</b-button>   
+                                    <b-col cols="12" class="px-1 h6"> 
+                                        <b-button id="searchRef" variant="primary" class="mt-2" size="sm" block>Search Ref #</b-button>   
                                     </b-col>
                                     <b-row align-h="end" align-v="center">
                                         <b-col class="pointer">
@@ -115,26 +112,17 @@
        </b-row>
     </b-row>
 
-    <!-- START WATCH Collection -->
-    <!-- START WATCH COLLECtION -->
-    <!-- START WATCH COLLECtION -->
-    <!-- START WATCH COLLECtION -->
-    <!-- START WATCH COLLECtION -->
-    <!-- START WATCH COLLECtION -->
+    <!-- START WATCH COLLECTION -->
+    <!-- START WATCH COLLECTION -->
 
     <b-row v-else align-h="center">
-        <b-col cols="11" md="8" class="ml-3 border my-5 center p-5">
+        <b-col cols="11" md="8" class="ml-3 border my-5 center p-5" id="begin-collection">
             <h3 class="center">Welcome to the WATCH COLLECTION!</h3>  
             <h5 class="mt-5">Let's get you started by adding a few watches to your collection</h5>
             <b-row>
-                <b-col cols="12" class="my-3 left">
-                        <b-form-input v-model="Collection.name"
-                            type="text"
-                            placeholder="Name your collection"
-                            description="Provide a name for your Watch Collection"
-                            label="Collection Name">
-                        </b-form-input>
-                        <b-button variant="success" class="my-2" size="sm" @click="nameCollection(Collection.name)">Next</b-button>
+                <b-col cols="6" class="mx-auto my-3">
+                        <b-button variant="success" class="my-2" size="lg" v-b-modal.add-watch-modal block>Okay!</b-button>
+                        <b-button variant="warning" class="my-3" size="sm" v-b-modal.add-watch-modal block>Do I have to?</b-button>
                 </b-col>
             </b-row>
         </b-col>
@@ -271,14 +259,9 @@
     </b-modal>
 
 
-    <!-- ADD WATCH MODAL   ADD WATHC MODAL   ADD WATCH MODALL
-    ADD WATCH MODAL   ADD WATHC MODAL   ADD WATCH MODALL
-    ADD WATCH MODAL   ADD WATHC MODAL   ADD WATCH MODALL
-    ADD WATCH MODAL   ADD WATHC MODAL   ADD WATCH MODALL
-    ADD WATCH MODAL   ADD WATHC MODAL   ADD WATCH MODALL
-    ADD WATCH MODAL   ADD WATHC MODAL   ADD WATCH MODALL -->
-
-
+    <!-- ADD WATCH MODAL   ADD WATCH MODAL   ADD WATCH MODALL
+    ADD WATCH MODAL   ADD WATCH MODAL   ADD WATCH MODALL
+    ADD WATCH MODAL   ADD WATCH MODAL   ADD WATCH MODALL -->
 
     <b-modal id="add-watch-modal"
         :title="addWatchTitle"
@@ -629,36 +612,41 @@ export default {
             addWatchTitle: "Add your first watch!",
             addWatch_Count: 1,
             addWatch: {},
-            isEditMode: false,
-            Collection: this.$store.getters.getUserCollection
+            isEditMode: false
         }
     },
 
+    props: ['userName'],
 
     computed: { 
 
-        getIsFullKit(id){
-            if(this.collection.pieces[id].isFullKit) this.isFullKitText = 'Yes';
-            else this.isFullKitText = 'No';
+        hasWatchesCollection() {
+            let status = this.$store.getters.getCollectionLength;
+            if (status == 0) return false;
+            return true;
         },
 
-        hasWatchesInCollection() {
-            if(this.$store.getters.getUserCollection.length == 0 || undefined || null) {
-                this.showDismissibleAlert = true;
-                return false;
-            }
-                else return true;
+        checkNameEnding() {
+            let name = this.userName;
+            name.toLowerCase();
+            let lastLetter = name.slice(-1);
+            if(lastLetter == 's') return name + "' "
+            else return name + "'s"
         },
 
-        // getUserCollection() {
-        //     let it = this.$store.getters.getUserCollection;
-        //     return it;
-        // }
+        getCollectionTotalValue() {
+            return 'Make me a real function!';
+        },
+
+        Collection() {
+            return this.$store.getters.getCollection
+        } 
     },
 
 
     methods: {
         selectWatch(watch) {
+            console.log(watch)
             this.selectedWatch = watch;
         },
 
@@ -685,8 +673,11 @@ export default {
         },
 
         submitWatch() {
+            console.log('will be submitting this watch', this.addWatch)
             this.isEditMode = false;
-            this.$store.dispatch('submitWatch', this.addWatch);
+            this.$store.dispatch('submitWatch', this.addWatch).then(() => {
+                this.addWatch = {}
+            })
         },
 
         cancelAddWatchForm() {
@@ -698,12 +689,16 @@ export default {
     },
 
     created: function() {
-        this.$store.dispatch('loadUserCollection')
+        this.$store.dispatch('loadUserCollection');
     }
 }
 </script>
 
 <style>
+
+    #searchRef {
+        font-size: .75em;
+    }
     .manage-btn-border {
         border-right: 1px solid lightgray;
     }
@@ -725,9 +720,21 @@ export default {
     box-shadow: none;
   }
 
-  @media(maz-width:500px) {
+  .btn {
+      box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  }
+
+  #begin-collection {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+
+  @media(max-width:500px) {
     li .form-control {
         font-size: 8px;
+    }
+
+    #searchRef {
+        font-size: 1em;
     }
   
 }

@@ -2,7 +2,7 @@
     <b-container fluid>
        <b-row class="mr-0">
             <b-col lg="2" md="3" xs="12" class="border bg-lightgray">
-               <app-profile-info :User="GetUser"></app-profile-info>
+               <app-profile-info :User="User"></app-profile-info>
                <b-row class="d-none d-md-block">
                     <b-col class="mx-auto" cols="12"><app-sidebar></app-sidebar></b-col>
                </b-row>
@@ -11,7 +11,7 @@
                </b-row>
             </b-col>
             <b-col lg="10" md="9" xs="12" class="border" >
-                <app-collection></app-collection>
+                <app-collection :userName="userName"></app-collection>
             </b-col>
        </b-row>
        <!-- <b-row class="mr-0">
@@ -35,10 +35,10 @@ export default {
         appSidebar: Sidebar,
         appFeed: Feed
     },
-
-    computed: {
-        GetUser: function() {
-            return this.$store.state.User
+    data () {
+        return {
+            User: this.$store.state.User,
+            userName: this.$store.state.User.firstName
         }
     },
 

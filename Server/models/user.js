@@ -80,11 +80,13 @@ const User = module.exports = function () {
     const CompareHashedAndSetJwt = function(formData, res) 
     {
         let tempEmail = formData.email.toLowerCase();
-        knex('peeps')
+        console.log('comparing hash', formData)
+        return knex('peeps')
             .select()
             .where('email', tempEmail)
             .first()
             .then(async (user) => {
+                console.log(user)
                 if(user) 
                 {  
                     bcrypt.compare(formData.password, user.password, function(err, match) {

@@ -7,7 +7,7 @@ const passport = require('passport');
 const app = express();
 const UserController = require('./controllers/UserController');
 const WatchController = require('./controllers/WatchController');
-const CollectionController = require('./controllers/CollectionController');
+// const CollectionController = require('./controllers/CollectionController');
 
 
 app.use(function(req, res, next) {
@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({
 
 app.use('/api/user', UserController);
 app.use('/api/watch', WatchController);
-app.use('/api/collection', CollectionController);
+// app.use('/api/collection', CollectionController);
 app.use('/api/static-assets', express.static('public'));
 
 app.use(passport.initialize());

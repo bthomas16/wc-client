@@ -3,8 +3,9 @@ const knex = require('../config/db');
 const Watch = (function() {
 
     function validateWatchFormData(formData, res) {
+        console.log('ok Ill validate it', formData)
         if(!formData)  res.json({isSuccess: false, message: 'Please send a valid form'});
-        else if (!formData.src)  res.json({isSuccess: false, message: 'Please provide at least one image of the watch in your posession'});
+        // else if (!formData.src)  res.json({isSuccess: false, message: 'Please provide at least one image of the watch in your posession'});
         else if (!formData.name)  res.json({isSuccess: false, message: 'Please provide a watch name'});
         else if (!formData.acquiredFor)  res.json({isSuccess: false, message: 'Please provide a price you acquired the watch for'});
         else if (!formData.isForSale)  res.json({isSuccess: false, message: 'Please let users know if the watch is for sale or not'});
@@ -26,10 +27,10 @@ const Watch = (function() {
     async function saveWatchToCollectionDB(formData, user_id, res) {
         try 
         {
-            console.log(formData, user_id);
-            return knex.insert(
+            console.log('hopefully saving watch to db', formData, user_id);
+            knex.insert(
                 {
-                    src: formData.src,
+                    // src: formData.src,
                     name: formData.name,
                     acquiredFor: formData.acquiredFor,
                     isForSale: formData.isForSale,
