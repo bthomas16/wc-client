@@ -1,5 +1,5 @@
 <template>
-    <b-container fluid class="p-0 m-0" >
+    <b-container class="p-0 m-0" >
         <b-row align-v="center" align-h="center" class="p-0 mx-auto py-3">
             <b-col cols="5" lg="8" md="12" class="m-0 mx-auto pt-lg-1">
                 <b-img :src="profPic" fluid style="height: auto; max-height: 200px;" class="profPic" rounded="circle"></b-img>

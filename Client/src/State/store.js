@@ -14,7 +14,8 @@ const axios = require('axios'),
     INVALIDATE_JWT = "INVALIDATE_JWT",
     NAME_COLLECTION = "NAME_COLLECTION",
     LOAD_COLLECTION = "LOAD_COLLECTION",
-    SUBMIT_WATCH = "SUBMIT_WATCH";
+    SUBMIT_WATCH = "SUBMIT_WATCH",
+    SELECT_WATCH = "SELECT_WATCH";
 
 const config = {
     headers: {
@@ -93,6 +94,10 @@ const mutations =
     [LOAD_COLLECTION](state, collection) {
         state.isLoading = false;                    
         state.Collection = collection;
+    },
+
+    [SELECT_WATCH](state, watch) {
+        state.selectedWatch = watch;
     }
 }
 
@@ -190,7 +195,7 @@ const actions =
     submitWatch(context, watch) {
         return new Promise((resolve, reject) => {
             axios.post('/api/watch', { watch }, config).then((res) => {
-                if(res.data){
+                if(res.data.isSuccess){
                     console.log('submitting watch', res.data)
                     context.commit(SUBMIT_WATCH, res.data)
                     resolve(res.data)
@@ -215,6 +220,14 @@ const actions =
         }).catch(err => {
             console.log(err);
         })
+    },
+
+    selectWatch(context, watch) {
+        if(watch != null) {
+            context.commit('SELECT_WATCH', watch);
+            return true;
+        }
+        throw new Error('HOLY SHIT!');
     }
 }
 
@@ -224,12 +237,6 @@ const getters =
         return state.isAuthorized;
     },
 
-    getUserLoadStatus(state) {
-        return function() {
-            return state.userLoadStatus;
-        }
-    },
-
     getJwt(state) {
         return state.jwt;
     },
@@ -237,10 +244,6 @@ const getters =
     getCollection(state) {
         return state.Collection;
     },
-
-    getCollectionLength(state) {
-        return state.Collection.length;
-    }
 }
 
 

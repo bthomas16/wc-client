@@ -1,7 +1,7 @@
 <template>
-    <b-container fluid>
-       <b-row class="mr-0">
-            <b-col lg="2" md="3" xs="12" class="border bg-lightgray">
+    <b-container>
+       <b-row>
+            <b-col lg="2" md="3" cols="12" class="border bg-lightgray">
                <app-profile-info :User="User"></app-profile-info>
                <b-row class="d-none d-md-block">
                     <b-col class="mx-auto" cols="12"><app-sidebar></app-sidebar></b-col>
@@ -10,7 +10,7 @@
                     <b-col class="mx-auto" cols="12"><app-sidebar></app-sidebar></b-col>
                </b-row>
             </b-col>
-            <b-col lg="10" md="9" xs="12" class="border" >
+            <b-col lg="10" md="9" cols="12" class="border" >
                 <app-collection :userName="userName"></app-collection>
             </b-col>
        </b-row>
@@ -49,6 +49,12 @@ export default {
 </script>
 
 <style>
+
+
+
+.container {
+    max-width: 100%;
+}
 .mt-50 {
     margin-top: 20em;
 }

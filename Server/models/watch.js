@@ -14,7 +14,6 @@ const Watch = (function() {
         else if (!formData.sizeWidth)  res.json({isSuccess: false, message: 'Please provide a height in mm for the case (without crown)'});
         else if (!formData.value)  res.json({isSuccess: false, message: 'Please provide a value for this watch'});
         else if (!formData.movementType)  res.json({isSuccess: false, message: 'Please specify a movement type for this watch'});
-        else if (!formData.sizeWidth)  res.json({isSuccess: false, message: 'Please provide a height in mm for the case (without crown)'});
         else if (!formData.sizeLugToLug)  res.json({isSuccess: false, message: 'Please provide a width in mm for the lug to lug measurement (band placement)'});
         else if (!formData.condition)  res.json({isSuccess: false, message: "Please provide an accurate condition describing the watch's overall condition"});
         else if (!formData.isFullKit)  res.json({isSuccess: false, message: 'Please let users know if the watch is a full kit'});

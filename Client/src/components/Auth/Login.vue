@@ -63,7 +63,7 @@
                     this.responseMessage = err.message
                 })
         },
-        
+
         toggleAuthChild ()
         {
             this.$emit('toggleAuthView')
