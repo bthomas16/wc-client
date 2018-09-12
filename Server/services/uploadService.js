@@ -3,10 +3,12 @@ const aws = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 
+const config = require('./config/config.js')
+
 const s3 = new aws.S3({
-    accessKeyId: 'AKIAIP5R7F7RZ7EG5KDQ',
-    secretAccessKey: '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',
-    region: 'us-east-2'
+    accessKeyId: config.accessKeyId,
+    secretAccessKey: config.secretAccessKey,
+    region: config.region
 });
 
 const upload = multer({
