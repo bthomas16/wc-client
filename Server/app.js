@@ -7,7 +7,10 @@ const passport = require('passport');
 const app = express();
 const UserController = require('./controllers/UserController');
 const WatchController = require('./controllers/WatchController');
-// const CollectionController = require('./controllers/CollectionController');
+const Upload = require('./controllers/UploadController');
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 app.use(function(req, res, next) {
@@ -18,20 +21,18 @@ app.use(function(req, res, next) {
   next();
 });
 
+
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
 
 app.use('/api/user', UserController);
 app.use('/api/watch', WatchController);
-// app.use('/api/collection', CollectionController);
-app.use('/api/static-assets', express.static('public'));
+app.use('/api/upload', Upload);
 
-app.use(passport.initialize());
-app.use(passport.session());
+app.use('/api/static-assets', express.static('public'));
 
 
 app.listen(8081, ()=> {
   console.log('listening on port 8081')
 })
+
+module.exports = app;

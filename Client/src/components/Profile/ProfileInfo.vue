@@ -1,15 +1,15 @@
 <template>
     <b-container class="p-0 m-0" >
         <b-row align-v="center" align-h="center" class="p-0 mx-auto py-3">
-            <b-col cols="5" lg="8" md="12" class="m-0 mx-auto pt-lg-1">
-                <b-img :src="profPic" fluid style="height: auto; max-height: 200px;" class="profPic" rounded="circle"></b-img>
+            <b-col cols="5" sm="4" md="12" class="m-0 mx-auto center pt-lg-1 border">
+                <b-img :src="profPic" fluid style="height: auto; max-height: 125px;" class="profPic mx-auto" rounded="circle"></b-img>
             </b-col>
-            <b-col cols="7" lg="12" md="12" class="left mx-auto p-0 pl-2 mt-2" >
-                    <b-col class="p0 ml-1 h4 bold">{{User.firstName}} {{User.lastName}}</b-col>  
-                    <b-col class="p0 ml-1">Rating</b-col>              
-                    <b-col class="p0 ml-1"><strong>(4)</strong> Watches for Trade</b-col>
-                    <b-col class="p0 ml-1"><strong>(19)</strong> Trades</b-col>
-                    <b-col class="p0 ml-1"><strong>(16)</strong> Watches for Sale</b-col>
+            <b-col cols="7" sm="7" md="12" class="left mx-auto p-0 pl-2 mt-2" >
+                <p class="p-0 my-1 ml-1 h4 bold">{{User.firstName}} {{User.lastName}}</p>
+                <b-col class="p-0 my-1 ml-1 h4">Rating</b-col>              
+                <p class="p-0 my-1 mt-2 ml-1 m-h5 h7"><strong>(4)</strong> Watches for Trade</p>
+                <p class="p-0 my-1 ml-1 m-h5 h7"><strong>(19)</strong> Trades</p>
+                <p class="p-0 my-1 ml-1 m-h5 h7"><strong>(16)</strong> Watches for Sale</p>
             </b-col>
             
         </b-row>
@@ -43,7 +43,7 @@
 <style>
 
 .profPic {
-    border: 3px soldi green;
+    border: 3px solid green;
 }
 
 @media(max-width:350px){

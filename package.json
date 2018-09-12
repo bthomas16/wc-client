@@ -1,0 +1,29 @@
+{
+  "name": "WatchCollection",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bthomas16/WatchCollection.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bthomas16/WatchCollection/issues"
+  },
+  "homepage": "https://github.com/bthomas16/WatchCollection#readme",
+  "dependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^4.2.0",
+    "mocha": "^5.2.0"
+  },
+  "devDependencies": {},
+  "description": ""
+}

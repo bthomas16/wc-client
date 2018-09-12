@@ -21,6 +21,7 @@ router.post('/register', async (req, res) =>
 
 router.post('/login', async (req, res) => 
 {
+  console.log('testing', req.body)
   let valid = User.ValidLoginFormData(req.body, res);
   if(valid) {
     User.CompareHashedAndSetJwt(req.body, res);   

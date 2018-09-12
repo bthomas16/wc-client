@@ -9,6 +9,7 @@ const User = module.exports = function () {
 
     function ValidRegisterFormData(formData, res) 
     {  
+        console.log('doing it!!!')
         if(!formData)  res.json({isSuccess: false, message: 'Please send a valid form'});
         else if (!formData.firstName)  res.json({isSuccess: false, message: 'Please provide a first name'});
         else if (!formData.lastName)  res.json({isSuccess: false, message: 'Please provide a last name'});
@@ -72,7 +73,6 @@ const User = module.exports = function () {
         else if (!formData.email) res.json({isSuccess: false, message: 'Please provide an email'});
         else if (!formData.password) res.json({isSuccess: false, message: 'Please provide a password'});
         else {
-            console.log('formd data is valid')
             return true;
         }
     }
@@ -80,13 +80,11 @@ const User = module.exports = function () {
     const CompareHashedAndSetJwt = function(formData, res) 
     {
         let tempEmail = formData.email.toLowerCase();
-        console.log('comparing hash', formData)
         return knex('peeps')
             .select()
             .where('email', tempEmail)
             .first()
-            .then(async (user) => {
-                console.log(user)
+            .then((user) => {
                 if(user) 
                 {  
                     bcrypt.compare(formData.password, user.password, function(err, match) {
@@ -96,7 +94,7 @@ const User = module.exports = function () {
                         else if(match) {
                             LoginUser(user, res);
                         }
-                        else res.json({isSuccess: false, message: 'Password is not correct'});   
+                        else res.json({isSuccess: false, message: 'Password is incorrect'});   
                 })   
                 }
                 else {
@@ -107,19 +105,16 @@ const User = module.exports = function () {
 
     function LoginUser(user, res)
     {
-        console.log('logging in user', 'user is:', user.id)
         let token = SetJwtToken(user);
         knex('peeps').where(
             'email', user.email
             ).first().then(function(user){
-                console.log('logging in this user user by id', user.id)
             res.json({isSuccess: true, message: "Successfully logged in", user, token})
         })
    } 
 
     function SetJwtToken(user) 
     {
-        console.log('but first, setting jwt', 'user is:', user.id)
         if(!user) return false;
         let token = jwt.sign({ id: user.id }, config.secret, {
             expiresIn: 86400 // expires in 24 hours

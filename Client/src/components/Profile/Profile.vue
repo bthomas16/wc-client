@@ -10,7 +10,7 @@
                     <b-col class="mx-auto" cols="12"><app-sidebar></app-sidebar></b-col>
                </b-row>
             </b-col>
-            <b-col lg="10" md="9" cols="12" class="border" >
+            <b-col lg="10" md="9" cols="12">
                 <app-collection :userName="userName"></app-collection>
             </b-col>
        </b-row>

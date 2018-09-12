@@ -454,21 +454,19 @@ export default {
 </script>
 
 <style>
-
-    /* .modal-dialog {
-        max-width: 60%;
-    }
-
-    #searchRef {
-        font-size: .75em;
-    }
-    .manage-btn-border {
-        border-right: 1px solid lightgray;
-    }
-
     #add-img-div {
         min-width: 100px;
         min-height: 100px;
+    }
+
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        text-decoration: none;
+        list-style-type: none;
     }
 
     li .form-control {
@@ -478,26 +476,9 @@ export default {
     }
 
     .form-control:focus {
-    border-color: inherit;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-  }
-
-  .btn {
-      box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-  }
-
-    ul {
-      margin: 0;
-      padding: 0;
-  }
-
-  li {
-      text-decoration: none;
-      list-style-type: none;
-  } */
-
-
-
+        border-color: inherit;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
 </style>
 
