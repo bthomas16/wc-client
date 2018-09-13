@@ -9,11 +9,9 @@ const User = module.exports = function () {
 
     function ValidRegisterFormData(formData, res) 
     {  
-        console.log('doing it!!!')
-        if(!formData)  res.json({isSuccess: false, message: 'Please send a valid form'});
-        else if (!formData.firstName)  res.json({isSuccess: false, message: 'Please provide a first name'});
+        if (!formData.firstName)  res.json({isSuccess: false, message: 'Please provide a first name'});
         else if (!formData.lastName)  res.json({isSuccess: false, message: 'Please provide a last name'});
-        else if (!formData.email)  res.json({isSuccess: false, message: 'Please provide a valid email'});
+        else if (!formData.email)  res.json({isSuccess: false, message: 'Please provide an email'});
         else if (!formData.password)  res.json({isSuccess: false, message: 'Please provide a password'});
         else return true
     }

@@ -3,7 +3,7 @@ const aws = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 
-const config = require('./config/config.js')
+const config = require('../config/config.js')
 
 const s3 = new aws.S3({
     accessKeyId: config.accessKeyId,

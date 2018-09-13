@@ -13,15 +13,14 @@ const VerifyToken = require('../middleware/VerifyToken');
 
 router.post('/register', async (req, res) => 
 {
+  if(!req.body)  res.json({isSuccess: false, message: 'Please send a valid form'});
   let validForm = User.ValidRegisterFormData(req.body, res);
   if(validForm)
       User.CheckDuplicatesHashAndSaveUser(req.body, res)
 });
     
-
 router.post('/login', async (req, res) => 
 {
-  console.log('testing', req.body)
   let valid = User.ValidLoginFormData(req.body, res);
   if(valid) {
     User.CompareHashedAndSetJwt(req.body, res);   
@@ -37,13 +36,10 @@ router.get('/profile', VerifyToken, async (req, res) =>
 {
   try 
   {
-    console.log('trying', req.id)
     await User.FindUser(req.id, res);
   }
   catch
-  {
-    console.log('trying bad')
-    
+  { 
     res.json({isSuccess: false, message: 'User is not valid'})  
   }
 });
