@@ -5,7 +5,7 @@ import store from './State/store.js';
 
 export const routes = [
     { 
-        path: '/', 
+        path: '', 
         name: 'home',
         component: Home,
         beforeEnter: dissallowAuth    
@@ -16,18 +16,11 @@ export const routes = [
         component: Profile,
         beforeEnter: requireAuth    
     }
-
-    // { 
-    //     path: '/collection',
-    //     name: 'collection',
-    //     component: Profile,
-    //     beforeEnter: requireAuth    
-    // }
 ];
 
 function dissallowAuth(to, from, next) {
     store.dispatch('validateJwt').then(res => {
-        if(res.success) next('/profile');
+        next('/profile');
     }).catch(() => {
         next()
     })

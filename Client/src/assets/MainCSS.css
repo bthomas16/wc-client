@@ -1,3 +1,6 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+
+
 .p0 {
     padding: 0 !important;
 }
@@ -158,6 +161,16 @@
     cursor: pointer;
 }
 
+::-webkit-scrollbar { 
+    display: none; 
+    width: 0 !important;
+    -ms-overflow-style: none;
+}
+
+*:focus {
+    outline: none;
+}
+
 
 /* COLORS */
 
@@ -222,7 +235,7 @@
 }
 
 .bg-lightgray {
-    background-color: rgba(215,215,215,.3);
+    background-color: rgba(255, 231, 231, 0.575);
 }
 
 .white {
@@ -231,6 +244,15 @@
 
 .bg-white {
     background-color: white;
+}
+
+.bg-white-opaque {
+    background-color: rgba(207, 196, 196, 0.2);
+    
+}
+
+.op-full {
+    opacity: 1;
 }
 
 .op-5 {
@@ -267,6 +289,22 @@
 
 .left-align {
     text-align: left;
+}
+
+.right-align {
+    text-align: right;
+}
+
+.oswald {
+    font-family: 'Oswald', sans-serif;
+}
+
+.rubik {
+    font-family: 'Rubik', sans-serif;
+}
+
+.oxygen {
+    font-family: 'Oxygen', sans-serif;
 }
 
 

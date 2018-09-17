@@ -1,124 +1,119 @@
 <template>
     <b-container>
-        <b-row align-h="center">
-            <b-col cols="8" class="mx-auto border-bottom">
-                <b-img :src="selectedWatchObj.selectedWatch.src" fluid></b-img>
+        <!-- <b-row align-h="center" v-if="selectedWatch.src">
+            <b-col cols="8" class="mx-auto pb-3 border-bottom">
+                <b-img :src="selectedWatch.src" fluid></b-img>
             </b-col>
-        </b-row>
+        </b-row> -->
         <b-row align-h="start">
             <b-col class="mt-3" cols="12">
                 <b-row align-v="center">
                     <b-col cols="6">
-                        <h5>Specs:</h5>
+                        <h5 class="m-0 p-0">Specs:</h5>
                     </b-col>
-                    <b-col cols="5" class="border p-2">
-                        <strong>Condition:</strong><span class="brown ml-4"> {{selectedWatchObj.selectedWatch.condition}}/10</span> 
+                    <b-col cols="5" class="border p-2" v-if="!isFeaturedWatch">
+                        <!-- <strong>Condition:</strong><span class="brown ml-4"> {{selectedWatch.condition || 10}}/10</span>  -->
+                    </b-col>
+                    <b-col cols="5" class="nowrap p-2" v-if="isFeaturedWatch">
+                        <a class="brown ml-4 link" href="https://www.ebay.com">Shop {{selectedWatch.name}}</a>
                     </b-col>
                 </b-row>
-                <ul>
-                    <li>
+                <ul class="mt-2">
+                    <li v-if="selectedWatch.brand">
                         <strong>Brand:</strong>
-                        <span> {{selectedWatchObj.selectedWatch.brand}}</span>
+                        <span> {{selectedWatch.brand}}</span>
                     </li>
-                    <li>
+                    <li v-if="selectedWatch.name">
                         <strong>Name:</strong>
-                        <span> {{selectedWatchObj.selectedWatch.name}}</span>
+                        <span> {{selectedWatch.name}}</span>
                     </li>
-                    <li>
+                    <li v-if="selectedWatch.value">
                         <strong>Value:</strong>
-                        <strong class="green">${{selectedWatchObj.selectedWatch.value}}</strong>
+                        <strong class="green">${{selectedWatch.value}}</strong>
                     </li>
-                    <li>
+                    <li v-if="selectedWatch.movementType">
                         <strong>Movement Type:</strong>
-                        <span> {{selectedWatchObj.selectedWatch.movementType}}</span>   
+                        <span> {{selectedWatch.movementType}}</span>   
                     </li>
-                    <li>
+                    <li v-if="selectedWatch.movement">
                         <strong>Movement:</strong>
-                        <span> {{selectedWatchObj.selectedWatch.movement}}</span>   
+                        <span> {{selectedWatch.movement}}</span>   
                     </li>
-                    <li>
+                    <li v-if="selectedWatch.sizeWidth && selectedWatch.sizeHeight">
                         <strong>Size:</strong>
-                        <span> {{selectedWatchObj.selectedWatch.sizeWidth}}mm x {{selectedWatchObj.selectedWatch.sizeHeight}}mm</span>
+                        <span> {{selectedWatch.sizeWidth}}mm x {{selectedWatch.sizeHeight}}mm</span>
                     </li>
-                    <li>
+                    <li v-if="selectedWatch.crystal">
                         <strong>Crystal:</strong>
-                        <span> {{selectedWatchObj.selectedWatch.crystal}}</span>   
+                        <span> {{selectedWatch.crystal}}</span>   
                     </li>
-                    <li>
+                    <li v-if="selectedWatch.isFullKit">
                         <strong>Full Kit:</strong>
-                        <span> {{selectedWatchObj.selectedWatch.isFullKit ? 'Yes' : 'No'}}</span>   
+                        <span> {{selectedWatch.isFullKit ? 'Yes' : 'No'}}</span>   
                     </li>
-                    <li>
+                    <li v-if="selectedWatch.band">
                         <strong>Band:</strong>
-                        <span> {{selectedWatchObj.selectedWatch.band}}</span>   
+                        <span> {{selectedWatch.band}}</span>   
                     </li>
-                    <li>
+                    <li v-if="selectedWatch.model">
                         <strong>Model #:</strong>
-                        <span> {{selectedWatchObj.selectedWatch.model}}</span>
+                        <span> {{selectedWatch.model}}</span>
                     </li>
-                    <li>
+                    <li v-if="selectedWatch.ref">
                         <strong>Ref #:</strong>
-                        <span> {{selectedWatchObj.selectedWatch.ref}}</span>
+                        <span> {{selectedWatch.ref}}</span>
                     </li>
-                    <li>
+                    <li v-if="selectedWatch.accuracy">
                         <strong>Accuracy:</strong>
-                        <span>+/- {{selectedWatchObj.selectedWatch.accuracy}} seconds</span>
+                        <span>+/- {{selectedWatch.accuracy}} seconds</span>
                     </li>
-                    <li>
+                    <li v-if="selectedWatch.forSalePrice">
                         <strong>For Sale Price:</strong>
-                        <span class="green">${{selectedWatchObj.selectedWatch.forSalePrice}}</span>
+                        <span class="green">${{selectedWatch.forSalePrice}}</span>
                     </li>
-                    <li>
+                    <li v-if="selectedWatch.forTradeValue">
                         <strong>For Trade Value:</strong>
-                        <span class="brown">${{selectedWatchObj.selectedWatch.forTradeValue}}</span>
+                        <span class="brown">${{selectedWatch.forTradeValue}}</span>
                     </li>
                 </ul>
-                <h5>{{selectedWatchObj.selectedWatch.descriptionNotes}}</h5>
+                <h5 v-if="selectedWatch.descriptionNotes">{{selectedWatch.descriptionNotes}}</h5>
                 
             </b-col>
-            <b-col v-if="!isEditMode" cols="8" class="border-bottom mx-auto"></b-col>
 
-            <h6 class="lightgray mx-auto mt-2">This section is only visible to you</h6>                        
             
-            <b-col class="mt-3" cols="12">
+            <b-col class="mt-3" cols="12" v-if="isUsersWatch">
+            <h6 class="lightgray mx-auto mt-2">This section is only visible to you</h6>                        
+            <b-col v-if="!isEdit" cols="8" class="border-bottom mx-auto"></b-col>
                 <b-row align-v="center">
                     <b-col cols="6">
                         <h5>Keeping House:</h5>
                     </b-col>
                     <b-col cols="5" class="border p-2">
-                        <strong>Turnaround:</strong><span class="green ml-4"> ${{selectedWatchObj.selectedWatch.lowestOfferAccepting - selectedWatchObj.selectedWatch.acquiredFor}}</span> 
+                        <strong>Turnaround:</strong><span class="green ml-4"> ${{selectedWatch.lowestOfferAccepting - selectedWatch.acquiredFor}}</span> 
                     </b-col>
                 </b-row>
                 <ul>
                     <li>
                         <strong>Acuired For:</strong>
-                        <span class="red"> -${{selectedWatchObj.selectedWatch.acquiredFor}}</span>
+                        <span class="red"> -${{selectedWatch.acquiredFor}}</span>
                     </li>
                     <li>
                         <strong>Lowest Offer Accepting:</strong>
-                        <span class="brown"> ${{selectedWatchObj.selectedWatch.lowestOfferAccepting}}</span>
+                        <span class="brown"> ${{selectedWatch.lowestOfferAccepting}}</span>
                     </li>
                     <li>
                         <strong>Date Acquired:</strong>
-                        <span> {{selectedWatchObj.selectedWatch.dateAcquired}}</span>
+                        <span> {{selectedWatch.dateAcquired}}</span>
                     </li>
                 </ul>
                 <b-form-textarea id="ownerNotes"
                     placeholder="Description Notes"
                     :rows="3"
                     :max-rows="6"
-                    :value="selectedWatchObj.selectedWatch.ownerNotes">
+                    :value="selectedWatch.ownerNotes">
                 </b-form-textarea>
             </b-col>
         </b-row>
-        <div slot="modal-footer" class="w-100">
-            <b-btn size="sm" class="float-right" variant="primary" @click="submitWatch" v-if="selectedWatchObj.isEdit">
-                Submit
-            </b-btn>
-            <b-btn size="sm" class="float-right" variant="primary" v-b-modal.see-more-modal.close v-else>
-                Ok
-            </b-btn>
-        </div>
     </b-container>
 </template>
 
@@ -127,25 +122,17 @@ import axios from 'axios';
 
 export default {
     name: 'seeMoreModal',
-    props: {
-        selectedWatchObj: {}
-    },
+    props: ['selectedWatch', 'isEdit', 'isFeaturedWatch'],
 
     data () {
         return {
-            isEditMode: false
+            isUsersWatch: false
         }
         
     },
     methods: {
 
-        submitWatch() {
-            console.log('will be submitting this watch', this.addWatch)
-            this.isEdit = false;
-            this.$store.dispatch('submitWatch', this.addWatch).then(() => {
-                this.addWatch = {}
-            })
-        }
+        
 
     }
 }

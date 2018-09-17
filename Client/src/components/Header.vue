@@ -1,16 +1,16 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" class="bg-blue">
+  <b-navbar toggleable="lg" type="dalightrk" class="bg-header">
 
   <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
 
-  <b-navbar-brand ><router-link class="brown" :to="getAuth ? '/profile' : '/'">Watch Collection</router-link></b-navbar-brand>
+  <b-navbar-brand><router-link class="white rubik" :to="getAuth ? '/profile' : '/'">Watch Collection</router-link></b-navbar-brand>
 
-  <b-collapse is-nav id="nav_collapse">  
+  <b-collapse is-nav id="nav_collapse" class="rubik">  
 
     <b-navbar-nav class="mt1 white ml-0 ml-md-5">
-        <b-nav-item >My Profile</b-nav-item>
-        <b-nav-item class="ml-0 ml-lg-4">Buy | Sell | Trade</b-nav-item>
+        <b-nav-item v-if="getAuth">My Profile</b-nav-item>
+        <b-nav-item class="ml-0 ml-lg-4 oswlad" v-if="getAuth">Buy | Sell | Trade</b-nav-item>
         <b-nav-item>Discover</b-nav-item>
         <b-nav-item>Watch News</b-nav-item> 
         <b-nav-item @click="logout" class="relative mobile-only" v-if="getAuth">Logout</b-nav-item>     
@@ -38,10 +38,11 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('logout').then(() => {
-        this.$router.push({path: '/'})
+        location.reload();
       })
     }
   },
+  
   computed: {
     getAuth: function() {
       return this.$store.getters.getUserAuthStatus;
@@ -54,8 +55,17 @@ export default {
 
 <style>
 
+.bg-header {
+  background-color: rgba(86, 163, 166, .85)
+}
+
 li a {
   color: white;
+}
+
+li a:hover, .navbar-brand:hover {
+  color: white;
+  text-decoration: underline
 }
 
 .absolute {
@@ -77,7 +87,10 @@ li a {
 
 .navbar-dark .navbar-nav .nav-link {
   color:white;
-  
+}
+
+li.nav-item a {
+  font-family: 'Rubik';
 }
 
 #ads .img-fluid {

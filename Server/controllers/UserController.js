@@ -12,7 +12,7 @@ const VerifyToken = require('../middleware/VerifyToken');
 
 
 router.post('/register', async (req, res) => 
-{
+{                              
   if(!req.body)  res.json({isSuccess: false, message: 'Please send a valid form'});
   let validForm = User.ValidRegisterFormData(req.body, res);
   if(validForm)
@@ -23,7 +23,7 @@ router.post('/login', async (req, res) =>
 {
   let valid = User.ValidLoginFormData(req.body, res);
   if(valid) {
-    User.CompareHashedAndSetJwt(req.body, res);   
+    User.CompareHashedAndLogin(req.body, res);   
   }
 });
 
@@ -43,6 +43,11 @@ router.get('/profile', VerifyToken, async (req, res) =>
     res.json({isSuccess: false, message: 'User is not valid'})  
   }
 });
+
+router.get('/isDuplicateEmail/?:email', (req, res) => 
+{
+  console.log('hit', req.params.email)
+})
 
 
 

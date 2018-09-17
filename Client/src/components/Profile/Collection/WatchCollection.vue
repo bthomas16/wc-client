@@ -39,10 +39,6 @@ import axios from 'axios';
 
 export default {
     name: 'watchCollection',
-    props: {
-        Collection: {},
-        currentWatchCardSize: 12
-    },
 
     data () {
         return {
@@ -64,7 +60,12 @@ export default {
                 this.addWatch = {}
             })
         }
+    },
 
+    computed: {
+        Collection() {
+            return this.$store.state.Collection
+        }
     }
 }
 </script>

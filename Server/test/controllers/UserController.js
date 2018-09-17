@@ -3,7 +3,7 @@
 const chai = require('chai');
 const expect = require('chai').expect;
 const assert = require('chai').assert;
-const knex = require('../../config/db.js');
+const knex = require('../../config/db');
 
 chai.use(require('chai-http'));
 
@@ -200,7 +200,7 @@ describe('User Authentication - API', function() {
                         expect(res).to.be.json;
                         expect(res.body).to.be.an('object');
                         assert.equal(res.body.isSuccess, true, 'success should be true');
-                        assert.equal(res.body.message, 'Successfully logged in', 'Successful login');
+                        assert.equal(res.body.message, 'Successfully Registered', 'Successful account registration');
                     });
             });
         

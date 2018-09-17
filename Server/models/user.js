@@ -27,7 +27,7 @@ const User = module.exports = function () {
                 if(duplicate)
                 {
                     console.log('found duplicate', duplicate.email, tempEmail)
-                    res.json({isSuccess: false, message: 'An account with this email already exists'})
+                    res.json({isSuccess: false, message: 'An account with this email already exists'});
                 }
                 else 
                 {
@@ -42,26 +42,37 @@ const User = module.exports = function () {
             bcrypt.hash(formData.password, salt, (err, hash) => {
                 if(err) res.json({isSuccess: false, message: err});
                 password = hash;
-                SaveUserToDB(formData, password)
-                .then(() => {
-                    CompareHashedAndSetJwt(formData, res);
-                })
+                SaveUserToDB(formData, password, res);
             })
         })   
     }
 
-    function SaveUserToDB(formData, hashPassword) 
+    function SaveUserToDB(formData, hashPassword, res) 
     {
-        let tempEmail = formData.email.toLowerCase();
-        return knex.insert
+       let tempEmail = formData.email.toLowerCase();
+       knex.insert
         ({
             firstName: formData.firstName,
             lastName: formData.lastName,
             email: tempEmail,
             password: hashPassword
         })
-        .into('peeps');
+        .into('peeps')
+        .then(() => {
+            console.log('user was saved')
+            let user = {
+                email: formData.email,
+                password: formData.password
+            }
+            let token = SetJwtToken(user);
+            res.json({isSuccess: true, message: 'Successfully Registered', token})
+        }).catch(err => {
+            console.log(err)
+        })
     }
+
+
+
 
     // LOGIN LOGIN LOGIN LOGIN
 
@@ -75,7 +86,7 @@ const User = module.exports = function () {
         }
     }
 
-    const CompareHashedAndSetJwt = function(formData, res) 
+    const CompareHashedAndLogin = function(formData, res) 
     {
         let tempEmail = formData.email.toLowerCase();
         return knex('peeps')
@@ -123,8 +134,6 @@ const User = module.exports = function () {
 
     // END LOGIN
 
-
-
    function FindUser(id, res)
    {
        console.log('finding user by id', id)
@@ -148,13 +157,13 @@ const User = module.exports = function () {
 
     return {
         // REGISTER
-        CheckDuplicatesHashAndSaveUser,
         ValidRegisterFormData,
+        CheckDuplicatesHashAndSaveUser,
         SaveUserToDB,
 
         // LOGIN
         ValidLoginFormData,
-        CompareHashedAndSetJwt,
+        CompareHashedAndLogin,
 
         FindUser
     }

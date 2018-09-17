@@ -1,89 +1,81 @@
 <template>
     <b-container>
-        <b-row no-gutters>            
-            <b-col cols="12" lg="8" class="mx-auto" align-h="center">
-                <b-alert show v-bind:variant="responseStyle" v-if="showAlert">{{responseMessage}}</b-alert>
-                <b-form @submit="submit">
+        <b-row>            
+            <b-col cols="12" md="10" xl="8" class="mx-auto" align-h="center">
+                <b-form @submit.prevent="submit">
                     <b-card-group deck>
-                        <b-card img-src="https://i.redd.it/eghuai7i83ez.jpg"
+                        <b-card
+                        img-src="https://blog.propertyroom.com/wp-content/uploads/2015/07/Watch-Collect.jpg"
                                 img-alt="Card image"
-                                v-if="card == 1"
-                                class="m-0"
+                                
+                                class="m-0 relative"
                                 >
-                            <div class="card-text mx-auto">
-                                <h4>Begin Organizing your collection here!</h4>
+                            <div class="card-text mx-auto"> 
+                                <h4>Register to manage your collection!</h4>
+                                <b-alert show v-bind:variant="responseStyle" v-if="showAlert">{{responseMessage}}</b-alert> 
                                 <b-form-group id="credentials"
+                                    v-if="card == 1"
                                     description="We'll never share your email with anyone else.">
                                     <b-form-input id="email"
                                                 type="email"
                                                 v-model="form.email"
                                                 required
+                                                autocomplete="off"
                                                 pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                                                placeholder="Enter your email"
-                                                @input="validateEmail(form.email)">
+                                                placeholder="Start with an email"
+                                                @input="validateEmail(form.email)"
+                                                >
                                     </b-form-input>
                                     <b-form-input id="password"
                                                 type="password"
                                                 v-model="form.password"
                                                 required
+                                                autocomplete="off"
                                                 placeholder="Create a password"
                                                 class="mt2"
                                                 v-if="showPassword"
                                                 @input="validatePassword(form.password)">
                                     </b-form-input>
                                 </b-form-group>
-                                <h6 class="red thin h7">{{errMsg}}</h6>
-                                <b-button variant="success" @click="card=2" :disabled="form.password.length <= 4">Continue</b-button>
-                            </div>
-                        </b-card>
-                        <b-card img-src="https://i.ytimg.com/vi/hWEd4ImKHT0/maxresdefault.jpg"
-                                img-alt="Card image"
-                                v-if="card == 2"
-                                >
-                            <div class="card-text mx-auto" >
                                 <b-form-group id="names"
+                                    v-if="card == 2"
                                     label-for="First Name">
                                     <label for="firstName">First Name:</label>
                                     <b-form-input id="firstName"
-                                                type="email"
+                                                type="text"
                                                 v-model="form.firstName"
                                                 required
+                                                autocomplete="off"
                                                 label="First Name:"
                                                 placeholder="First Name">
                                     </b-form-input>
                                     <label class="mt2" for="firstName">Last Name:</label>
                                     <b-form-input id="password"
-                                                type="password"
+                                                type="text"
                                                 v-model="form.lastName"
                                                 required
+                                                autocomplete="off"
                                                 placeholder="Last Name"
                                                 label="Last Name:"
                                                 >
                                     </b-form-input>
                                 </b-form-group>
-                                <b-button variant="success" :disabled="!form.firstName || !form.lastName" type="submit">Finish</b-button>
+                                <h6 class="red thin h7">{{errMsg}}</h6>
+                                <b-row align-v="center">
+                                    <b-col cols="4">
+                                        <b-button variant="success" @click="card=2" :disabled="form.password.length <= 4" v-if="card == 1">Continue</b-button>
+                                        <b-button variant="success" :disabled="!form.firstName || !form.lastName" type="submit" v-if="card == 2">Finish</b-button>
+                                    </b-col>
+                                    <b-col cols="8" class="right-align">
+                                        <p class="h7 m-1 ">Alread have an account? <span class="link nowrap" @click="toggleAuthChild">Login Here</span></p>
+                                    </b-col>
+                                </b-row>
                             </div>
                         </b-card>
                     </b-card-group>
                 </b-form>
             </b-col>
         </b-row>
-        
-
-
-     
-        
-         
-             <!--
-            <b-row align-v="center">
-                <b-col>
-                    <b-button type="submit" variant="primary">Submit</b-button>
-                </b-col>
-                <b-col>
-                    <p sm="9" class="mt2 h6">Already have an account? <span class="link" @click="toggleAuthChild">Login Here</span></p>
-                </b-col>
-            </b-row> -->
-
     </b-container>
 </template>
 
@@ -111,27 +103,35 @@
     methods: {
         submit () 
         {
+            
+            console.log('submitting', this.form);
             this.showAlert = false;
             this.form.email.toLowerCase();
-            this.$store.dispatch('register', this.form).then(res => {
-                if(res.isSuccess) this.$router.push({path: '/profile'})
+            this.$store.dispatch('register', this.form)
+            .then(res => {
+                console.log('good', res)
+                if(res.isSuccess) this.$router.push({path: '/profile'});
                 else {
                     this.showAlert = true;
                     this.responseMessage = res.message;
                     this.responseStyle = 'danger';
                 }
             }).catch(err => {
+                console.log('bad', res)
+                
                 this.showAlert = true;
                 this.responseMessage = err.message;
                 this.responseStyle = 'danger';
             })
         },
+
         toggleAuthChild ()
         {
             this.$emit('toggleAuthView')
         },
 
-        validateEmail(email) {
+        validateEmail(email) 
+        {
             var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             if(re.test(email)) {
                 this.showPassword = true;
@@ -144,7 +144,8 @@
             }
         },
 
-        validatePassword(password) {
+        validatePassword(password) 
+        {
             if(password.length <= 4) 
             {
                 this.errMsg = 'Password must be more than 4 characters';
@@ -156,9 +157,18 @@
             }
         },
 
-        validateNames(first, last) {
+        validateNames(first, last) 
+        {
             if(first.length && last.length) return true;
             else return false;
+        },
+
+        isDuplicateEmail(email)
+        {
+            console.log('should check', email)
+            axios.get('/api/user/isDuplicateEmail?email=' + email).then(res => {
+                console.log(res)
+            })
         }
     }
 }

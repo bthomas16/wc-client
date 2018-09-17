@@ -31,7 +31,7 @@ const state =
     jwt: '',
     User: {},
     Collection: {},
-    userLoadStatus: 'not-loaded',
+    isUserLoaded: false,
     selectedWatch: {}
 }
 
@@ -45,13 +45,13 @@ const mutations =
         state.isLoading = true;
     },
 
-    [AUTH_SUCCESS] (state, user) 
+    [AUTH_SUCCESS] (state, data) 
     {
-        state.User = user;        
+        state.User = data.user;        
         state.jwt = localStorage.getItem('watchJwt');
         state.isAuthorized = true;
         state.isLoading = false;
-        state.userLoadStatus = 'loaded';
+        state.isUserLoaded = true;
     },
 
     [AUTH_FAILURE] (state) 
@@ -71,7 +71,7 @@ const mutations =
         state.User = user;
         state.isAuthorized = true;
         state.jwt = localStorage.getItem('watchJwt');
-        state.userloadStatus = 'loaded';
+        state.isUserLoaded = true;
     },
 
     [VALIDATE_JWT](state) {
@@ -112,7 +112,7 @@ const actions =
                 .then(res => {
                     if(res.data.isSuccess)
                     {
-                        console.log(res.data)
+                        console.log('loginnnnn', res.data, res.data.userStore) 
                         localStorage.setItem('watchJwt', res.data.token);
                         context.commit(AUTH_SUCCESS, res.data);
                         resolve(res.data)
@@ -155,7 +155,7 @@ const actions =
 
     logout(context) 
     {   
-        localStorage.removeItem("watchJwt");
+        localStorage.removeItem('watchJwt');
         context.commit(LOGOUT);
     },
 
@@ -244,6 +244,10 @@ const getters =
     getCollection(state) {
         return state.Collection;
     },
+
+    getUser(state) {
+        return state.User;
+    }
 }
 
 

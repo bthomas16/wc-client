@@ -1,7 +1,10 @@
 <template>
   <b-container fluid >
-    <app-header> </app-header>
-    <router-view></router-view>
+    <app-header></app-header>
+    <transition name="slide">
+      <router-view :key="$route.fullPath"></router-view>
+    </transition>
+      
   </b-container> 
 </template>
 
@@ -17,8 +20,5 @@ import Header from './components/Header.vue'
 </script>
 
 <style>
-body .overflow-hidden {
-    overflow-y: hidden;
-}
 
 </style>

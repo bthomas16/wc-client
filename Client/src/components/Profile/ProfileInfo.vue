@@ -5,8 +5,9 @@
                 <b-img :src="profPic" fluid style="height: auto; max-height: 125px;" class="profPic mx-auto" rounded="circle"></b-img>
             </b-col>
             <b-col cols="7" sm="7" md="12" class="left mx-auto p-0 pl-2 mt-2" >
-                <p class="p-0 my-1 ml-1 h4 bold">{{User.firstName}} {{User.lastName}}</p>
-                <b-col class="p-0 my-1 ml-1 h4">Rating</b-col>              
+                <!-- {{state}} -->
+                <p class="p-0 my-1 ml-1 h5 bold">{{User.firstName}} {{User.lastName}}</p>
+                <!-- <b-col class="p-0 my-1 ml-1 h4">Rating</b-col>               -->
                 <p class="p-0 my-1 mt-2 ml-1 m-h5 h7"><strong>(4)</strong> Watches for Trade</p>
                 <p class="p-0 my-1 ml-1 m-h5 h7"><strong>(19)</strong> Trades</p>
                 <p class="p-0 my-1 ml-1 m-h5 h7"><strong>(16)</strong> Watches for Sale</p>
@@ -19,28 +20,24 @@
 <script>
     import axios from 'axios';
     export default {
-    props: {
-        User: 
-        {
-            firstName: String,
-            lastName: String,
-            email: String,
-            profPic: String,
-            required: true
-        }
-    },
     data () {
         return {
-            profPic: "http://www.bistiproofpage.com/wp-content/uploads/2018/04/cute-profile-pics-for-whatsapp-images.png"
+            profPic: "http://www.bistiproofpage.com/wp-content/uploads/2018/04/cute-profile-pics-for-whatsapp-images.png",
+            state: this.$store.state
         }
     },
     methods: {
         
+    },
+    computed: {
+        User() {
+            return this.$store.getters.getUser
+        }
     }
 }
 </script>
 
-<style>
+<style scoped>
 
 .profPic {
     border: 3px solid green;
@@ -50,6 +47,7 @@
     .profPic {
         height:140px;
     }
+
 }
   
 </style>

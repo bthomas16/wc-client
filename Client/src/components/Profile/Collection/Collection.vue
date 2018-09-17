@@ -7,7 +7,7 @@
             <b-col>
                 <b-row class="my-3 mx-auto center m-left-align" align-v="center" align-h="center">
                     <b-col cols="12" md="5" class="p-0 m-0">
-                        <h3>Justin Bieber's Collection</h3>
+                        <h3>{{User.firstName}}'s Collection</h3>
                     </b-col>
                     <b-col cols="12" md="7" class="p-0 m-0">
                         <b-row>
@@ -42,7 +42,7 @@
                                 <b-button id="manage" variant="primary" block>Manage</b-button>
                             </b-col>
                             <b-col lg="6" cols="12" class="mt-2 mt-lg-0">
-                                <b-button id="manage" variant="success" @click="addWatch" size="sm" block>+ Watch</b-button>
+                                <b-button id="manage" variant="success" @click="addWatchModal" size="sm" block>+ Watch</b-button>
                             </b-col>
                         </b-row>
                     </b-col>
@@ -81,7 +81,7 @@
 
                 <!-- LOOP THROUGH WATCHES -->
 
-                <watch-collection :collection="Collection" @selectWatch="selectWatch"></watch-collection>
+                <watch-collection @selectWatch="selectWatch"></watch-collection>
 
             </b-col>
         </b-row>
@@ -94,8 +94,7 @@
                 <h5 class="mt-5">Let's get you started by adding a few watches to your collection</h5>
                 <b-row>
                     <b-col cols="6" class="mx-auto my-3">
-                            <b-button variant="success" class="my-2" size="lg" v-b-modal.add-watch-modal block>Okay!</b-button>
-                            <b-button variant="warning" class="my-3" size="sm" v-b-modal.add-watch-modal block>Do I have to?</b-button>
+                        <b-button variant="success" class="my-2" size="lg" v-b-modal.add-watch-modal block>Okay!</b-button>
                     </b-col>
                 </b-row>
             </b-col>
@@ -107,15 +106,42 @@
             ref="seeMoreModal" 
             id="see-more-modal"
             :title="selectedWatch.name">
-            <see-more-modal :selectedWatchObj="getSelectedWatchObj"></see-more-modal>
+            <div slot="modal-header-close" class="w-100" @click="cancelAddWatchForm">
+                X
+            </div>
+            <see-more-modal :selectedWatch="selectedWatch" :isEdit="isEdit"></see-more-modal>
+            <div slot="modal-footer" class="w-100">
+            <b-btn size="sm" class="float-right" variant="primary" @click="submitWatch" v-if="isEdit">
+                Submit
+            </b-btn>
+            <b-btn size="sm" class="float-right" variant="primary" v-b-modal.see-more-modal.close v-else>
+                Ok
+            </b-btn>
+        </div>
         </b-modal>
         
         <!-- ADD WATCH MODAL -->
-        
         <b-modal 
             id="add-watch-modal"
             ref="addWatchModal">
-            <add-watch-modal @previewWatch="previewWatch"></add-watch-modal>
+            <div slot="modal-header-close" class="w-100" @click="cancelAddWatchForm">
+                X
+            </div>
+            <add-watch-modal @click="previewWatch" :addWatchCount="addWatchCount" :addWatch="addWatch"></add-watch-modal>
+            <div slot="modal-footer">
+                <b-btn size="lg" class="float-right" :class="addWatchCount == 1 ? '' : 'hidden'" variant="primary" @click="addWatchCount++">
+                    Add Specs
+                </b-btn>
+                <b-button size="lg" variant="info" @click="addWatchCount++" :class="addWatchCount == 2 ? 'float-right' : 'hidden'">
+                    Continue Specs
+                </b-button>
+                <b-btn size="lg" class="float-right" :class="addWatchCount == 3 ? '' : 'hidden'" variant="primary" @click="addWatchCount++">
+                    Add Owner Details
+                </b-btn>
+                <b-btn size="lg" class="float-right" :class="addWatchCount == 4 ? '' : 'hidden'" variant="primary" @click="previewWatch">
+                    Preview
+                </b-btn>
+            </div>
         </b-modal>
     
     </b-container>
@@ -137,15 +163,17 @@ export default {
         return {
             filterBy: "Recently Added",
             showDismissibleAlert: false,
-            isEditMode: false,
+            isEdit: false,
             selectedWatch: {},
             isSeeMore: false,
-            isEdit: false,
-            isManagingCollection: false
+            isManagingCollection: false,
+            userName: this.$store.state.User.firstName,
+            addWatchCount: 1,
+            addWatch: {},
+            isFeaturedWatch: false
         }
     },
 
-    props: ['userName'],
 
     methods: {
         selectWatch(watch) {
@@ -154,21 +182,30 @@ export default {
             this.$refs.seeMoreModal.show();
         },
 
-        addWatch() {
+        addWatchModal() {
             this.$refs.addWatchModal.show();
-        } ,
-        
-        previewWatch(addWatch) {
-            this.selectedWatch = addWatch;
-            this.isEdit = true;
-            let seeMoreModalObj = 
-            {
-                selectedWatch: this.selectedWatch,
-                isEdit: this.isEdit
+        },
 
-            }
+        cancelAddWatchForm() {
+            this.$refs.addWatchModal.hide();
+            this.$refs.seeMoreModal.hide();
+            this.addWatch = {};
+            this.addWatchCount = 1;
+        },
+        
+        previewWatch() {
+            this.selectedWatch = this.addWatch;
+            this.isEdit = true;
             this.$refs.addWatchModal.hide(); 
             this.$refs.seeMoreModal.show();
+        },
+
+        submitWatch() {
+            this.isEdit = false;
+            this.$refs.seeMoreModal.hide();
+            this.$store.dispatch('submitWatch', this.addWatch).then(() => {
+                this.addWatch = {}
+            })
         }
     },
 
@@ -187,16 +224,11 @@ export default {
             return this.$store.getters.getCollection
         },
 
-        getSelectedWatchObj() {
-            return {
-                selectedWatch: this.selectedWatch,
-                isEdit: false
-            }
+        User(){
+           return this.$store.state.User
         }
     },
 
-
-    
 
     created: function() {
         this.$store.dispatch('loadUserCollection');

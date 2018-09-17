@@ -1,6 +1,6 @@
 <template>
     <b-container class="mt3">
-        <b-alert show v-bind:variant="responseStyle">{{responseMessage}}</b-alert>
+        <b-alert v-if="showAlert" v-bind:variant="responseStyle">{{responseMessage}}</b-alert>
         <b-form @submit.prevent="onSubmit">
             <b-form-group id="exampleInputGroup1"
                             label="Email address:"
@@ -54,8 +54,9 @@
     methods: {
         onSubmit () 
         {
+            console.log('submitting', this.form)
             this.$store.dispatch('login', this.form).then(res => {
-                    this.$router.push({ path: '/profile'  }) 
+                    this.$router.push({ path: '/profile'}) 
                 }).catch(err => {
                     console.log(err)
                     this.showAlert = true;

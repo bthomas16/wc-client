@@ -1,5 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
+const GoogleFontsPlugin = require("google-fonts-webpack-plugin")
 
 module.exports = {
   entry: './src/main.js',
@@ -83,6 +84,17 @@ module.exports = {
   performance: {
     hints: false
   },
+  plugins: [
+		new GoogleFontsPlugin({
+			fonts: [
+				{ family: "Source Sans Pro" },
+        { family: "Rubik"},
+				{ family: "Poppins"}
+        
+			]
+			/* ...options */
+		})
+	],
   devtool: '#eval-source-map'
 }
 
