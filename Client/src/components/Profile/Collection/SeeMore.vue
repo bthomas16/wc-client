@@ -1,20 +1,20 @@
 <template>
     <b-container>
-        <!-- <b-row align-h="center" v-if="selectedWatch.src">
+        <b-row align-h="center" v-if="selectedWatch.src">
             <b-col cols="8" class="mx-auto pb-3 border-bottom">
                 <b-img :src="selectedWatch.src" fluid></b-img>
             </b-col>
-        </b-row> -->
+        </b-row>
         <b-row align-h="start">
             <b-col class="mt-3" cols="12">
                 <b-row align-v="center">
                     <b-col cols="6">
                         <h5 class="m-0 p-0">Specs:</h5>
                     </b-col>
-                    <b-col cols="5" class="border p-2" v-if="!isFeaturedWatch">
-                        <!-- <strong>Condition:</strong><span class="brown ml-4"> {{selectedWatch.condition || 10}}/10</span>  -->
+                    <b-col cols="5" class="border p-2" v-if="!selectedWatch.isFeaturedWatch">
+                        <strong>Condition:</strong><span class="brown ml-4"> {{selectedWatch.condition || 10}}/10</span> 
                     </b-col>
-                    <b-col cols="5" class="nowrap p-2" v-if="isFeaturedWatch">
+                    <b-col cols="5" class="nowrap p-2" v-if="selectedWatch.isFeaturedWatch">
                         <a class="brown ml-4 link" href="https://www.ebay.com">Shop {{selectedWatch.name}}</a>
                     </b-col>
                 </b-row>
@@ -122,7 +122,7 @@ import axios from 'axios';
 
 export default {
     name: 'seeMoreModal',
-    props: ['selectedWatch', 'isEdit', 'isFeaturedWatch'],
+    props: ['selectedWatch', 'isEdit'],
 
     data () {
         return {

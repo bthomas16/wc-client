@@ -111,13 +111,13 @@
             </div>
             <see-more-modal :selectedWatch="selectedWatch" :isEdit="isEdit"></see-more-modal>
             <div slot="modal-footer" class="w-100">
-            <b-btn size="sm" class="float-right" variant="primary" @click="submitWatch" v-if="isEdit">
-                Submit
-            </b-btn>
-            <b-btn size="sm" class="float-right" variant="primary" v-b-modal.see-more-modal.close v-else>
-                Ok
-            </b-btn>
-        </div>
+                <b-btn size="sm" class="float-right" variant="primary" @click="submitWatch" v-if="isEdit">
+                    Submit
+                </b-btn>
+                <b-btn size="sm" class="float-right" variant="primary" v-b-modal.see-more-modal.close v-else>
+                    Ok
+                </b-btn>
+            </div>
         </b-modal>
         
         <!-- ADD WATCH MODAL -->
@@ -167,7 +167,6 @@ export default {
             selectedWatch: {},
             isSeeMore: false,
             isManagingCollection: false,
-            userName: this.$store.state.User.firstName,
             addWatchCount: 1,
             addWatch: {},
             isFeaturedWatch: false

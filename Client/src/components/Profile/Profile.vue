@@ -1,16 +1,16 @@
 <template>
-    <b-container ref="profileRef">
-       <b-row>
+    <b-container ref="profileRef" v-if="isUserLoaded">
+       <b-row >
             <b-col lg="2" md="3" cols="12" class="border bg-lightgray">
                <app-profile-info></app-profile-info>
-               <b-row class="d-none d-md-block"  v-if="isUserLoaded">
+               <b-row class="d-none d-md-block">
                     <b-col class="mx-auto" cols="12"><app-sidebar></app-sidebar></b-col>
                </b-row>
-               <b-row class="d-none d-md-block mt-50"  v-if="isUserLoaded">
+               <b-row class="d-none d-md-block mt-50">
                     <b-col class="mx-auto" cols="12"><app-sidebar></app-sidebar></b-col>
                </b-row>
             </b-col>
-            <b-col lg="10" md="9" cols="12"  v-if="isUserLoaded">
+            <b-col lg="10" md="9" cols="12">
                 <app-collection></app-collection>
             </b-col>
        </b-row>
@@ -26,6 +26,7 @@ import ProfileInfo from './ProfileInfo.vue';
 import Collection from './Collection/Collection.vue';
 import Sidebar from './Sidebar.vue';
 import Feed from './Feed/Feed.vue';
+import store from '../../State/store';
 
 
 export default {
@@ -43,11 +44,20 @@ export default {
         }
     },
 
-    created: function () {
-            console.log('creating isloaded', this.$store.state.isUserLoaded)
-        
+    created: function() {
         this.$store.dispatch('user');
     }
+
+    // beforeRouteEnter(to, from, next) {    
+    //     console.log('before entering', store.getters.getUserLoadStatus)    
+        
+    //     store.dispatch('user').then(() => {
+    //         console.log('after entering', store.getters.getUserLoadStatus) 
+    //         next()
+    //     }).catch(() => {
+    //         next('/')
+    //     })
+    // }
 }
 </script>
 

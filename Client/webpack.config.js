@@ -87,10 +87,8 @@ module.exports = {
   plugins: [
 		new GoogleFontsPlugin({
 			fonts: [
-				{ family: "Source Sans Pro" },
         { family: "Rubik"},
 				{ family: "Poppins"}
-        
 			]
 			/* ...options */
 		})

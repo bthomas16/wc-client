@@ -3,17 +3,17 @@ exports.up = function(knex, Promise) {
     return knex.schema.createTable('watch', (table) => {
         table.increments('id').primary();
         table.integer('user_id').references('id').inTable('peeps');
-        table.string('src')
-        table.string('name')
-        table.integer('acquiredFor')
-        table.boolean('isForSale')
-        table.boolean('isForTrade')
+        table.string('src');
+        table.string('name').notNullable();
+        table.integer('acquiredFor');
+        table.boolean('isForSale');
+        table.boolean('isForTrade');
         table.integer('lowestOfferAccepting');
-        table.integer('sizeWidth')
-        table.integer('sizeHeight')
-        table.integer('sizeLugToLug')
-        table.string('movementType')
-        table.integer('value')
+        table.integer('sizeWidth');
+        table.integer('sizeHeight');
+        table.integer('sizeLugToLug');
+        table.string('movementType');
+        table.integer('value');
         table.integer('yearOfManufacture');
         table.string('brand');
         table.string('ref');

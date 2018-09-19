@@ -136,13 +136,11 @@ const User = module.exports = function () {
 
    function FindUser(id, res)
    {
-       console.log('finding user by id', id)
         knex('peeps').where(
             'id', id
             )
             .first().then(function(user)
             {
-                console.log('read me pls', user)
                 let userStore = 
                 {
                     firstName: user.firstName,
@@ -150,7 +148,7 @@ const User = module.exports = function () {
                     email: user.email
                 }
                 console.log('found user', userStore)
-                res.json({isSuccess: true, message: 'User is valid', userStore})
+                res.status(200).json({isSuccess: true, message: 'User is valid', userStore})
             }
         )
     } 

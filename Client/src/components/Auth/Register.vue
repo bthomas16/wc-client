@@ -3,76 +3,74 @@
         <b-row>            
             <b-col cols="12" md="10" xl="8" class="mx-auto" align-h="center">
                 <b-form @submit.prevent="submit">
-                    <b-card-group deck>
-                        <b-card
-                        img-src="https://blog.propertyroom.com/wp-content/uploads/2015/07/Watch-Collect.jpg"
-                                img-alt="Card image"
-                                
-                                class="m-0 relative"
-                                >
-                            <div class="card-text mx-auto"> 
-                                <h4>Register to manage your collection!</h4>
-                                <b-alert show v-bind:variant="responseStyle" v-if="showAlert">{{responseMessage}}</b-alert> 
-                                <b-form-group id="credentials"
-                                    v-if="card == 1"
-                                    description="We'll never share your email with anyone else.">
-                                    <b-form-input id="email"
-                                                type="email"
-                                                v-model="form.email"
-                                                required
-                                                autocomplete="off"
-                                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                                                placeholder="Start with an email"
-                                                @input="validateEmail(form.email)"
-                                                >
-                                    </b-form-input>
-                                    <b-form-input id="password"
-                                                type="password"
-                                                v-model="form.password"
-                                                required
-                                                autocomplete="off"
-                                                placeholder="Create a password"
-                                                class="mt2"
-                                                v-if="showPassword"
-                                                @input="validatePassword(form.password)">
-                                    </b-form-input>
-                                </b-form-group>
-                                <b-form-group id="names"
-                                    v-if="card == 2"
-                                    label-for="First Name">
-                                    <label for="firstName">First Name:</label>
-                                    <b-form-input id="firstName"
-                                                type="text"
-                                                v-model="form.firstName"
-                                                required
-                                                autocomplete="off"
-                                                label="First Name:"
-                                                placeholder="First Name">
-                                    </b-form-input>
-                                    <label class="mt2" for="firstName">Last Name:</label>
-                                    <b-form-input id="password"
-                                                type="text"
-                                                v-model="form.lastName"
-                                                required
-                                                autocomplete="off"
-                                                placeholder="Last Name"
-                                                label="Last Name:"
-                                                >
-                                    </b-form-input>
-                                </b-form-group>
-                                <h6 class="red thin h7">{{errMsg}}</h6>
-                                <b-row align-v="center">
-                                    <b-col cols="4">
-                                        <b-button variant="success" @click="card=2" :disabled="form.password.length <= 4" v-if="card == 1">Continue</b-button>
-                                        <b-button variant="success" :disabled="!form.firstName || !form.lastName" type="submit" v-if="card == 2">Finish</b-button>
-                                    </b-col>
-                                    <b-col cols="8" class="right-align">
-                                        <p class="h7 m-1 ">Alread have an account? <span class="link nowrap" @click="toggleAuthChild">Login Here</span></p>
-                                    </b-col>
-                                </b-row>
-                            </div>
-                        </b-card>
-                    </b-card-group>
+                    <b-card
+                    img-src="https://blog.propertyroom.com/wp-content/uploads/2015/07/Watch-Collect.jpg"
+                            img-alt="Card image"
+                            
+                            class="m-0 relative"
+                            >
+                        <div class="card-text mx-auto"> 
+                            <h4>Register to manage your collection!</h4>
+                            <b-alert show v-bind:variant="responseStyle" v-if="showAlert">{{responseMessage}}</b-alert> 
+                            <b-form-group id="credentials"
+                                v-if="card == 1"
+                                description="We'll never share your email with anyone else.">
+                                <b-form-input id="email"
+                                            type="email"
+                                            v-model="form.email"
+                                            required
+                                            autocomplete="off"
+                                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                                            placeholder="Start with an email"
+                                            @input="validateEmail(form.email)"
+                                            >
+                                </b-form-input>
+                                <b-form-input id="password"
+                                            type="password"
+                                            v-model="form.password"
+                                            required
+                                            autocomplete="off"
+                                            placeholder="Create a password"
+                                            class="mt2"
+                                            v-if="showPassword"
+                                            @input="validatePassword(form.password)">
+                                </b-form-input>
+                            </b-form-group>
+                            <b-form-group id="names"
+                                v-if="card == 2"
+                                label-for="First Name">
+                                <label for="firstName">First Name:</label>
+                                <b-form-input id="firstName"
+                                            type="text"
+                                            v-model="form.firstName"
+                                            required
+                                            autocomplete="off"
+                                            label="First Name:"
+                                            placeholder="First Name">
+                                </b-form-input>
+                                <label class="mt2" for="firstName">Last Name:</label>
+                                <b-form-input id="password"
+                                            type="text"
+                                            v-model="form.lastName"
+                                            required
+                                            autocomplete="off"
+                                            placeholder="Last Name"
+                                            label="Last Name:"
+                                            >
+                                </b-form-input>
+                            </b-form-group>
+                            <h6 class="red thin h7">{{errMsg}}</h6>
+                            <b-row align-v="center">
+                                <b-col cols="4">
+                                    <b-button variant="success" @click="card=2" :disabled="form.password.length <= 4" v-if="card == 1">Continue</b-button>
+                                    <b-button variant="success" :disabled="!form.firstName || !form.lastName" type="submit" v-if="card == 2">Finish</b-button>
+                                </b-col>
+                                <b-col cols="8" class="right-align">
+                                    <p class="h7 m-1 ">Alread have an account? <span class="link nowrap" @click="toggleAuthChild">Login Here</span></p>
+                                </b-col>
+                            </b-row>
+                        </div>
+                    </b-card>
                 </b-form>
             </b-col>
         </b-row>

@@ -8,28 +8,45 @@ export const routes = [
         path: '', 
         name: 'home',
         component: Home,
-        beforeEnter: dissallowAuth    
+        // beforeEnter: dissallowAuth    
     },
     { 
         path: '/profile',
         name: 'profile',
         component: Profile,
-        beforeEnter: requireAuth    
+        // beforeEnter: requireAuth    
     }
 ];
 
 function dissallowAuth(to, from, next) {
-    store.dispatch('validateJwt').then(res => {
-        next('/profile');
-    }).catch(() => {
-        next()
+    console.log('dissallow')
+    let jwt = localStorage.getItem('watchJwt');
+    if(!jwt) next();
+    else {
+        console.log(jwt, 'going next')
+        store.dispatch('validateJwt').then(res => {
+            if(res.isSuccess) next('/profile');
+            else next();
+        }).catch((err) => {
+            console.log('caught err:', err)
+            next();
     })
 }
 
-function requireAuth(to, from, next) {
-    store.dispatch('validateJwt').then(res => {
-        next();
-    }).catch(() => {
-        next('/')
-    })
+}
+
+function requireAuth(to, from, next) { 
+    console.log('allow')
+    let jwt = localStorage.getItem('watchJwt');
+    if(jwt) 
+    {
+        store.dispatch('validateJwt').then(res => {
+            if(res.isSuccess) next();
+            else next('/');
+        }).catch(() => {
+            next('/')
+        })
+    }
+    else next('/');
+
 }

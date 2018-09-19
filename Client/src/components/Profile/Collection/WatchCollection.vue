@@ -1,8 +1,8 @@
 <template>
     <b-container fluid>
         <b-row id="watchRow" align-h="start" class="mt-4">
-            <b-col cols="3" md="4" class="watch border p-2 pt-0 mx-1" v-for="(watch) in Collection" :key="watch.id">
-                <b-row align-v="start" align-h="center" no-gutters>
+            <b-col cols="3" md="3" class="watch border p-2 pt-0" v-for="(watch) in Collection" :key="watch.id">
+                <b-row align-v="start" align-h="around" no-gutters>
                     <b-col cols="12" class="order-1">
                         <b-row aling-h="center" align-v="center" no-gutters>
                             <b-col cols="12" lg="6" class="mx-auto p-1">
@@ -58,6 +58,7 @@ export default {
             this.isEdit = false;
             this.$store.dispatch('submitWatch', this.addWatch).then(() => {
                 this.addWatch = {}
+                this.$store.dispatch('loadUserCollection');
             })
         }
     },

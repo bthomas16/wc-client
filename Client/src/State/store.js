@@ -112,7 +112,7 @@ const actions =
                 .then(res => {
                     if(res.data.isSuccess)
                     {
-                        console.log('loginnnnn', res.data, res.data.userStore) 
+                        console.log('loginnnnn', res.data, res.data.user) 
                         localStorage.setItem('watchJwt', res.data.token);
                         context.commit(AUTH_SUCCESS, res.data);
                         resolve(res.data)
@@ -163,12 +163,12 @@ const actions =
     {
         return new Promise((resolve, reject) => {
             axios.get('/api/user/validate-jwt', {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('watchJwt')
+                params: {
+                    jwt: localStorage.getItem('watchJwt')
                 }
             }).then(res => {
-                if(res.data.success) {
+                console.log('sdjkfn', res)
+                if(res.data.isSuccess) {
                     context.commit(VALIDATE_JWT);
                     resolve(res.data)
                 }
@@ -194,15 +194,15 @@ const actions =
 
     submitWatch(context, watch) {
         return new Promise((resolve, reject) => {
-            axios.post('/api/watch', { watch }, config).then((res) => {
+            axios.post('/api/watch', watch, config).then((res) => {
                 if(res.data.isSuccess){
                     console.log('submitting watch', res.data)
                     context.commit(SUBMIT_WATCH, res.data)
                     resolve(res.data)
                 }
                 else {
-                    console.log(err);
-                    reject(err.data)
+                    console.log(res);
+                    reject(res.data)
                 }
             })
         })
@@ -218,7 +218,7 @@ const actions =
         }).then(res => {
             context.commit(LOAD_COLLECTION, res.data.collection);
         }).catch(err => {
-            console.log(err);
+            context.commit(LOAD_COLLECTION, [])
         })
     },
 
@@ -235,6 +235,10 @@ const getters =
 {
     getUserAuthStatus(state) {    
         return state.isAuthorized;
+    },
+
+    getUserLoadStatus(state) {    
+        return state.isUserLoaded;
     },
 
     getJwt(state) {

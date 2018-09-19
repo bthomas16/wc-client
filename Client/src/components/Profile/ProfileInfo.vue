@@ -22,8 +22,7 @@
     export default {
     data () {
         return {
-            profPic: "http://www.bistiproofpage.com/wp-content/uploads/2018/04/cute-profile-pics-for-whatsapp-images.png",
-            state: this.$store.state
+            profPic: "http://www.bistiproofpage.com/wp-content/uploads/2018/04/cute-profile-pics-for-whatsapp-images.png"
         }
     },
     methods: {
@@ -31,7 +30,7 @@
     },
     computed: {
         User() {
-            return this.$store.getters.getUser
+            return this.$store.state.User
         }
     }
 }

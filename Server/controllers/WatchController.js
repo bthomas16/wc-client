@@ -8,8 +8,7 @@ const VerifyToken = require('../middleware/VerifyToken');
 
 
 router.post('/', VerifyToken, async (req, res) => {
-    let formData = req.body.watch;
-    console.log(req.body, 'checking body')
+    let formData = req.body;
     if(Watch.validateWatchFormData(formData, res))
         Watch.saveWatchToCollectionDB(formData, req.id, res); 
 })
@@ -18,8 +17,8 @@ router.get('/', VerifyToken , async (req, res) => {
     try
     {
         knex('watch').where('user_id', req.id).then(collection => {
-            console.log('collection would be', collection)
-            res.json({collection})
+            if(collection.length > 0) res.status(200).json({collection});
+            else res.status(404).json({hasCollection: false, message: 'No collection'})
         }) 
     }
     catch

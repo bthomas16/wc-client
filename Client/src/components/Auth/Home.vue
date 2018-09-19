@@ -1,5 +1,5 @@
 <template>
-    <b-container fluid class="pt-3">
+    <b-container fluid class="p-0 m-0 fill">
         <b-row align-v="center" align-h="around" no-gutters>
             <b-col cols="12" md="5" order="2" order-md="1" class=" mx-auto">
                 <b-row no-gutters>
@@ -27,6 +27,7 @@
                                         </b-col>
                                         <b-col>
                                             <b-row>
+                                                
                                             <!-- <b-col cols="10" class="mx-auto">  -->
                                                 <h4>Watch Name</h4>
                                                 <h6>Brand Name</h6>
@@ -60,8 +61,14 @@
             </b-col>
         </b-row>
 
+
         <b-modal :title="selectedWatch.name" ref="seeFeaturedWatchModal">
-            <app-see-more :selectedWatchObj="getSelectedWatch"></app-see-more>
+            <app-see-more :selectedWatch="selectedWatch"></app-see-more>
+            <div slot="modal-footer" class="w-100">
+                <b-btn size="" class="float-right" variant="primary" @click="closeFeaturedWatchModel">
+                    OK
+                </b-btn>
+            </div>
         </b-modal>
         
     </b-container>
@@ -70,7 +77,8 @@
 <script>
 import Register from './Register.vue';
 import Login from './Login.vue';
-import SeeMore from '../Profile/Collection/SeeMore.vue'
+import SeeMore from '../Profile/Collection/SeeMore.vue';
+
 
 export default {
     components: {
@@ -87,63 +95,48 @@ export default {
                     brand: 'Omega',
                     name: 'WatchGuy',
                     value: 375,
-                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png'
+                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png',
+                    isFeaturedWatch: true
                 },
                 {
                     src: 'http://static1.squarespace.com/static/53af7209e4b0911b3009149d/53af7250e4b0f61134967e91/555f5050e4b0b614ae768991/1432327291003/?format=1000w',
                     brand: 'Omega',
                     name: 'WatchGuy',
                     value: 375,
-                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png'
+                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png',
+                    isFeaturedWatch: true
                 },
                 {
                     src: 'http://static1.squarespace.com/static/53af7209e4b0911b3009149d/53af7250e4b0f61134967e91/555f5050e4b0b614ae768991/1432327291003/?format=1000w',
                     brand: 'Omega',
                     name: 'WatchGuy',
                     value: 375,
-                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png'
+                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png',
+                    isFeaturedWatch: true
                 },
                 {
                     src: 'http://static1.squarespace.com/static/53af7209e4b0911b3009149d/53af7250e4b0f61134967e91/555f5050e4b0b614ae768991/1432327291003/?format=1000w',
                     brand: 'Omega',
                     name: 'WatchGuy',
                     value: 375,
-                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png'
+                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png',
+                    isFeaturedWatch: true
                 },
                 {
                     src: 'http://static1.squarespace.com/static/53af7209e4b0911b3009149d/53af7250e4b0f61134967e91/555f5050e4b0b614ae768991/1432327291003/?format=1000w',
                     brand: 'Omega',
                     name: 'WatchGuy',
                     value: 375,
-                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png'
+                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png',
+                    isFeaturedWatch: true
                 },
                 {
                     src: 'http://static1.squarespace.com/static/53af7209e4b0911b3009149d/53af7250e4b0f61134967e91/555f5050e4b0b614ae768991/1432327291003/?format=1000w',
                     brand: 'Omega',
                     name: 'WatchGuy',
                     value: 375,
-                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png'
-                },
-                 {
-                    src: 'http://static1.squarespace.com/static/53af7209e4b0911b3009149d/53af7250e4b0f61134967e91/555f5050e4b0b614ae768991/1432327291003/?format=1000w',
-                    brand: 'Omega',
-                    name: 'WatchGuy',
-                    value: 375,
-                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png'
-                },
-                {
-                    src: 'http://static1.squarespace.com/static/53af7209e4b0911b3009149d/53af7250e4b0f61134967e91/555f5050e4b0b614ae768991/1432327291003/?format=1000w',
-                    brand: 'Omega',
-                    name: 'WatchGuy',
-                    value: 375,
-                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png'
-                },
-                {
-                    src: 'http://static1.squarespace.com/static/53af7209e4b0911b3009149d/53af7250e4b0f61134967e91/555f5050e4b0b614ae768991/1432327291003/?format=1000w',
-                    brand: 'Omega',
-                    name: 'WatchGuy',
-                    value: 375,
-                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png'
+                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png',
+                    isFeaturedWatch: true
                 }
             ],
         showLogin: false
@@ -155,34 +148,38 @@ export default {
         },
 
         selectWatch(watch) {
+            console.log(watch)
             this.selectedWatch = watch;
             this.$refs.seeFeaturedWatchModal.show();
-        }
-    },
-    computed: {
-        getSelectedWatch() {
-            return {
-                selectedWatch: this.selectedWatch,
-                isEdit: false,
-                isFeaturedWatch: true
-            }
+        },
+
+        closeFeaturedWatchModel() {
+            this.$refs.seeFeaturedWatchModal.hide()
         }
     }
 }
 </script>
 
 <style scoped>
+
+.fill {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    height: 92.1vh;
+    overflow-y: hidden;
+}
 .container-fluid {
-    background: linear-gradient( rgba(55, 55, 55, .45), rgba(55, 55, 55, .45) ), url('https://topwatch.vn/upload_images/images/topwatch-huong-dan-su-dung-va-bao-quan-dong-ho(1).jpg');
-    height: 100vh;
+    background: linear-gradient( rgba(55, 55, 55, .45), rgba(55, 55, 55, .45)), url('https://topwatch.vn/upload_images/images/topwatch-huong-dan-su-dung-va-bao-quan-dong-ho(1).jpg');
     background-repeat: no-repeat;
     background-size: cover;
-    overflow-y: hidden !important;
+    /* height: 100vh; */
 }
 
 #watch-collection {
     background: rgba(40,40,40,.6);
-    max-height: 69vh;
     overflow-y: scroll;
 }
 .box-shadow {
