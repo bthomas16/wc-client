@@ -30,7 +30,7 @@ exports.up = function(knex, Promise) {
         table.integer('limitedEditionNumber');
         table.integer('limitedEditionTotal');
         table.string('watchStyle');
-
+        table.integer('order');
         table.integer('userPreferedOrder');
         table.string('watchLabels');
     })

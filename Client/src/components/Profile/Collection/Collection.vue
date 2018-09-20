@@ -3,7 +3,7 @@
 
         <!-- Has Watch collection / View Collection -->
 
-        <b-row v-if="hasWatchesCollection" align-h="center">
+        <b-row v-if="isCollectionLoaded" align-h="center">
             <b-col>
                 <b-row class="my-3 mx-auto center m-left-align" align-v="center" align-h="center">
                     <b-col cols="12" md="5" class="p-0 m-0">
@@ -206,35 +206,50 @@ export default {
                 this.addWatch = {}
             })
         }
+
+        // hasWatchesCollection() {
+        //     let status = this.$store.state.Collection;
+        //     console.log(this.$store.state.Collection)
+        //     if(status){
+        //         if (status == 0) return false;
+        //         return true;
+        //     } else return false
+        // },
     },
 
-    computed: { 
-        hasWatchesCollection() {
-            let status = this.$store.state.Collection.length;
-            if(status){
-                if (status == 0) return false;
-                return true;
-            } else return false
-        },
-
-        getCollectionTotalValue() {
-            return 'Make me a real function!';
+    computed: {  
+        getCollectionTotalValue() 
+        {
+            // if (this.Collection.length)
+            // {
+            //     let tv = 0;
+            //     this.Collection.forEach(w => tv += w.value);
+            //     console.log(tv);
+            //     return tv
+            // }
+            // else return 'N/A'
+            return 'N/A'
         },
 
         Collection() {
-            return this.$store.getters.getCollection
+            return this.$store.getters.getCollection;
         },
 
-        User(){
-           return this.$store.state.User
+        User() {
+            return this.$store.getters.getUser;
+        },
+
+        isCollectionLoaded() {
+            return this.$store.getters.getCollectionLoadStatus
         }
     },
 
-
-    created: function() {
-        this.$store.dispatch('loadUserCollection');
-    },
-
+    created: function() 
+    {
+        this.$store.dispatch('loadUserCollection').then(() => {
+            console.log(this.$store.state.Collection)
+        })
+    }
 }
 </script>
 

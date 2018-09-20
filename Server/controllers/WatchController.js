@@ -18,7 +18,7 @@ router.get('/', VerifyToken , async (req, res) => {
     {
         knex('watch').where('user_id', req.id).then(collection => {
             if(collection.length > 0) res.status(200).json({collection});
-            else res.json({hasCollection: false, message: 'No collection'})
+            else res.status(404).json({hasCollection: false, message: 'No collection'})
         }) 
     }
     catch

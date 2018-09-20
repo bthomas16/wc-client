@@ -29,8 +29,9 @@ const state =
     isLoading: false,
     isAuthorized: false,
     User: {},
-    Collection: {},
+    Collection: [],
     isUserLoaded: false,
+    isCollectionLoaded: false,
     selectedWatch: {}
 }
 
@@ -46,7 +47,6 @@ const mutations =
 
     [AUTH_SUCCESS] (state, user) 
     {
-        console.log('user is about to become', user)
         state.User = user;        
         state.isAuthorized = true;
         state.isLoading = false;
@@ -72,17 +72,15 @@ const mutations =
         state.isAuthorized = false;
     },
 
-    [NAME_COLLECTION](state, collectionName) {
-        state.Collection.name = collectionName;
-    },
-
     [SUBMIT_WATCH](state, watch) {
-        console.log(state.Collection, 'commiting new watch')
+        console.log(state.Collection, watch, 'commiting new watch')
+        state.isCollectionLoaded = true;
         state.Collection.push(watch);
     },
 
     [LOAD_COLLECTION](state, collection) {
-        state.isLoading = false;                    
+        state.isLoading = false;     
+        state.isCollectionLoaded = true;               
         state.Collection = collection;
     },
 
@@ -186,7 +184,6 @@ const actions =
         return new Promise((resolve, reject) => {
             axios.post('/api/watch', watch, config).then((res) => {
                 if(res.data.isSuccess){
-                    console.log('submitting watch', res.data)
                     context.commit(SUBMIT_WATCH, res.data.watch)
                     resolve(res.data)
                 }
@@ -206,9 +203,10 @@ const actions =
                 'Authorization': localStorage.getItem('watchJwt')
             }
         }).then(res => {
+            console.log(res.data, 'found colelction')
             context.commit(LOAD_COLLECTION, res.data.collection);
         }).catch(err => {
-            context.commit(LOAD_COLLECTION, [])
+            console.log(err);
         })
     },
 
@@ -229,6 +227,10 @@ const getters =
 
     getUserLoadStatus(state) {    
         return state.isUserLoaded;
+    },
+
+    getCollectionLoadStatus(staste) {
+        return state.isCollectionLoaded;
     },
 
     getCollection(state) {
