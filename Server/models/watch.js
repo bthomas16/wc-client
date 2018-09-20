@@ -27,7 +27,7 @@ const Watch = (function() {
         try 
         {
             console.log('hopefully saving watch to db', formData, user_id);
-            knex.insert(
+            await knex('watch').insert(
                 {
                     // src: formData.src,
                     name: formData.name,
@@ -42,10 +42,12 @@ const Watch = (function() {
                     condition: formData.condition,
                     isFullKit: formData.isFullKit,
                     user_id: user_id
-                }).into('watch').then(() => {
+                }).then((watch) => {
+                    console.log('saved!', watch)
                     res.json({
                         isSuccess: true,
-                        message: 'Watch saved to Collection'
+                        message: 'Watch saved to Collection',
+                        watch: formData
                     });
                 }
             ) 

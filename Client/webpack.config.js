@@ -84,15 +84,15 @@ module.exports = {
   performance: {
     hints: false
   },
-  plugins: [
-		new GoogleFontsPlugin({
-			fonts: [
-        { family: "Rubik"},
-				{ family: "Poppins"}
-			]
-			/* ...options */
-		})
-	],
+  // plugins: [
+	// 	new GoogleFontsPlugin({
+	// 		fonts: [
+  //       { family: "Rubik"},
+	// 			{ family: "Poppins"}
+	// 		]
+	// 		/* ...options */
+	// 	})
+	// ],
   devtool: '#eval-source-map'
 }
 

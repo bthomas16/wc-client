@@ -39,25 +39,14 @@ export default {
 
     computed: {
         isUserLoaded() {
-            console.log('isloaded', this.$store.state.isUserLoaded)
-            return this.$store.state.isUserLoaded
+            return this.$store.getters.getUserLoadStatus
         }
     },
 
     created: function() {
-        this.$store.dispatch('user');
+        if (this.$store.state.isUserLoaded) return true
+        else this.$store.dispatch('user');
     }
-
-    // beforeRouteEnter(to, from, next) {    
-    //     console.log('before entering', store.getters.getUserLoadStatus)    
-        
-    //     store.dispatch('user').then(() => {
-    //         console.log('after entering', store.getters.getUserLoadStatus) 
-    //         next()
-    //     }).catch(() => {
-    //         next('/')
-    //     })
-    // }
 }
 </script>
 

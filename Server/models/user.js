@@ -50,22 +50,22 @@ const User = module.exports = function () {
     function SaveUserToDB(formData, hashPassword, res) 
     {
        let tempEmail = formData.email.toLowerCase();
-       knex.insert
+       knex('peeps')
+       .returning('id')
+       .insert
         ({
             firstName: formData.firstName,
             lastName: formData.lastName,
             email: tempEmail,
             password: hashPassword
-        })
-        .into('peeps')
-        .then(() => {
-            console.log('user was saved')
-            let user = {
-                email: formData.email,
-                password: formData.password
-            }
-            let token = SetJwtToken(user);
-            res.json({isSuccess: true, message: 'Successfully Registered', token})
+        }).then((id) => {
+            console.log('user was saved here is the ID', id[0])
+            let token = jwt.sign({ id: id[0] }, config.secret, {
+                expiresIn: 86400 // expires in 24 hours
+              })
+              let user = formData;
+              user.password = null;
+            res.status(201).json({isSuccess: true, message: 'Successfully Registered', token, user})
         }).catch(err => {
             console.log(err)
         })
@@ -117,8 +117,13 @@ const User = module.exports = function () {
         let token = SetJwtToken(user);
         knex('peeps').where(
             'email', user.email
-            ).first().then(function(user){
-            res.json({isSuccess: true, message: "Successfully logged in", user, token})
+            ).first().then(function(userByEmail){
+                let user = {
+                    firstName: userByEmail.firstName,
+                    lastName: userByEmail.lastName,
+                    email: userByEmail.email
+                }
+            res.json({isSuccess: true, message: "Successfully logged in", token, user})
         })
    } 
 
@@ -141,16 +146,11 @@ const User = module.exports = function () {
             )
             .first().then(function(user)
             {
-                let userStore = 
-                {
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    email: user.email
-                }
-                console.log('found user', userStore)
-                res.status(200).json({isSuccess: true, message: 'User is valid', userStore})
+                res.status(200).json({isSuccess: true, message: 'User is valid', user})
             }
-        )
+        ).catch(() => {
+            res.status(403).json({isSuccess: false, message: 'User is invalid'})
+        })
     } 
 
     return {

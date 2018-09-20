@@ -1,20 +1,22 @@
 <template>
     <b-container fluid>
-        <b-row id="watchRow" align-h="start" class="mt-4">
-            <b-col cols="3" md="3" class="watch border p-2 pt-0" v-for="(watch) in Collection" :key="watch.id">
-                <b-row align-v="start" align-h="around" no-gutters>
-                    <b-col cols="12" class="order-1">
+        <b-row id="watchRow" align-h="between" class="mt-4">
+            <b-col cols="3" md="3" class="watch" v-for="(watch) in Collection" :key="watch.id">
+
+
+                <b-row align-v="start" align-h="around">
+                    <b-col cols="11" class="order-1 p-2 border box-shadow">
                         <b-row aling-h="center" align-v="center" no-gutters>
-                            <b-col cols="12" lg="6" class="mx-auto p-1">
+                            <b-col cols="12" lg="6" class="mx-auto">
                                 <b-img
                                 @click="selectWatch(watch)" 
-                                src="https://www.bremont.com/images/collection/_1000x600_fit_center-center/AIRCO-MACH-3-BL-FRONT-1_180226_104014.png" 
+                                src="https://n3.sdlcdn.com/imgs/e/v/o/SDL044502225_1-6ee47.jpg" 
                                 fluid>
                                 </b-img>
                             </b-col>
-                            <b-col lg="6" class="d-none d-lg-block pr-2">
+                            <b-col lg="6" class="d-none d-lg-block">
                                 <b-row align-h="end" no-gutters>
-                                    <h6><strong>{{watch.name}}</strong></h6>
+                                    <h6 class="nowrap"><strong>{{watch.name}}</strong></h6>
                                     <b-col cols="10" class="mt-5 px-1">
                                         <b-button variant="outline-info" size="sm" block @click="selectWatch(watch)">See More</b-button>
                                     </b-col>
@@ -29,6 +31,8 @@
                         </b-row>
                     </b-col>
                 </b-row>
+
+
             </b-col>
         </b-row>
     </b-container>

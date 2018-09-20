@@ -210,9 +210,11 @@ export default {
 
     computed: { 
         hasWatchesCollection() {
-            let status = this.$store.getters.getCollection.length;
-            if (status == 0) return false;
-            return true;
+            let status = this.$store.state.Collection.length;
+            if(status){
+                if (status == 0) return false;
+                return true;
+            } else return false
         },
 
         getCollectionTotalValue() {

@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/config.js');
 
 
-const VerifyToken = require('../middleware/VerifyToken');
+const VerifyToken = require('../middleware/VerifyToken.js');
 
 
 router.post('/register', async (req, res) => 
@@ -43,14 +43,14 @@ router.get('/validate-jwt', (req, res) =>
 })
 
 
-router.get('/profile', VerifyToken, async (req, res) => 
+router.get('/profile', VerifyToken, (req, res) => 
 {
-  try 
+  console.log('token kjasdfgh verifued egwebjfv', req.id)
+  if(req.id)
   {
-      console.log(req)
-    await User.FindUser(req.id, res);
+    User.FindUser(req.id, res);
   }
-  catch
+  else
   { 
     res.status(404).json({isSuccess: false, message: 'User is not valid'})  
   }

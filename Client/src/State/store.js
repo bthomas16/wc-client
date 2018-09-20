@@ -20,7 +20,7 @@ const axios = require('axios'),
 const config = {
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('watchJwt')
+        'authorization': localStorage.getItem('watchJwt')
     }
 }
 
@@ -28,7 +28,6 @@ const state =
 {
     isLoading: false,
     isAuthorized: false,
-    jwt: '',
     User: {},
     Collection: {},
     isUserLoaded: false,
@@ -45,10 +44,10 @@ const mutations =
         state.isLoading = true;
     },
 
-    [AUTH_SUCCESS] (state, data) 
+    [AUTH_SUCCESS] (state, user) 
     {
-        state.User = data.user;        
-        state.jwt = localStorage.getItem('watchJwt');
+        console.log('user is about to become', user)
+        state.User = user;        
         state.isAuthorized = true;
         state.isLoading = false;
         state.isUserLoaded = true;
@@ -63,15 +62,6 @@ const mutations =
     [LOGOUT](state) 
     {
         state.isAuthorized = false;
-    },
-
-    [GET_USER](state, user)
-    {
-        state.isLoading = false;            
-        state.User = user;
-        state.isAuthorized = true;
-        state.jwt = localStorage.getItem('watchJwt');
-        state.isUserLoaded = true;
     },
 
     [VALIDATE_JWT](state) {
@@ -114,7 +104,7 @@ const actions =
                     {
                         console.log('loginnnnn', res.data, res.data.user) 
                         localStorage.setItem('watchJwt', res.data.token);
-                        context.commit(AUTH_SUCCESS, res.data);
+                        context.commit(AUTH_SUCCESS, res.data.user);
                         resolve(res.data)
                     }
                     else 
@@ -139,7 +129,7 @@ const actions =
             .then(res => {
                 console.log('registtreee', res.data)
                 localStorage.setItem('watchJwt', res.data.token);
-                context.commit(AUTH_SUCCESS, res.data);
+                context.commit(AUTH_SUCCESS, res.data.user);
                 resolve(res.data)
             })
             .catch(err => {
@@ -150,6 +140,15 @@ const actions =
                 context.commit(AUTH_FAILURE );     
                 reject(res.data)                              
             })
+        })
+    },
+
+    user(context) {
+        axios.get('/api/user/profile', config).then(res => {
+            console.log('profile loaded', res.data.user, res.data)
+            context.commit(AUTH_SUCCESS, res.data.user)
+        }).catch(err => {
+            console.log(err)
         })
     },
 
@@ -183,26 +182,17 @@ const actions =
         })
     },
 
-    user(context) {
-        axios.get('/api/user/profile', config).then(res => {
-            context.commit(GET_USER, res.data.userStore)
-        }).catch(err => {
-            // context.commit(INVALID_USER, res.data.userStore)
-            console.log(err)
-        })
-    },
-
     submitWatch(context, watch) {
         return new Promise((resolve, reject) => {
             axios.post('/api/watch', watch, config).then((res) => {
                 if(res.data.isSuccess){
                     console.log('submitting watch', res.data)
-                    context.commit(SUBMIT_WATCH, res.data)
+                    context.commit(SUBMIT_WATCH, res.data.watch)
                     resolve(res.data)
                 }
                 else {
                     console.log(res);
-                    reject(res.data)
+                    reject(res.data);
                 }
             })
         })
@@ -239,10 +229,6 @@ const getters =
 
     getUserLoadStatus(state) {    
         return state.isUserLoaded;
-    },
-
-    getJwt(state) {
-        return state.jwt;
     },
 
     getCollection(state) {

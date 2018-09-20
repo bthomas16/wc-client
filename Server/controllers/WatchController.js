@@ -4,7 +4,7 @@ const knex = require('../config/db');
 const Promise = require('promise');
 const Watch = require('../models/watch.js');
 
-const VerifyToken = require('../middleware/VerifyToken');
+const VerifyToken = require('../middleware/VerifyToken.js');
 
 
 router.post('/', VerifyToken, async (req, res) => {
@@ -18,7 +18,7 @@ router.get('/', VerifyToken , async (req, res) => {
     {
         knex('watch').where('user_id', req.id).then(collection => {
             if(collection.length > 0) res.status(200).json({collection});
-            else res.status(404).json({hasCollection: false, message: 'No collection'})
+            else res.json({hasCollection: false, message: 'No collection'})
         }) 
     }
     catch

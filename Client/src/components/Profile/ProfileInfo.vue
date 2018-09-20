@@ -1,8 +1,8 @@
 <template>
     <b-container class="p-0 m-0" >
         <b-row align-v="center" align-h="center" class="p-0 mx-auto py-3">
-            <b-col cols="5" sm="4" md="12" class="m-0 mx-auto center pt-lg-1 border">
-                <b-img :src="profPic" fluid style="height: auto; max-height: 125px;" class="profPic mx-auto" rounded="circle"></b-img>
+            <b-col cols="5" sm="4" md="12" class="m-0 mx-auto center pt-lg-1">
+                <b-img :src="profPic" fluid style="height: auto; max-height: 125px;" class="profPic mx-auto box-shadow" rounded="circle"></b-img>
             </b-col>
             <b-col cols="7" sm="7" md="12" class="left mx-auto p-0 pl-2 mt-2" >
                 <!-- {{state}} -->
@@ -39,7 +39,7 @@
 <style scoped>
 
 .profPic {
-    border: 3px solid green;
+    border: 2px solid lightgray;
 }
 
 @media(max-width:350px){

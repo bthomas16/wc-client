@@ -8,13 +8,13 @@ export const routes = [
         path: '', 
         name: 'home',
         component: Home,
-        // beforeEnter: dissallowAuth    
+        beforeEnter: dissallowAuth    
     },
     { 
         path: '/profile',
         name: 'profile',
         component: Profile,
-        // beforeEnter: requireAuth    
+        beforeEnter: requireAuth    
     }
 ];
 
@@ -22,7 +22,8 @@ function dissallowAuth(to, from, next) {
     console.log('dissallow')
     let jwt = localStorage.getItem('watchJwt');
     if(!jwt) next();
-    else {
+    else 
+    {
         console.log(jwt, 'going next')
         store.dispatch('validateJwt').then(res => {
             if(res.isSuccess) next('/profile');
@@ -30,9 +31,8 @@ function dissallowAuth(to, from, next) {
         }).catch((err) => {
             console.log('caught err:', err)
             next();
-    })
-}
-
+        })
+    }
 }
 
 function requireAuth(to, from, next) { 
@@ -48,5 +48,4 @@ function requireAuth(to, from, next) {
         })
     }
     else next('/');
-
 }
