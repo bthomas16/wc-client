@@ -101,13 +101,10 @@
     methods: {
         submit () 
         {
-            
-            console.log('submitting', this.form);
             this.showAlert = false;
             this.form.email.toLowerCase();
             this.$store.dispatch('register', this.form)
             .then(res => {
-                console.log('good', res)
                 if(res.isSuccess) this.$router.push({path: '/profile'});
                 else {
                     this.showAlert = true;
@@ -115,8 +112,6 @@
                     this.responseStyle = 'danger';
                 }
             }).catch(err => {
-                console.log('bad', res)
-                
                 this.showAlert = true;
                 this.responseMessage = err.message;
                 this.responseStyle = 'danger';
@@ -161,13 +156,13 @@
             else return false;
         },
 
-        isDuplicateEmail(email)
-        {
-            console.log('should check', email)
-            axios.get('/api/user/isDuplicateEmail?email=' + email).then(res => {
-                console.log(res)
-            })
-        }
+        // isDuplicateEmail(email)
+        // {
+        //     console.log('should check', email)
+        //     axios.get('/api/user/isDuplicateEmail?email=' + email).then(res => {
+        //         console.log(res)
+        //     })
+        // }
     }
 }
 </script>

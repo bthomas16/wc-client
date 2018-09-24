@@ -1,9 +1,8 @@
 <template>
     <b-container id="collection-container" class="">
 
-        <!-- Has Watch collection / View Collection -->
 
-        <b-row v-if="isCollectionLoaded" align-h="center">
+        <b-row v-if="Collection" align-h="center">
             <b-col>
                 <b-row class="my-3 mx-auto center m-left-align" align-v="center" align-h="center">
                     <b-col cols="12" md="5" class="p-0 m-0">
@@ -74,14 +73,14 @@
                 </b-row>
 
                 <b-row v-else>
-                    <b-col cols="5" class="mx-auto">
+                    <b-col cols="9" md="5" class="mx-auto">
                         <b-button variant="info" class="my-0" size="sm" @click="isManagingCollection = true" block>Manage Collection</b-button>
                     </b-col>
                 </b-row>
 
                 <!-- LOOP THROUGH WATCHES -->
 
-                <watch-collection @selectWatch="selectWatch"></watch-collection>
+                <watch-collection @selectWatch="selectWatch" :Collection="Collection"></watch-collection>
 
             </b-col>
         </b-row>
@@ -143,6 +142,8 @@
                 </b-btn>
             </div>
         </b-modal>
+
+        {{Collection}}
     
     </b-container>
 </template>
@@ -204,6 +205,7 @@ export default {
             this.$refs.seeMoreModal.hide();
             this.$store.dispatch('submitWatch', this.addWatch).then(() => {
                 this.addWatch = {}
+                this.addWatchCount = 1;
             })
         }
 
@@ -231,24 +233,24 @@ export default {
             return 'N/A'
         },
 
-        Collection() {
-            return this.$store.getters.getCollection;
-        },
-
         User() {
             return this.$store.getters.getUser;
         },
 
-        isCollectionLoaded() {
-            return this.$store.getters.getCollectionLoadStatus
+        Collection() 
+        {
+            let watchCollection = this.$store.getters.getCollection;
+            console.log(watchCollection)
+            if(!watchCollection || watchCollection.length < 1) return false;                  
+            return watchCollection.sort((a, b) => {
+                return a.order - b.order;
+            })
         }
     },
 
     created: function() 
     {
-        this.$store.dispatch('loadUserCollection').then(() => {
-            console.log(this.$store.state.Collection)
-        })
+        this.$store.dispatch('loadUserCollection');
     }
 }
 </script>

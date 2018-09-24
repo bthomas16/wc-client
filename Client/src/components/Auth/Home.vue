@@ -148,7 +148,6 @@ export default {
         },
 
         selectWatch(watch) {
-            console.log(watch)
             this.selectedWatch = watch;
             this.$refs.seeFeaturedWatchModal.show();
         },

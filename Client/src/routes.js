@@ -24,7 +24,6 @@ function dissallowAuth(to, from, next) {
     if(!jwt) next();
     else 
     {
-        console.log(jwt, 'going next')
         store.dispatch('validateJwt').then(res => {
             if(res.isSuccess) next('/profile');
             else next();

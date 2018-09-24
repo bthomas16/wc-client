@@ -41,7 +41,8 @@ const Watch = (function() {
                     movementType: formData.movementType,
                     condition: formData.condition,
                     isFullKit: formData.isFullKit,
-                    user_id: user_id
+                    user_id: user_id,
+                    order: formData.order
                 }).then((watch) => {
                     console.log('saved!', watch)
                     res.json({

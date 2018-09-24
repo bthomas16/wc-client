@@ -15,7 +15,8 @@ const axios = require('axios'),
     NAME_COLLECTION = "NAME_COLLECTION",
     LOAD_COLLECTION = "LOAD_COLLECTION",
     SUBMIT_WATCH = "SUBMIT_WATCH",
-    SELECT_WATCH = "SELECT_WATCH";
+    SELECT_WATCH = "SELECT_WATCH",
+    WATCH_ORDER_UPDATED = "WATCH_ORDER_UPDATED";
 
 const config = {
     headers: {
@@ -73,8 +74,8 @@ const mutations =
     },
 
     [SUBMIT_WATCH](state, watch) {
-        console.log(state.Collection, watch, 'commiting new watch')
         state.isCollectionLoaded = true;
+        console.log(state.Collection)
         state.Collection.push(watch);
     },
 
@@ -86,6 +87,10 @@ const mutations =
 
     [SELECT_WATCH](state, watch) {
         state.selectedWatch = watch;
+    },
+
+    [WATCH_ORDER_UPDATED](state, watch) {
+        state.Collection[watch.id].order = watch.order;
     }
 }
 
@@ -100,7 +105,6 @@ const actions =
                 .then(res => {
                     if(res.data.isSuccess)
                     {
-                        console.log('loginnnnn', res.data, res.data.user) 
                         localStorage.setItem('watchJwt', res.data.token);
                         context.commit(AUTH_SUCCESS, res.data.user);
                         resolve(res.data)
@@ -111,7 +115,6 @@ const actions =
                         reject(res.data);
                     }  
                 }).catch(err => {
-                    console.log('err', err)
                     context.commit(AUTH_FAILURE);
                         reject(err.data);
                 })
@@ -125,7 +128,6 @@ const actions =
             context.commit(AUTHENTICATING); // show spinner
             axios.post('/api/user/register', formData)
             .then(res => {
-                console.log('registtreee', res.data)
                 localStorage.setItem('watchJwt', res.data.token);
                 context.commit(AUTH_SUCCESS, res.data.user);
                 resolve(res.data)
@@ -134,7 +136,6 @@ const actions =
                 this.responseStyle = 'danger';
                 this.responseMessage = err.data.message;
                 this.form = {}; 
-                console.log(err.data)
                 context.commit(AUTH_FAILURE );     
                 reject(res.data)                              
             })
@@ -143,7 +144,6 @@ const actions =
 
     user(context) {
         axios.get('/api/user/profile', config).then(res => {
-            console.log('profile loaded', res.data.user, res.data)
             context.commit(AUTH_SUCCESS, res.data.user)
         }).catch(err => {
             console.log(err)
@@ -164,7 +164,6 @@ const actions =
                     jwt: localStorage.getItem('watchJwt')
                 }
             }).then(res => {
-                console.log('sdjkfn', res)
                 if(res.data.isSuccess) {
                     context.commit(VALIDATE_JWT);
                     resolve(res.data)
@@ -182,31 +181,24 @@ const actions =
 
     submitWatch(context, watch) {
         return new Promise((resolve, reject) => {
+            if(!context.state.Collection) watch.order = 0;
+            else watch.order = context.state.Collection.length + 1;
             axios.post('/api/watch', watch, config).then((res) => {
-                if(res.data.isSuccess){
                     context.commit(SUBMIT_WATCH, res.data.watch)
                     resolve(res.data)
-                }
-                else {
-                    console.log(res);
-                    reject(res.data);
-                }
+            }).catch(() => {
+                reject(res.data);        
             })
         })
     },
 
     loadUserCollection(context) {
         context.commit(LOADING);
-        axios.get('/api/watch',  {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem('watchJwt')
-            }
-        }).then(res => {
-            console.log(res.data, 'found colelction')
+        axios.get('/api/watch', config)
+        .then(res => {
             context.commit(LOAD_COLLECTION, res.data.collection);
         }).catch(err => {
-            console.log(err);
+            context.commit(LOAD_COLLECTION, []);
         })
     },
 
@@ -216,6 +208,17 @@ const actions =
             return true;
         }
         throw new Error('HOLY SHIT!');
+    },
+
+    updateWatchOrder(context, watchToUpdate) {
+        if (!watchToUpdate) return false;
+        axios.put('/api/watch', watchToUpdate, config)
+        .then(res => {
+            context.commit('WATCH_ORDER_UPDATED', watchToUpdate)
+            console.log(res)
+        }).catch(err =>{
+            console.log(err);
+        });
     }
 }
 
