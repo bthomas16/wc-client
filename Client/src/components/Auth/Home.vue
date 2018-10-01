@@ -1,65 +1,48 @@
 <template>
-    <b-container fluid class="p-0 m-0 fill">
-        <b-row align-v="center" align-h="around" no-gutters>
-            <b-col cols="12" md="5" order="2" order-md="1" class=" mx-auto">
+    <b-container fluid>
+        <b-row align-v="center" align-h="center" class="p-0 p-md-2 p-lg-0 mx-auto">
+            <b-col cols="12" md="5" order="2" order-md="1" class="mt-3 mx-auto">
                 <b-row no-gutters>
-                    <h2 class="border-bottom pt-0 px-1 pb-3 white mx-auto mt-3 my-1 mt-md-0 mx-md-0 Poppins bg-white-opaque"><strong>Featured Collection of the week</strong></h2>
-                    <b-col id="watch-collection" cols="11" class="mx-auto ml-md-0 py-2 mt-3">
-                        <b-row align-h="center">
-                            <b-col v-for="watch in FeaturedWatches" :key="watch.id" cols="5" md="3" class="pointer bg-white box-shadow border p-1 m-1 "
-                            @click="selectWatch(watch)">
-                                <b-img :src="watch.src" fluid class="my-2"></b-img>
-                                <b-row>
-                                    <b-col cols="10" class="mx-auto p-1 pb-0 mt-2 border bg-white-opaque box-shadow lh-low">
-                                        <b-col cols="10" class="mx-auto"><b-img :src="watch.logoSrc" fluid></b-img></b-col>
-                                        <h5 class="my-0">{{watch.brand}}</h5>
-                                        <h6 class="mt-1 mb-0">{{watch.name}}</h6>
-                                        <h6 class="green mb-0">${{watch.value}}</h6>
+                    <h2 class="border-bottom pt-0 px-1 pb-3 white mx-auto mt-3 my-1 mt-md-0 mx-md-0 Poppins"><strong>Featured Collection of the week</strong></h2>
+                    <b-col cols="12" lg="11" class="mt-3">
+                        <b-form-row class="mx-auto">
+                            <b-col cols="4" v-for="watch in FeaturedWatches" :key="watch.id" class="pointer"  @click="selectWatch(watch)">
+                                <b-row align-v="start" align-h="center" class="mb-3 bg-white" no-gutters>
+                                    <b-col cols="12" class="border py-3 bg-white">
+                                        <b-img
+                                        @click="selectWatch(watch)"
+                                        :src="watch.src" 
+                                        fluid>
+                                        </b-img>
                                     </b-col>
-                                </b-row>  
-                            </b-col>
-                            <b-row>
-                                <b-col cols="11" class="mx-auto border bg-lightgray mt-2" align-h="center">
-                                    <b-row>
-                                        <b-col cols="2">
-                                            <b-img width="200" fluid src="https://ksr-ugc.imgix.net/assets/016/788/908/fe119610ee2998cc636c8a7ac224cebf_original.png?crop=faces&w=1552&h=873&fit=crop&v=1496084881&auto=format&q=92&s=7600a575bed419466c2b65a057adc28b">
-                                            </b-img> 
+                                        <b-col cols="12 center bg-white-opaque my-0 p-0">
+                                            <b-img id="brandLogo" :src="watch.logoSrc" fluid class="mx-auto p-0"></b-img>
                                         </b-col>
-                                        <b-col>
-                                            <b-row>
-                                                
-                                            <!-- <b-col cols="10" class="mx-auto">  -->
-                                                <h4>Watch Name</h4>
-                                                <h6>Brand Name</h6>
-                                                <ul>
-                                                    <li>spec</li>
-                                                    <li>spec</li>
-                                                    <li>spec</li>
-                                                </ul>
-                                                <h6 class="reen">$300</h6>
-                                            <!-- </b-col> -->
-                                            </b-row>
+                                        <b-col cols="12" class="mx-auto p-1 bg-white-opaque">
+                                            <p class="my-0 h8">{{watch.brand}}</p>
+                                            <p class="my-0 h6">{{watch.name}}</p>
+                                            <p class="green mb-0">${{watch.value}}</p>
                                         </b-col>
-                                    </b-row>
-                                </b-col>
-                            </b-row>    
-                        </b-row>
-                    </b-col>
-                </b-row>
-            </b-col>
-            <b-col cols="12" md="7" class="mx-auto">
-                <b-row no-gutters>
-                    <b-col cols="12" class="mx-auto">
-                        <span v-if="showLogin">
-                            <app-login @toggleAuthView="toggleAuthParent"></app-login>
-                        </span>
-                        <span v-else>
-                            <app-register @toggleAuthView="toggleAuthParent"></app-register>
-                        </span>  
-                    </b-col>
-                </b-row>
-            </b-col>
-        </b-row>
+                            </b-row>
+                        </b-col>
+                    </b-form-row>
+                </b-col>
+            </b-row>
+        </b-col> 
+        <b-col cols="12" md="7" class="mt-3 mt-md-0 mx-auto">
+            <b-row no-gutters align-h="center">
+                <!-- <b-alert v-if="isValidToken" show class="w-75" variant="danger">Your session has expired. Please login again</b-alert>  -->
+                <b-col cols="12" sm="10" md="" lg="8" class="mx-auto">
+                    <span v-if="showLogin">
+                        <app-login @toggleAuthView="toggleAuthParent"></app-login>
+                    </span>
+                    <span v-else>
+                        <app-register @toggleAuthView="toggleAuthParent"></app-register>
+                    </span>  
+                </b-col>
+            </b-row>
+        </b-col>
+    </b-row>
 
 
         <b-modal :title="selectedWatch.name" ref="seeFeaturedWatchModal">
@@ -144,7 +127,7 @@ export default {
     },
     methods: {
         toggleAuthParent: function() {
-            return this.showLogin = !this.showLogin
+            return this.showLogin = !this.showLogin;
         },
 
         selectWatch(watch) {
@@ -154,6 +137,10 @@ export default {
 
         closeFeaturedWatchModel() {
             this.$refs.seeFeaturedWatchModal.hide()
+        },
+
+        isValidToken() {
+            return this.$store.getters.getUserAuthStatus;
         }
     }
 }
@@ -161,24 +148,21 @@ export default {
 
 <style scoped>
 
-.fill {
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100vw;
-    height: 92.1vh;
-    overflow-y: hidden;
-}
 .container-fluid {
-    background: linear-gradient( rgba(55, 55, 55, .45), rgba(55, 55, 55, .45)), url('https://topwatch.vn/upload_images/images/topwatch-huong-dan-su-dung-va-bao-quan-dong-ho(1).jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    /* height: 100vh; */
+    height: 100vh;
+}
+
+.container-fluid {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://topwatch.vn/upload_images/images/topwatch-huong-dan-su-dung-va-bao-quan-dong-ho(1).jpg");
+  height: 92.95vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
 }
 
 #watch-collection {
-    background: rgba(40,40,40,.6);
+    /* background: rgba(40,40,40,.2   ); */
     overflow-y: scroll;
 }
 
@@ -187,10 +171,14 @@ export default {
     -webkit-text-stroke: 1px black;
 }
 
+#brandLogo {
+    max-height: 75px;
+}
+
 @media(max-height: 768px) {
     .container-fluid {
         overflow-y: scroll !important;
-        height: auto;
+        /* height: auto; */
     }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
     <b-container>
         <b-row>            
-            <b-col cols="12" md="10" xl="8" class="mx-auto" align-h="center">
+            <b-col>
                 <b-form @submit.prevent="submit">
                     <b-card
                     img-src="https://blog.propertyroom.com/wp-content/uploads/2015/07/Watch-Collect.jpg"
@@ -14,7 +14,7 @@
                             <b-alert show v-bind:variant="responseStyle" v-if="showAlert">{{responseMessage}}</b-alert> 
                             <b-form-group id="credentials"
                                 v-if="card == 1"
-                                description="We'll never share your email with anyone else.">
+                                description="We'll never share your email with anyone.">
                                 <b-form-input id="email"
                                             type="email"
                                             v-model="form.email"
@@ -31,7 +31,7 @@
                                             required
                                             autocomplete="off"
                                             placeholder="Create a password"
-                                            class="mt2"
+                                            class="mt-3"
                                             v-if="showPassword"
                                             @input="validatePassword(form.password)">
                                 </b-form-input>
@@ -48,7 +48,7 @@
                                             label="First Name:"
                                             placeholder="First Name">
                                 </b-form-input>
-                                <label class="mt2" for="firstName">Last Name:</label>
+                                <label class="mt-2" for="firstName">Last Name:</label>
                                 <b-form-input id="password"
                                             type="text"
                                             v-model="form.lastName"
@@ -66,7 +66,7 @@
                                     <b-button variant="success" :disabled="!form.firstName || !form.lastName" type="submit" v-if="card == 2">Finish</b-button>
                                 </b-col>
                                 <b-col cols="8" class="right-align">
-                                    <p class="h7 m-1 ">Alread have an account? <span class="link nowrap" @click="toggleAuthChild">Login Here</span></p>
+                                    <p class="h8 m-1 ">Alread have an account? <span class="link nowrap" @click="toggleAuthChild">Login Here</span></p>
                                 </b-col>
                             </b-row>
                         </div>
@@ -168,6 +168,11 @@
 </script>
 
 <style>
+.form-control:focus {
+    border: none;
+    outline: none !important;
+}
+
     #register-wrapper {
         max-width: 60%;
         padding:auto;

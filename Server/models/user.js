@@ -89,26 +89,21 @@ const User = module.exports = function () {
     const CompareHashedAndLogin = function(formData, res) 
     {
         let tempEmail = formData.email.toLowerCase();
-        return knex('peeps')
+        console.log(formData, 'fdata')
+        knex('peeps')
             .select()
             .where('email', tempEmail)
             .first()
             .then((user) => {
-                if(user) 
-                {  
-                    bcrypt.compare(formData.password, user.password, function(err, match) {
-                        if(err) {
-                            res.json({isSuccess: false, message: 'Something went wrong'})
-                        }
-                        else if(match) {
-                            LoginUser(user, res);
-                        }
-                        else res.json({isSuccess: false, message: 'Password is incorrect'});   
+                bcrypt.compare(formData.password, user.password, function(err, match) {
+                    if(match) {
+                        console.log(',atchie', match)
+                        LoginUser(user, res);
+                    }
+                    else res.json({isSuccess: false, message: 'Password is incorrect'});   
                 })   
-                }
-                else {
-                    res.json({isSuccess: false, message: 'User does not exist'})
-                }
+        }).catch(err => {
+            res.json({isSuccess: false, message: 'User does not exist'});  
         })
     }
 

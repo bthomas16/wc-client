@@ -1,5 +1,5 @@
 <template>
-  <b-navbar toggleable="lg" type="dalightrk" class="bg-header">
+  <b-navbar toggleable="lg" type="dark" class="bg-header">
 
   <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
@@ -97,6 +97,15 @@ li.nav-item a {
     max-width: 75%;
   }
 
+  .navbar-brand {
+      font-size: 1.5em;
+  }
+  
+  .navbar-toggler, .navbar-toggler:focus {
+      border:none;
+      outline: none;
+  }
+
 @media(max-width: 575px) {
   .navbar-collapse {
     background-color: rgba(2,36,95,.1);
@@ -125,7 +134,6 @@ li.nav-item a {
   #ads .img-fluid {
     max-width: 100%;
   }
-
 }
 
 </style>

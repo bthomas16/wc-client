@@ -31,12 +31,12 @@ router.post('/login', async (req, res) =>
 router.get('/validate-jwt', (req, res) => 
 {
   let token = req.query.jwt;
-  console.log('verifying', req.params)
-    jwt.verify(token, config.secret, function(err, decoded) {
-      console.log(err, 'oh nooo')
+  console.log('tokenin', token)
+  // if(!token) res.status(401).json({ isSuccess: false, message: 'No token provided'});
+    jwt.verify(token, config.secret, function(err, decoded) { 
     if (err) {
       console.log(err, decoded, 'hudfh')
-      res.json({ isSuccess: false, message: 'Your session has expired - Please Logout and Login again.'});
+      res.status(401).json({ isSuccess: false, message: 'Your session has expired - Please Logout and Login again.'});
     }
     res.status(200).json({isSuccess: true, message: 'User is authorized'})
   })
@@ -45,7 +45,7 @@ router.get('/validate-jwt', (req, res) =>
 
 router.get('/profile', VerifyToken, (req, res) => 
 {
-  console.log('token kjasdfgh verifued egwebjfv', req.id)
+  console.log('token poopy face mcgee', req.id)
   if(req.id)
   {
     User.FindUser(req.id, res);

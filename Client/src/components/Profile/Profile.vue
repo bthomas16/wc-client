@@ -1,9 +1,9 @@
 <template>
-    <b-container ref="profileRef" v-if="isUserLoaded">
-       <b-row >
-            <b-col lg="2" md="3" cols="12" class="border bg-lightgray">
+    <b-container ref="profileRef" v-if="isUserLoaded" class="p-0">
+       <b-row no-gutters>
+            <b-col lg="2" md="3" cols="12" class="border bg-lightgray mx-auto">
                <app-profile-info></app-profile-info>
-               <b-row class="d-none d-md-block">
+               <b-row class="d-none d-md-block" no-gutters>
                     <b-col class="mx-auto" cols="12"><app-sidebar></app-sidebar></b-col>
                </b-row>
                <b-row class="d-none d-md-block mt-50">

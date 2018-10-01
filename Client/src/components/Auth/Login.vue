@@ -1,49 +1,50 @@
 <template>
     <b-container class="mt3">
         <b-row>            
-            <b-col cols="12" md="10" xl="8" class="mx-auto" align-h="center">
+            <b-col cols="12" class="mx-auto" align-h="center">
                 <b-alert v-if="showAlert" v-bind:variant="responseStyle">{{responseMessage}}</b-alert>
                 <b-form @submit.prevent="onSubmit">
                     <b-card
-                            img-src="https://blog.propertyroom.com/wp-content/uploads/2015/07/Watch-Collect.jpg"
-                                    img-alt="Card image"
-                                    
-                                    class="m-0 relative"
-                                    >
-                                <div class="card-text mx-auto"> 
-                                    <h4>Login to manage your collection!</h4>
-                                    <b-alert show v-bind:variant="responseStyle" v-if="showAlert">{{responseMessage}}</b-alert> 
-                                    <b-form-group id="exampleInputGroup1"
-                                    label="Email address:"
-                                    label-for="email">
-                                        <b-form-input id="email"
-                                                    type="email"
-                                                    v-model="form.email"
-                                                    required
-                                                    placeholder="Enter email">
-                                        </b-form-input>
-                                    </b-form-group>
-                                    <b-form-group id="exampleInputGroup2"
-                                                    label="Your Password:"
-                                                    label-for="password">
-                                        <b-form-input id="password"
-                                                    type="password"
-                                                    v-model="form.password"
-                                                    required
-                                                    placeholder="Enter name">
-                                        </b-form-input>
-                                    </b-form-group>
-                                    <h6 class="red thin h7">{{responseMessage}}</h6>
-                                    <b-row align-v="center">
-                                        <b-col>
-                                            <b-button type="submit" variant="primary">Submit</b-button>
-                                        </b-col>
-                                        <b-col class="right-align">
-                                            <p sm="9" class="mt2 h6">Don't have an account? <span class="link nowrap" @click="toggleAuthChild">Register Here</span></p>
-                                        </b-col>
-                                    </b-row>
-                                </div>
-                            </b-card>
+                    img-src="https://blog.propertyroom.com/wp-content/uploads/2015/07/Watch-Collect.jpg"
+                            img-alt="Card image"
+                            
+                            class="m-0 relative"
+                            >
+                        <div class="card-text mx-auto"> 
+                            <h4>Login to manage your collection!</h4>
+                            <b-alert show v-bind:variant="responseStyle" v-if="showAlert">{{responseMessage}}</b-alert> 
+                            <b-form-group id="exampleInputGroup1"
+                            label="Email address:"
+                            label-for="email">
+                                <b-form-input id="email"
+                                            type="email"
+                                            v-model="form.email"
+                                            required
+                                            autocomplete="off"
+                                            placeholder="Enter email">
+                                </b-form-input>
+                            </b-form-group>
+                            <b-form-group id="exampleInputGroup2"
+                                            label="Your Password:"
+                                            label-for="password">
+                                <b-form-input id="password"
+                                            type="password"
+                                            v-model="form.password"
+                                            required
+                                            autocomplete="off"
+                                            placeholder="Enter name">
+                                </b-form-input>
+                            </b-form-group>
+                            <b-row align-v="center">
+                                <b-col>
+                                    <b-button type="submit" variant="primary">Submit</b-button>
+                                </b-col>
+                                <b-col cols="8" class="right-align">
+                                    <p class="h8 m-1 ">Don't have an account? <span class="link nowrap" @click="toggleAuthChild">Register Here</span></p>
+                                </b-col>
+                            </b-row>
+                        </div>
+                    </b-card>
                 </b-form>
             </b-col>
         </b-row>

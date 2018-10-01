@@ -1,7 +1,5 @@
 <template>
     <b-container id="collection-container" class="">
-
-
         <b-row v-if="Collection" align-h="center">
             <b-col>
                 <b-row class="my-3 mx-auto center m-left-align" align-v="center" align-h="center">
@@ -22,53 +20,60 @@
                     </b-col>
                 </b-row>
                 
-                <div class="w-75 mx-auto pt-4 relative"> 
-                    <div class="absolute r0 t0 mr-6 pointer gray bold" v-if="isManagingCollection" @click="isManagingCollection = false"><strong>Cancel</strong></div>
-                    <div class="absolute r0 t0 ml-5 pointer green bold" v-if="isManagingCollection" @click="isManagingCollection = false"><strong>Update</strong></div>
-                </div>
+                <b-row class="w-100 mb-2 mb-md-2 relative" no-gutters align-h="center"> 
+                    <b-col cols="12" md="10" class="border-bottom"></b-col>
+                    <b-col cols="12" md="10">
+                        <b-row no-gutters>
+                            <b-col cols="auto" class="l-0 t-0 pointer gray bold h5 my-1" v-if="isManagingCollection" @click="isManagingCollection = false"><strong class="red">X</strong></b-col>
+                            <b-col class="ml-3 l-0 t-0 pointer green bold h5 my-1" v-if="isManagingCollection" @click="isManagingCollection = false"><strong class="green">&#x2713;</strong></b-col>
+                        </b-row>
+                    </b-col>
+                    
+                </b-row>
 
-                <div class="w-75 border-bottom mx-auto mb-4 relative">
-                </div>
                 
-                
+                {{this.$store.getters.getFavorites}}
 
                 <!-- FILTER WATCH ARRAY / RESULTS -->
                 
-                <b-row  align-v="start" align-h="between" v-if="isManagingCollection" no-gutters>
-                    <b-col cols="4" md="3"  class="pr-4 manage-btn-border" >
-                        <b-row align-v="center" align-h="center" id="watch-controls">
-                            <b-col lg="5" cols="12" >
-                                <b-button id="manage" variant="primary" block>Manage</b-button>
+                <b-row  align-v="start" align-h="center" v-if="isManagingCollection">
+                    <b-col cols="4" md="4"  class="pr-4 manage-btn-border" >
+                        <b-row align-v="start" align-h="center" id="watch-controls">
+                            <b-col lg="6" cols="12" class="mx-auto center" >
+                                <b-button id="manage" variant="primary" block size="sm">Manage</b-button>
                             </b-col>
                             <b-col lg="6" cols="12" class="mt-2 mt-lg-0">
-                                <b-button id="manage" variant="success" @click="addWatchModal" size="sm" block>+ Watch</b-button>
+                                <b-button id="addWatch" variant="success" @click="addWatchModal" size="sm" block>+ Watch</b-button>
                             </b-col>
                         </b-row>
                     </b-col>
-                    <b-col cols="8" md="9" class="px-3">
-                        <b-row align-v="start" align-h="start">
-                            <b-col cols="5" sm="3">
-                                <b-dropdown text="filterBy" variant="info" size="" block>
-                                    <b-dropdown-item-button>First item</b-dropdown-item-button>
-                                    <b-dropdown-item-button>Second item</b-dropdown-item-button>
-                                    <b-dropdown-divider></b-dropdown-divider>
-                                    <b-dropdown-item-button>Separated Item</b-dropdown-item-button>
-                                </b-dropdown>
+                    <b-col cols="8">
+                        <b-form-row align-v="start" align-h="start" >
+                            <b-col cols="4" lg="2" >
+                                <b-button variant="info" size="sm" block>
+                                    Sort
+                                </b-button>  
                             </b-col>
                             
-                            <b-col cols="12" sm="5" order="3" order-lg="2" >
-                                <b-input-group prepend="&#9906;" class="mt-2 mt-sm-0">
-                                    <b-form-input type="text" placeholder="Search" ></b-form-input>
+                            <b-col cols="7"  lg="3" class="mt-0 mt-sm-0">
+                                <b-button variant="primary  " size="sm" block>
+                                    Watch Style
+                                </b-button>      
+                            </b-col>
+                            <b-col cols="12"  lg="3" class="mt-2 mt-md-0 d-none d-lg-block">
+                                <b-button variant="white" size="sm" block>
+                                    Watch Status
+                                </b-button>      
+                            </b-col>
+                            <b-col cols="11" lg="4" order="3">
+                                <b-input-group prepend="&#9906;" class="mt-2 mt-lg-0" size="sm">
+                                    <b-form-input type="text" placeholder="Search" size="sm"></b-form-input>
                                 </b-input-group>
                             </b-col>
-                            <b-col cols="7"  sm="3" order-lg="3" class="mt-0 mt-sm-0">
-                                <b-row align-v="start" align-h="start">
-                                    <b-col >
-                                        <b-form-input placeholder="8/pg" type="number" block></b-form-input>
-                                    </b-col>
-                                </b-row>      
-                            </b-col>
-                        </b-row>
+                        </b-form-row>
+                        <!-- <b-row no-gutters align-h="start">
+                            
+                        </b-row> -->
                     </b-col>
                 </b-row>
 
@@ -142,8 +147,6 @@
                 </b-btn>
             </div>
         </b-modal>
-
-        {{Collection}}
     
     </b-container>
 </template>
@@ -162,7 +165,7 @@ export default {
     },
     data () {
         return {
-            filterBy: "Recently Added",
+            Sort: "Recently Added",
             showDismissibleAlert: false,
             isEdit: false,
             selectedWatch: {},
@@ -170,7 +173,8 @@ export default {
             isManagingCollection: false,
             addWatchCount: 1,
             addWatch: {},
-            isFeaturedWatch: false
+            isFeaturedWatch: false,
+            hasCollection: false
         }
     },
 
@@ -239,23 +243,30 @@ export default {
 
         Collection() 
         {
+            console.log('poop')
             let watchCollection = this.$store.getters.getCollection;
             console.log(watchCollection)
-            if(!watchCollection || watchCollection.length < 1) return false;                  
+            if(!watchCollection || watchCollection.length < 1) {
+                return false;          
+            }
+            else {               
             return watchCollection.sort((a, b) => {
+                // if(b.order == a.order) b.order += 1;
                 return a.order - b.order;
             })
+            }       
         }
     },
 
     created: function() 
     {
         this.$store.dispatch('loadUserCollection');
+        this.$store.dispatch('getFavorites');
     }
 }
 </script>
 
-<style>
+<style scoped>
     .dropdown {
         font-size: .5em; 
     }
@@ -275,10 +286,25 @@ export default {
         border-right: 1px solid lightgray;
     }
 
-    #manage {
-        padding:.4em;
-        font-size:1em;
+    .btn {
+        text-align: center;
+        font-size: .85em;
     }
+
+
+@media(min-width: 580px) {
+    .btn  {
+        padding: .6em 2em;
+    }
+
+    .form-control {
+        padding: 1.405em .5em !important; 
+    }
+
+    .input-group-prepend .input-group-text {
+        padding: 1.405em !important;
+    }
+}
 
 @media(max-width: 750px) {
     .modal-dialog {
@@ -292,16 +318,6 @@ export default {
     #dropdown {
         font-size: .8em;
         padding:0;
-    }
-}
-
-@media(max-width: 420px) {
-    #manage {
-        padding:.3em;
-    }
-
-    #watch-controls {
-        font-size: .85em;
     }
 }
 

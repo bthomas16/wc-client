@@ -19,8 +19,8 @@ export const routes = [
 ];
 
 function dissallowAuth(to, from, next) {
-    console.log('dissallow')
     let jwt = localStorage.getItem('watchJwt');
+    console.log('dissallow', jwt)
     if(!jwt) next();
     else 
     {
@@ -35,16 +35,16 @@ function dissallowAuth(to, from, next) {
 }
 
 function requireAuth(to, from, next) { 
-    console.log('allow')
     let jwt = localStorage.getItem('watchJwt');
-    if(jwt) 
-    {
+    console.log('allow', jwt);
+
+    if(jwt){
         store.dispatch('validateJwt').then(res => {
             if(res.isSuccess) next();
             else next('/');
         }).catch(() => {
             next('/')
-        })
+        })   
     }
     else next('/');
 }

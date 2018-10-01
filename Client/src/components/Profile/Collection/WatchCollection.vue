@@ -1,42 +1,30 @@
 <template>
-    <b-container fluid >
-        <b-row id="watchRow" align-h="between" class="mt-4">
+    <b-container fluid>
+        <b-row id="watchRow" align-h="between" class="mt-3 mt-md-4">
 
-
-            <!-- <div class="col-md-3">
-                <draggable class="list-group" element="ul" v-model="list" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="isDragging=false">
-                    <transition-group type="transition" :name="'flip-list'">
-                    <li class="list-group-item" v-for="element in list" :key="element.order">
-                        <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click=" element.fixed=! element.fixed" aria-hidden="true"></i>
-                        {{element.name}}
-                        <span class="badge">{{element.order}}</span>
-                    </li>
-                    </transition-group>
-                </draggable>
-            </div> -->
             <draggable :Collection="Collection" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="onEnd">
-                <b-col cols="3" md="3" class="dropZone left" v-for="watch in Collection" :key="watch.id" :id="watch.id">
-                    <b-row align-v="start" align-h="around" class="watch mb-3">
-                        <b-col cols="11" class="watch-wrapper order-1 p-2 border box-shadow" >
+                <b-col cols="4" md="3" class="left" v-for="(watch) in Collection" :key="watch.id" :id="watch.id">
+                    <b-row align-v="start" align-h="around" class="watch mb-3" no-gutters>
+                        <b-col cols="12" class="watch-wrapper order-1 border box-shadow" >
                             <b-row aling-h="center" align-v="center" no-gutters>
-                                <b-col cols="12" lg="6" class="mx-auto">
+                                <b-col cols="12" xl="6" class="mx-auto">
                                     <b-img
                                     @click="selectWatch(watch)"
                                     src="https://n3.sdlcdn.com/imgs/e/v/o/SDL044502225_1-6ee47.jpg" 
-                                    fluid>
+                                    fluid class="pointer">
                                     </b-img>
                                 </b-col>
-                                <b-col lg="6" class="d-none d-lg-block">
-                                    <b-row align-h="end" no-gutters>
-                                        <h6 class="nowrap"><strong>{{watch.name}} ORDER: {{watch.order}}</strong></h6>
-                                        <b-col cols="10" class="mt-5 px-1">
-                                            <b-button variant="outline-info" size="sm" block @click="selectWatch(watch)" class="z4">See More</b-button>
+                                <b-col cols="12" xl="6" class="d-none d-md-block mx-auto">
+                                    <b-row align-h="center" no-gutters>
+                                        <h6 id="watchName" class="nowrap right-align right r0 mt-3 mr-0 mr-md-3 absolute col-11 overflow-hidden"><strong>{{watch.name}}</strong></h6>
+                                        <b-col cols="10" class="mt-0 mt-md-5">
+                                            <b-button id="seeMore" variant="outline-info" size="sm" block @click="selectWatch(watch)" class="z4 py-1 center">See More</b-button>
                                         </b-col>
-                                        <b-col cols="10" class="px-1 h6"> 
-                                            <b-button id="searchRef" variant="primary" class="mt-2" size="sm" block>Search Ref #</b-button>   
+                                        <b-col cols="10"> 
+                                            <b-button id="searchRef" variant="primary" class="mt-2 py-1" size="sm" block>Search Model</b-button>   
                                         </b-col>
-                                        <b-col cols="10" class="p-0" >
-                                            <b-img :src="emptyHeart" width="40px;" class="pointer right" ></b-img> 
+                                        <b-col cols="10" class="p-0 my-1" >
+                                            <b-img :src="isFavoriteWatch(watch.id) ? fullHeart : emptyHeart" width="30px;" class="heartIcon pointer right" @click="favoriteToggle(watch.id)"></b-img> 
                                         </b-col>
                                     </b-row>
                                 </b-col>
@@ -65,8 +53,6 @@ export default {
             isEditMode: false,
             emptyHeart: "http://localhost:8081/api/static-assets/empty-heart.png",
             fullHeart: "http://localhost:8081/api/static-assets/full-heart.png",
-
-
             // DRAGABLE PROPERTIES
 
             editable: true,
@@ -74,7 +60,9 @@ export default {
             delayedDragging: false
         }
     },
-    props: ['Collection'],
+    props: {
+        Collection: Array
+    },
     methods: {
         selectWatch(watch) {
             this.$emit('selectWatch', watch)
@@ -93,22 +81,17 @@ export default {
             })
         },
 
-        // DRAGABLE METHODS
-
-        // Button to sort original order
-        // orderList() {
-        //     this.Collection = this.Collection.sort((one, two) => {
-        //         return one.order - two.order;
-        //     });
-        // },
+        // DRAGABLE METHODS 
 
         onEnd(event) {
-            console.log(event.newIndex)
+            console.log(event)
             let watchToUpdate = {
                     id: event.item.id,
-                    order: event.newIndex
+                    newIndex: event.newIndex,
+                    oldInex: event.oldIndex
                 }
             // setTimeout(() =>{
+                console.log(this.Collection)
                 this.$store.dispatch('updateWatchOrder', watchToUpdate);
             // }, 1200)
         },
@@ -130,16 +113,19 @@ export default {
             console.log(value);
         },
 
-        getComponentData() {
-            return {
-                on: {
-                change: this.handleChange,
-                input: this.inputChanged
-                },
-                props: {
-                value: this.name
-                }
-            };
+        favoriteToggle(watchId) {
+            this.$store.dispatch('toggleWatchFavorite', watchId);
+        },
+
+        isFavoriteWatch(watchId) {
+            if(this.Favorites) {
+             let found = this.Favorites.find((w) => {
+                    return w.watch_id == watchId
+                })
+                if(found) return true
+                else return false
+            }
+
         }
     },
 
@@ -153,6 +139,10 @@ export default {
                 ghostClass: "ghost"
             };
         },
+
+        Favorites() {
+            return this.$store.getters.getFavorites;
+        }
 
         
     },
@@ -171,9 +161,17 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+    #watchName {
+        font-size: .80em;
+    }
+
+    #seeMore {
+        font-size: .70em;
+    }
+
     #searchRef {
-        font-size: .75em;
+        font-size: .60em;
     }
 
     .btn {
@@ -209,16 +207,22 @@ export default {
     background:lightgreen;
     color:#fff;
     }
-
-
     @media(min-width: 765px) and (max-width: 815px) {
-        #searchRef {
-            font-size: .5em;
+        #searchRef, #seeMore {
+            font-size: .6em;
+        }
+
+        #watchName {
+            font-size: .65em;
+        } 
+
+        .heartIcon {
+            width: 20px;
         }
     }
 
     @media(max-width: 415px) {
-        #searchRef {
+        #searchRef, #seeMore {
             font-size: .65em;
         }
     }

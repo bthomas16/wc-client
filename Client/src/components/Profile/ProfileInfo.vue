@@ -1,6 +1,6 @@
 <template>
-    <b-container class="p-0 m-0" >
-        <b-row align-v="center" align-h="center" class="p-0 mx-auto py-3">
+    <b-container>
+        <b-row align-v="center" align-h="center" class="py-3" >
             <b-col cols="5" sm="4" md="12" class="m-0 mx-auto center pt-lg-1">
                 <b-img :src="profPic" fluid style="height: auto; max-height: 125px;" class="profPic mx-auto box-shadow" rounded="circle"></b-img>
             </b-col>
@@ -8,9 +8,9 @@
                 <!-- {{state}} -->
                 <p class="p-0 my-1 ml-1 h5 bold">{{User.firstName}} {{User.lastName}}</p>
                 <!-- <b-col class="p-0 my-1 ml-1 h4">Rating</b-col>               -->
-                <p class="p-0 my-1 mt-2 ml-1 m-h5 h7"><strong>(4)</strong> Watches for Trade</p>
-                <p class="p-0 my-1 ml-1 m-h5 h7"><strong>(19)</strong> Trades</p>
-                <p class="p-0 my-1 ml-1 m-h5 h7"><strong>(16)</strong> Watches for Sale</p>
+                <p class="p-0 my-1 mt-2 ml-1 m-h5 h7"><strong>({{Collection.length || 0}})</strong> Watches Total</p>
+                <p class="p-0 my-1 ml-1 m-h5 h7"><strong>({{watchesForTrade.length || 0}})</strong> Watches FSOT</p>
+                <p class="p-0 my-1 ml-1 m-h5 h7"><strong>({{Favorites.length || 0}})</strong> Watches Favorited</p>
             </b-col>
             
         </b-row>
@@ -31,6 +31,22 @@
     computed: {
         User() {
             return this.$store.state.User
+        },
+
+        Collection() {
+            return this.$store.getters.getCollection;
+        },
+
+        watchesForTrade() {
+            let Collection = this.$store.getters.getCollection;
+            let filteredCollection = Collection.filter(watch => {
+                if(watch.isForSale || watch.isForTrade) return watch;
+            })
+            return filteredCollection;
+        },
+
+        Favorites() {
+            return this.$store.state.Favorites;
         }
     }
 }
