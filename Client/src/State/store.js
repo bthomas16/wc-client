@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 const axios = require('axios'),
     LOADING = "LOADING",
+    NOT_LOADING = "NOT_LOADING",
     AUTHENTICATING = "AUTHENTICATING",
     AUTH_SUCCESS = "AUTH_SUCCESS",
     AUTH_FAILURE = "AUTH_FAILURE",
@@ -38,8 +39,8 @@ const mutations =
         state.isLoading = true;
     },
 
-    [AUTHENTICATING] (state) {
-        state.isLoading = true;
+    [NOT_LOADING] (state) {
+        state.isLoading = false;
     },
 
     [AUTH_SUCCESS] (state, user) 
@@ -108,8 +109,8 @@ const actions =
 
     login(context, formData) 
     {
+        context.commit(LOADING); // show spinner
         return new Promise((resolve, reject) => {
-            context.commit(AUTHENTICATING); // show spinner
                 axios.post('/api/user/login', formData)
                 .then(res => {
                     localStorage.setItem('watchJwt', res.data.token);
@@ -125,8 +126,8 @@ const actions =
 
     register(context, formData) 
     {
+        context.commit(LOADING);// show spinner
         return new Promise((resolve, reject) => {
-            context.commit(AUTHENTICATING); // show spinner
             axios.post('/api/user/register', formData)
             .then(res => {
                 localStorage.setItem('watchJwt', res.data.token);
@@ -144,6 +145,7 @@ const actions =
     },
 
     user(context) {
+        context.commit(LOADING);        
         axios.get('/api/user/profile', {
             headers: {
                 'Content-Type': 'application/json',
@@ -153,17 +155,21 @@ const actions =
             context.commit(AUTH_SUCCESS, res.data.user)
         }).catch(err => {
             console.log(err)
+            context.commit(NOT_LOADING);
         })
     },
 
     logout(context) 
     {   
+        context.commit(LOADING);        
         localStorage.removeItem('watchJwt');
         context.commit(LOGOUT);
+        context.commit(NOT_LOADING);        
     },
 
     validateJwt(context) 
     {
+        context.commit(LOADING);        
         return new Promise((resolve, reject) => {
             console.log('validating jwt', localStorage.getItem('watchJwt'))
             axios.get('/api/user/validate-jwt', {
@@ -175,6 +181,7 @@ const actions =
                 resolve(res.data)
             }).catch(err => {
                 reject()
+                context.commit(NOT_LOADING);
                 console.log(err)
             })
         })
@@ -190,13 +197,16 @@ const actions =
         })
         .then(res => {
             context.commit(LOAD_COLLECTION, res.data.collection);
+            context.commit(NOT_LOADING);            
         }).catch(err => {
             console.log('errorreres', err)
             context.commit(LOAD_COLLECTION, []);
+            context.commit(NOT_LOADING);            
         })
     },
 
     submitWatch(context, watch) {
+        context.commit(LOADING);        
         return new Promise((resolve, reject) => {
             if(!context.state.Collection) watch.order = 0;
             else watch.order = context.state.Collection.length + 1;
@@ -211,7 +221,8 @@ const actions =
                     context.commit(SUBMIT_WATCH, res.data.watch)
                     resolve(res.data)
             }).catch((err) => {
-                reject(err.data);        
+                reject(err.data);   
+                    context.commit(NOT_LOADING);      
             })
         })
     },
@@ -272,6 +283,10 @@ const actions =
 
 const getters = 
 {
+    getLoadingStatus(state) {
+        return state.isLoading;
+    },
+
     getUserAuthStatus(state) {    
         return state.isAuthorized;
     },

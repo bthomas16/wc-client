@@ -6,17 +6,9 @@
                     <b-col cols="12" md="5" class="p-0 m-0">
                         <h3>{{User.firstName}}'s Collection</h3>
                     </b-col>
-                    <b-col cols="12" md="7" class="p-0 m-0">
-                        <b-row>
-                            <b-col>
-                                <b-col class="m-0 p-0 my-2 mb-md-3 ">
-                                    <h5 class="m-h4">Favorite Piece: <strong>Rolex Submariner</strong> </h5> 
-                                </b-col>
-                                <b-col class="p-0">
-                                    <h5 class="m-h4">Total Value: <strong class="green">{{getCollectionTotalValue}}</strong> </h5>
-                                </b-col>
-                            </b-col>
-                        </b-row>
+                    <b-col cols="12" md="6" class="p-0 m-0 right-align m-left-align mt-2 mt-md-0">
+                        <p cols="12" class="mb-1 mb-md-0 m-h4 right w-100">Favorite Piece: <strong>Rolex Submariner</strong> </p> 
+                        <p class="my-0 m-h4 mt-0 right w-100">Total Value: <strong class="green">{{getCollectionTotalValue}}</strong> </p>
                     </b-col>
                 </b-row>
                 
@@ -30,9 +22,6 @@
                     </b-col>
                     
                 </b-row>
-
-                
-                {{this.$store.getters.getFavorites}}
 
                 <!-- FILTER WATCH ARRAY / RESULTS -->
                 
