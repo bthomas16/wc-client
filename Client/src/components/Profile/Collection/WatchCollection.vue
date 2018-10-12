@@ -5,7 +5,8 @@
             <draggable :Collection="Collection" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="onEnd">
                 <b-col cols="4" md="3" class="left" v-for="(watch) in Collection" :key="watch.id" :id="watch.id">
                     <b-row align-v="start" align-h="around" class="watch mb-3" no-gutters>
-                        <b-col cols="12" class="watch-wrapper order-1 border box-shadow" >
+                        <b-col cols="12" class="watch-wrapper order-1 border box-shadow relative" >
+                            <p id="editIcon" v-if="isManagingCollection" class="bg-blue absolute r0 t0 h6 pointer z4" @click="editWatch(watch)"></p>
                             <b-row aling-h="center" align-v="center" no-gutters>
                                 <b-col cols="12" xl="6" class="mx-auto">
                                     <b-img
@@ -50,7 +51,6 @@ export default {
 
     data () {
         return {
-            isEditMode: false,
             emptyHeart: "http://localhost:8081/api/static-assets/empty-heart.png",
             fullHeart: "http://localhost:8081/api/static-assets/full-heart.png",
             // DRAGABLE PROPERTIES
@@ -61,7 +61,8 @@ export default {
         }
     },
     props: {
-        Collection: Array
+        Collection: Array,
+        isManagingCollection: Boolean
     },
     methods: {
         selectWatch(watch) {
@@ -79,6 +80,10 @@ export default {
                 this.addWatch = {}
                 this.$store.dispatch('loadUserCollection');
             })
+        },
+
+        editWatch(watch) {
+            this.$emit('editWatchModal', watch);
         },
 
         // DRAGABLE METHODS 
@@ -125,7 +130,6 @@ export default {
                 if(found) return true
                 else return false
             }
-
         }
     },
 
@@ -184,6 +188,19 @@ export default {
 
     .left {
         float: left;
+    }
+
+    #editIcon {
+        border-radius: 50%;
+        border: 1px solid white;
+        background-image: url('http://localhost:8081/api/static-assets/editIcon1.png');
+        background-position: center;
+        background-size: 70%;
+        background-repeat:no-repeat;
+        width: 2.25em;
+        height: 2.25em;
+        margin-top: -.5em;
+        margin-right: -.5em;
     }
 
     .dropZone[aria-dropeffect="move"]  {

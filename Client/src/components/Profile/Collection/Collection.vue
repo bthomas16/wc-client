@@ -3,30 +3,28 @@
         <b-row v-if="Collection" align-h="center">
             <b-col>
                 <b-row class="my-3 mx-auto center m-left-align" align-v="center" align-h="center">
-                    <b-col cols="12" md="5" class="p-0 m-0">
-                        <h3>{{User.firstName}}'s Collection</h3>
+                    <b-col cols="12" md="5" class="p-0 m-0 h5 m-h1">
+                        <strong>{{User.firstName}}'s Collection</strong>
                     </b-col>
                     <b-col cols="12" md="6" class="p-0 m-0 right-align m-left-align mt-2 mt-md-0">
-                        <p cols="12" class="mb-1 mb-md-0 m-h4 right w-100">Favorite Piece: <strong>Rolex Submariner</strong> </p> 
-                        <p class="my-0 m-h4 mt-0 right w-100">Total Value: <strong class="green">{{getCollectionTotalValue}}</strong> </p>
+                        <p cols="12" class="mb-1 mb-md-0 m-h2 right w-100">Favorite Piece: <strong>Rolex Submariner</strong> </p> 
+                        <p class="my-0 m-h2 mt-0 right w-100">Total Value: <strong class="green">{{getCollectionTotalValue}}</strong> </p>
                     </b-col>
                 </b-row>
                 
                 <b-row class="w-100 mb-2 mb-md-2 relative" no-gutters align-h="center"> 
                     <b-col cols="12" md="10" class="border-bottom"></b-col>
                     <b-col cols="12" md="10">
-                        <b-row no-gutters>
-                            <b-col cols="auto" class="l-0 t-0 pointer gray bold h5 my-1" v-if="isManagingCollection" @click="isManagingCollection = false"><strong class="red">X</strong></b-col>
-                            <b-col class="ml-3 l-0 t-0 pointer green bold h5 my-1" v-if="isManagingCollection" @click="isManagingCollection = false"><strong class="green">&#x2713;</strong></b-col>
+                        <b-row no-gutters align-h="between">
+                            <b-col cols="6" class="left-align pointer gray bold h5 my-1" v-if="isManagingCollection" @click="isManagingCollection = false"><strong class="red">X</strong></b-col>
+                            <b-col cols="6" class="right-align pointer lightgray bold h5 my-1" v-if="isManagingCollection" @click="updatedFilteredCollection"><strong>Reset</strong></b-col>
                         </b-row>
-                    </b-col>
-                    
+                    </b-col> 
                 </b-row>
 
                 <!-- FILTER WATCH ARRAY / RESULTS -->
-                
                 <b-row  align-v="start" align-h="center" v-if="isManagingCollection">
-                    <b-col cols="4" md="4"  class="pr-4 manage-btn-border" >
+                    <b-col cols="4" md="4"  class="manage-btn-border" >
                         <b-row align-v="start" align-h="center" id="watch-controls">
                             <b-col lg="6" cols="12" class="mx-auto center" >
                                 <b-button id="manage" variant="primary" block size="sm">Manage</b-button>
@@ -38,31 +36,21 @@
                     </b-col>
                     <b-col cols="8">
                         <b-form-row align-v="start" align-h="start" >
-                            <b-col cols="4" lg="2" >
-                                <b-button variant="info" size="sm" block>
-                                    Sort
-                                </b-button>  
+                            <b-col cols="6" lg="3" class="selectWrapper">
+                                <b-form-select id="sortedArr" class="btn m-0 p-0 pl-1" :options="sortOptions" v-model.number="sortFilter" @change="getSortedArr"/>
                             </b-col>
-                            
-                            <b-col cols="7"  lg="3" class="mt-0 mt-sm-0">
-                                <b-button variant="primary  " size="sm" block>
-                                    Watch Style
-                                </b-button>      
+                            <b-col cols="6" lg="3" class="mt-0 mt-sm-0 selectWrapper">
+                                <b-form-select class="btn m-0 p-0 pl-1" :options="styleOptions" v-model="styleFilter" @change="getStyleArr"/>  
                             </b-col>
-                            <b-col cols="12"  lg="3" class="mt-2 mt-md-0 d-none d-lg-block">
-                                <b-button variant="white" size="sm" block>
-                                    Watch Status
-                                </b-button>      
+                            <b-col cols="12"  lg="2" class="mt-2 mt-md-0 d-none d-lg-block selectWrapper">
+                                <b-form-select class="btn m-0 p-0 pl-1" :options="statusOptions" v-model="statusFilter" @change="getStatusArr"/>     
                             </b-col>
-                            <b-col cols="11" lg="4" order="3">
+                            <b-col cols="12" lg="4" order="3" class="selectWrapper">
                                 <b-input-group prepend="&#9906;" class="mt-2 mt-lg-0" size="sm">
-                                    <b-form-input type="text" placeholder="Search" size="sm"></b-form-input>
+                                    <b-form-input id="searchInput" type="text" placeholder="Searches" size="sm" @input="getSearchArr" v-model="searchFilter"></b-form-input>
                                 </b-input-group>
                             </b-col>
                         </b-form-row>
-                        <!-- <b-row no-gutters align-h="start">
-                            
-                        </b-row> -->
                     </b-col>
                 </b-row>
 
@@ -71,43 +59,46 @@
                         <b-button variant="info" class="my-0" size="sm" @click="isManagingCollection = true" block>Manage Collection</b-button>
                     </b-col>
                 </b-row>
-
-                <!-- LOOP THROUGH WATCHES -->
-
-                <watch-collection @selectWatch="selectWatch" :Collection="Collection"></watch-collection>
-
+                <watch-collection 
+                    @selectWatch="selectWatch" 
+                    @editWatchModal="editWatchModal" 
+                    :Collection="filteredCollection" 
+                    :isManagingCollection="isManagingCollection">
+                </watch-collection>
             </b-col>
         </b-row>
 
         <!-- No watch collection / Start Collection -->
-
         <b-row v-else align-h="center">
-            <b-col cols="11" md="8" class="ml-3 border my-5 center p-5" id="begin-collection">
-                <h3 class="center">Welcome to the WATCH COLLECTION!</h3>  
-                <h5 class="mt-5">Let's get you started by adding a few watches to your collection</h5>
+            <b-col cols="11" md="8" class="border my-5 center p-2 p-md-5" id="begin-collection">
+                <p class="h3 m-h1 center">Welcome to your <span class="nowrap">WATCH COLLECTION!</span></p>  
+                <p class="h5 m-h2 mt-4 mt-md-5">Get started by adding a watch</p>
                 <b-row>
                     <b-col cols="6" class="mx-auto my-3">
-                        <b-button variant="success" class="my-2" size="lg" v-b-modal.add-watch-modal block>Okay!</b-button>
+                        <b-button variant="success" class="my-2" size="lg" @click="addWatchModal" block>Okay!</b-button>
                     </b-col>
                 </b-row>
             </b-col>
         </b-row>
 
         <!-- SEE MORE MODAL -->
-
         <b-modal 
             ref="seeMoreModal" 
             id="see-more-modal"
             :title="selectedWatch.name">
-            <div slot="modal-header-close" class="w-100" @click="cancelAddWatchForm">
+            <div slot="modal-title">{{ selectedWatch.name }}</div>            
+            <div slot="modal-header-close" class="w-100 m-h2 mt-2 mt-md-1" @click="resetWatchFormAndModals">
                 X
             </div>
-            <see-more-modal :selectedWatch="selectedWatch" :isEdit="isEdit"></see-more-modal>
-            <div slot="modal-footer" class="w-100">
-                <b-btn size="sm" class="float-right" variant="primary" @click="submitWatch" v-if="isEdit">
+            <see-more-modal 
+                :selectedWatch="selectedWatch" 
+                :isAddingWatch="isAddingWatch">
+            </see-more-modal>
+            <div slot="modal-footer" class="w-100 mt-0 p-0">
+                <b-btn size="sm" class="float-right" variant="primary" @click="submitWatch" v-if="isAddingWatch || isEditingExistingWatch">
                     Submit
                 </b-btn>
-                <b-btn size="sm" class="float-right" variant="primary" v-b-modal.see-more-modal.close v-else>
+                <b-btn size="sm" class="float-right" variant="primary" v-else @click="resetWatchFormAndModals">
                     Ok
                 </b-btn>
             </div>
@@ -116,25 +107,41 @@
         <!-- ADD WATCH MODAL -->
         <b-modal 
             id="add-watch-modal"
-            ref="addWatchModal">
-            <div slot="modal-header-close" class="w-100" @click="cancelAddWatchForm">
+            ref="addWatchModal"
+            size="lg">
+            <div slot="modal-title" v-if="isAddingWatch">Adding Watch</div>
+            <div slot="modal-title" v-if="isEditingExistingWatch">Editing {{addWatch.name}}</div>
+            <div slot="modal-header-close" class="w-100 m-h2 mt-2 mt-md-1" @click="resetWatchFormAndModals">
                 X
             </div>
-            <add-watch-modal @click="previewWatch" :addWatchCount="addWatchCount" :addWatch="addWatch"></add-watch-modal>
-            <div slot="modal-footer">
-                <b-btn size="lg" class="float-right" :class="addWatchCount == 1 ? '' : 'hidden'" variant="primary" @click="addWatchCount++">
-                    Add Specs
-                </b-btn>
-                <b-button size="lg" variant="info" @click="addWatchCount++" :class="addWatchCount == 2 ? 'float-right' : 'hidden'">
-                    Continue Specs
-                </b-button>
-                <b-btn size="lg" class="float-right" :class="addWatchCount == 3 ? '' : 'hidden'" variant="primary" @click="addWatchCount++">
-                    Add Owner Details
-                </b-btn>
-                <b-btn size="lg" class="float-right" :class="addWatchCount == 4 ? '' : 'hidden'" variant="primary" @click="previewWatch">
-                    Preview
-                </b-btn>
-            </div>
+            <add-watch-modal 
+                :previewWatch="previewWatch" 
+                :addWatch="addWatch" 
+                :addWatchCount="addWatchCount">
+            </add-watch-modal>
+            <b-row slot="modal-footer" no-gutters class="w-100" align-h="end" align-v="center">
+                <b-col cols="8">
+                    <!-- Potential Progress Bar -->
+                    <p v-if="!addWatch.name && addWatchCount == 2" class="red p-0 m-0">*Please add a name for this watch</p>
+                </b-col>
+                <b-col cols="4" class="right-align">
+                    <b-btn  size="sm" class="center white" :class="addWatchCount == 1 ? 'hidden' : ''" variant="warning" @click="addWatchCount--">
+                       Back
+                    </b-btn>
+                    <b-btn size="sm" :class="addWatchCount == 1 ? '' : 'hidden'" variant="primary" @click="addWatchCount++">
+                        Specs
+                    </b-btn>
+                    <b-button size="sm" variant="info" @click="addWatchCount++" :class="addWatchCount == 2 ? '' : 'hidden'" :disabled="!addWatch.name">
+                        Continue
+                    </b-button>
+                    <b-btn size="sm" :class="addWatchCount == 3 ? '' : 'hidden'" variant="primary" @click="addWatchCount++">
+                        Owner Details
+                    </b-btn>
+                    <b-btn size="sm" :class="addWatchCount == 4 ? '' : 'hidden'" variant="primary" @click="previewWatch">
+                        Preview
+                    </b-btn>
+                </b-col>   
+            </b-row>
         </b-modal>
     
     </b-container>
@@ -154,19 +161,65 @@ export default {
     },
     data () {
         return {
-            Sort: "Recently Added",
+            addWatchCount: 1,
+            sortFilter: null,
+            sortOptions: [
+                { value: null, text: 'Condition', disabled: true},
+                { value: 8, text: '8-10'},
+                { value: 5, text: '5-8'},
+                { value: 1, text: '0-5'},
+                // { value: 'recentAcquisition', text: 'Acquired Recently'},
+            ],
+
+            styleFilter: null,
+            styleOptions: [
+                { value: null, text: 'Select a Style', disabled: true},
+                { value: 'Diver', text: 'Diver'},
+                { value: 'Dress', text: 'Dress'},
+                { value: 'Chronograph', text: 'Chronograph'},
+                { value: 'Tourbillon', text: 'Tourbillon'},
+                { value: 'Black Tie', text: 'Black Tie'},
+                { value: 'Sport', text: 'Sport'},
+                { value: 'Smart', text: 'Smart'},
+                { value: 'Apple', text: 'Apple'},
+                { value: 'Casual', text: 'Casual'},
+                { value: 'Orienteering', text: 'Orienteering'},
+            ],
+
+            statusFilter: null,
+            statusOptions: [
+                { value: null, text: 'Status', disabled: true},
+                { value: 'keeper', text: 'Keeper'},
+                { value: 'sale', text: 'For Sale'},
+                { value: 'trade', text: 'For Trade'},
+                { value: 'fsot', text: 'Sale / Trade'},
+                { value: 'favorites', text: 'Favorites'}
+            ],
+
+            searchFilter: null,
+            sortArr: [],
+            styleArr: [],
+            statusArr: [],
+            searchArr: [],
+
+            concatFilteredFinal: [],
             showDismissibleAlert: false,
-            isEdit: false,
+            isAddingWatch: false,
+            isEditingExistingWatch: false,
             selectedWatch: {},
             isSeeMore: false,
             isManagingCollection: false,
-            addWatchCount: 1,
             addWatch: {},
             isFeaturedWatch: false,
-            hasCollection: false
+            hasCollection: false,
+            searchTerms: [
+                'brand',
+                'name',
+                'model',
+                'ref'
+            ]
         }
     },
-
 
     methods: {
         selectWatch(watch) {
@@ -175,74 +228,252 @@ export default {
             this.$refs.seeMoreModal.show();
         },
 
+        editWatchModal(watch) {
+            this.addWatch = watch;
+            this.isAddingWatch = false;
+            this.isEditingExistingWatch = true;
+            this.$refs.addWatchModal.show();            
+        },
+
         addWatchModal() {
+            this.createAddWatch();
+            console.log(this.addWatch)
+            this.isAddingWatch = true;
+            this.isEditingExistingWatch = false;
             this.$refs.addWatchModal.show();
         },
 
-        cancelAddWatchForm() {
+        resetWatchFormAndModals() {
+            this.isAddingWatch = false;
+            this.isEditingExistingWatch = false;
             this.$refs.addWatchModal.hide();
             this.$refs.seeMoreModal.hide();
-            this.addWatch = {};
+            this.addWatch = this.addWatch;
             this.addWatchCount = 1;
         },
         
         previewWatch() {
             this.selectedWatch = this.addWatch;
-            this.isEdit = true;
+            if(this.addWatch.id) {
+                this.isAddingWatch = false;
+                this.isEditingExistingWatch = true;
+            }
+            if(!this.addWatch.id) {
+                this.isAddingWatch = true;
+                this.isEditingExistingWatch = false;
+            }
             this.$refs.addWatchModal.hide(); 
             this.$refs.seeMoreModal.show();
         },
 
         submitWatch() {
-            this.isEdit = false;
+            this.isAddingWatch = false;
+            this.isEditingExistingWatch = false;
+            
             this.$refs.seeMoreModal.hide();
-            this.$store.dispatch('submitWatch', this.addWatch).then(() => {
-                this.addWatch = {}
-                this.addWatchCount = 1;
-            })
-        }
+            console.log('okay here we go', this.addWatch)
+            if(!this.addWatch.id) {
+                console.log('new', this.addWatch.id)
+                this.$store.dispatch('submitNewWatch', this.addWatch).then(() => {
+                    this.createAddWatch(); //reset add watch to defaults
+                    this.addWatchCount = 1; //resets watch count
+                });
+            } 
+            else {
+                console.log('edit', this.addWatch.id)
+                
+                this.$store.dispatch('submitEditWatch', this.addWatch).then(() => {
+                    this.createAddWatch(); //reset add watch to defaults
+                    this.addWatchCount = 1; //resets watch count
+                });
+            }
+        },
 
-        // hasWatchesCollection() {
-        //     let status = this.$store.state.Collection;
-        //     console.log(this.$store.state.Collection)
-        //     if(status){
-        //         if (status == 0) return false;
-        //         return true;
-        //     } else return false
-        // },
+        createAddWatch() {
+            this.addWatch = {
+                src: '',
+                brand: '',
+                name: '',
+                isForSale: false,
+                isForTrade: false,
+                isFullKit: false,
+                watchStyle: null,
+                watchStyle: null,
+                accuracy: null,
+                movement: null,
+                movementType: null,
+                sizeLugToLug: null,
+                sizeWidth: null,
+                sizeHeight: null,
+                crystal: null,
+                band: '',
+                model: '',
+                ref: '',
+                forSalePrice: null,
+                forTradeValue: null,
+                acquiredFor: null,
+                dateAcquired: ''
+            }
+        },
+
+        getSortedStyle() {
+            let styleValue = this.styleFilter;
+            console.log(styleValue);
+        },
+
+        signalChange: function(e) {
+            this.$emit('change', e)
+            console.log(e)
+        },
+
+        getSortedArr(eventValue) {
+            this.searchFilter = null;
+            this.searchArr = this.Collection;            
+            this.$emit('change', eventValue);
+            let filterValue = eventValue;
+            this.sortArr = this.Collection.filter(watch => {
+                switch(filterValue) {
+                    case 8: 
+                        return watch.condition >= 8;
+                        break;
+                    case 5: 
+                        return (watch.condition >= 5 && watch.condition < 8);
+                            return watch;
+                        break;
+                    case 1: 
+                        return (watch.condition >= 1 && watch.condition < 5);
+                            return watch;
+                    default:
+                        return [];
+                }
+            })
+            this.updatedFilteredCollection('sort', this.sortArr);
+        },   
+
+        getStyleArr(eventValue) {
+            this.searchFilter = null;  
+            this.searchArr = this.Collection;          
+            this.$emit('change', eventValue);
+            let filterValue = eventValue;
+            this.styleArr = this.Collection.filter(watch => watch.watchStyle == filterValue);
+            this.updatedFilteredCollection('style', this.styleArr);
+        }, 
+
+        getStatusArr(eventValue) {
+            this.searchFilter = null;
+            this.searchArr = this.Collection;            
+            this.$emit('change', eventValue);
+            let filterValue = eventValue;
+            this.statusArr = this.Collection.filter(watch => {
+                switch(filterValue) {
+                    case 'keeper': 
+                        return (!watch.isForSale && !watch.isForTrade) == true;
+                        break;
+                    case 'sale': 
+                        return watch.isForSale == true;
+                        break;
+                    case 'trade': 
+                        return watch.isForTrade == true;
+                        break;
+                    case 'fsot': 
+                        return (watch.isForSale && watch.isForTrade) == true;
+                        break;
+                    case 'favorites': 
+                        let faves = this.$store.getters.getFavorites;
+                        let w = faves.find(f => f.watch_id == watch.id );
+                        return watch = w;
+                        break;
+                    default: 
+                        return [];         
+                };
+            });
+            this.updatedFilteredCollection('status', this.statusArr);
+        }, 
+
+        getSearchArr(eventValue) {
+            this.$emit('change', eventValue);
+            if(eventValue) {
+                let filterValue = eventValue;
+                this.searchArr = this.Collection.filter(watch => {
+                    if(watch.brand.toLowerCase().match(filterValue.toLowerCase()))
+                        return watch
+                    else if(watch.name.toLowerCase().match(filterValue.toLowerCase()))
+                        return watch
+                    else if(watch.model.toLowerCase().match(filterValue.toLowerCase()))
+                        return watch
+                    if(watch.ref.toLowerCase().match(filterValue.toLowerCase()))
+                        return watch
+                })
+                this.updatedFilteredCollection('search', this.searchArr);
+            }   
+        },
+
+        updatedFilteredCollection(valToReset, newCollection) {
+            this.resetFilteredCollection(valToReset, newCollection);
+        },
+
+        resetFilteredCollection(val, newCollection) {
+            switch(val) {
+                case 'sort':
+                    this.styleFilter = null;
+                    this.statusFilter = null;
+                    this.searchFilter = null;
+                    this.filteredCollection = newCollection;
+                    break;
+                case 'style':
+                    this.sortFilter = null;
+                    this.statusFilter = null;
+                    this.searchFilter = null;
+                    this.filteredCollection = newCollection;  
+                    break;
+                case 'status': 
+                    this.sortFilter = null;
+                    this.styleFilter = null;
+                    this.searchFilter = null;
+                    this.filteredCollection = newCollection;
+                    break;
+                case 'search': 
+                    this.sortFilter = null;
+                    this.styleFilter = null;
+                    this.statusFilter = null;   
+                    this.filteredCollection = newCollection;                                     
+                    break;
+                default: 
+                    this.sortFilter = null;
+                    this.styleFilter = null;
+                    this.statusFilter = null;
+                    this.searchFilter = null;
+                    this.filteredCollection = this.Collection;                        
+            }
+        }
     },
 
     computed: {  
-        getCollectionTotalValue() 
-        {
-            // if (this.Collection.length)
-            // {
-            //     let tv = 0;
-            //     this.Collection.forEach(w => tv += w.value);
-            //     console.log(tv);
-            //     return tv
-            // }
-            // else return 'N/A'
-            return 'N/A'
+        getSortFilter() {
+           return this.sortFilter;
         },
 
+        getCollectionTotalValue() 
+        {
+            return 'N/A'
+        },
+        
         User() {
             return this.$store.getters.getUser;
         },
 
         Collection() 
         {
-            console.log('poop')
             let watchCollection = this.$store.getters.getCollection;
-            console.log(watchCollection)
-            if(!watchCollection || watchCollection.length < 1) {
+            if(!watchCollection.length) {
                 return false;          
             }
             else {               
-            return watchCollection.sort((a, b) => {
-                // if(b.order == a.order) b.order += 1;
-                return a.order - b.order;
-            })
+                let filtered = watchCollection.sort((a, b) => {
+                    return a.order - b.order;
+                });
+                this.filteredCollection = filtered;
+                return this.filteredCollection;
             }       
         }
     },
@@ -256,6 +487,7 @@ export default {
 </script>
 
 <style scoped>
+
     .dropdown {
         font-size: .5em; 
     }
@@ -280,24 +512,58 @@ export default {
         font-size: .85em;
     }
 
+    #add-watch-modal .modal-dialog {
+        width: 80% !important;
+    }
+
+
+    .modal-body {
+        padding: .5rem;
+    }
+
+    #add-img-div {
+        min-width: 100px;
+        min-height: 100px;
+    }
+
+   
+
+
+    .form-control:focus {
+        border-color: inherit;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+
 
 @media(min-width: 580px) {
     .btn  {
         padding: .6em 2em;
     }
 
-    .form-control {
-        padding: 1.405em .5em !important; 
+    #searchInput {
+        padding: 1.285em .5em !important; 
     }
 
     .input-group-prepend .input-group-text {
-        padding: 1.405em !important;
+        padding: 1.285em !important;
     }
 }
 
+@media(max-width: 579px) {
+    .custom-select {
+            height: calc(1.69rem + 2px);
+        }
+
+        .caret {
+    display: none;
+}
+}
+
+
 @media(max-width: 750px) {
     .modal-dialog {
-        max-width: 95%;
+        max-width: 5%;
     }
 
     #watch-controls {

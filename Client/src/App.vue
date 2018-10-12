@@ -2,7 +2,7 @@
   <b-container fluid>
     <app-header></app-header>
     <transition name="slide" >
-      <router-view :key="$route.fullPath" v-if="!isLoading"></router-view>
+      <router-view :key="$route.fullPath"></router-view>
     </transition>
       
   </b-container> 

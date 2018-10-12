@@ -6,9 +6,6 @@ exports.up = function(knex, Promise) {
       table.string('lastName').notNullable();
       table.string('password').notNullable();
       table.string('email').notNullable();
-      table.string('phone');
-      table.string('address');
-      table.string('typeOfWatchesInterestedIn');
   })
 };
 

@@ -3,26 +3,26 @@
         <b-row align-v="center" align-h="center" class="p-0 p-md-2 p-lg-0 mx-auto">
             <b-col cols="12" md="5" order="2" order-md="1" class="mt-3 mx-auto">
                 <b-row no-gutters>
-                    <h2 class="border-bottom pt-0 px-1 pb-3 white mx-auto mt-3 my-1 mt-md-0 mx-md-0 Poppins"><strong>Featured Collection of the week</strong></h2>
+                    <h2 class="border-bottom pt-0 px-1 pb-3 white mx-auto mt-3 my-1 mt-md-0 mx-md-0 Poppins"><strong>Featured Collection</strong></h2>
                     <b-col cols="12" lg="11" class="mt-3">
                         <b-form-row class="mx-auto">
                             <b-col cols="4" v-for="watch in FeaturedWatches" :key="watch.id" class="pointer"  @click="selectWatch(watch)">
                                 <b-row align-v="start" align-h="center" class="mb-3 bg-white" no-gutters>
-                                    <b-col cols="12" class="border py-3 bg-white">
+                                    <b-col cols="12" class="border py-1 py-md-3 bg-white">
                                         <b-img
                                         @click="selectWatch(watch)"
                                         :src="watch.src" 
                                         fluid>
                                         </b-img>
                                     </b-col>
-                                        <b-col cols="12 center bg-white-opaque my-0 p-0">
-                                            <b-img id="brandLogo" :src="watch.logoSrc" fluid class="mx-auto p-0"></b-img>
-                                        </b-col>
-                                        <b-col cols="12" class="mx-auto p-1 bg-white-opaque">
-                                            <p class="my-0 h8">{{watch.brand}}</p>
-                                            <p class="my-0 h6">{{watch.name}}</p>
-                                            <p class="green mb-0">${{watch.value}}</p>
-                                        </b-col>
+                                    <b-col cols="12 center bg-white-opaque my-0 px-3 pt-1">
+                                        <b-img id="brandLogo" :src="watch.logoSrc" fluid class="mx-auto p-0"></b-img>
+                                    </b-col>
+                                    <b-col cols="12" class="mx-auto p-1 bg-white-opaque">
+                                        <p class="my-0 h8">{{watch.brand}}</p>
+                                        <p class="my-0 h6 m-h3">{{watch.name}}</p>
+                                        <p class="green mb-0 m-h3">${{watch.value}}</p>
+                                    </b-col>
                             </b-row>
                         </b-col>
                     </b-form-row>
@@ -32,7 +32,7 @@
         <b-col cols="12" md="7" class="mt-3 mt-md-0 mx-auto">
             <b-row no-gutters align-h="center">
                 <!-- <b-alert v-if="isValidToken" show class="w-75" variant="danger">Your session has expired. Please login again</b-alert>  -->
-                <b-col cols="12" sm="10" md="" lg="8" class="mx-auto">
+                <b-col cols="12" lg="8" class="mx-auto">
                     <span v-if="showLogin">
                         <app-login @toggleAuthView="toggleAuthParent"></app-login>
                     </span>
@@ -78,7 +78,7 @@ export default {
                     brand: 'Omega',
                     name: 'WatchGuy',
                     value: 375,
-                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png',
+                    logoSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Omega_Logo.svg/200px-Omega_Logo.svg.png',
                     isFeaturedWatch: true
                 },
                 {
@@ -86,7 +86,7 @@ export default {
                     brand: 'Omega',
                     name: 'WatchGuy',
                     value: 375,
-                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png',
+                    logoSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Omega_Logo.svg/200px-Omega_Logo.svg.png',
                     isFeaturedWatch: true
                 },
                 {
@@ -94,7 +94,7 @@ export default {
                     brand: 'Omega',
                     name: 'WatchGuy',
                     value: 375,
-                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png',
+                    logoSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Omega_Logo.svg/200px-Omega_Logo.svg.png',
                     isFeaturedWatch: true
                 },
                 {
@@ -102,7 +102,7 @@ export default {
                     brand: 'Omega',
                     name: 'WatchGuy',
                     value: 375,
-                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png',
+                    logoSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Omega_Logo.svg/200px-Omega_Logo.svg.png',
                     isFeaturedWatch: true
                 },
                 {
@@ -110,7 +110,7 @@ export default {
                     brand: 'Omega',
                     name: 'WatchGuy',
                     value: 375,
-                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png',
+                    logoSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Omega_Logo.svg/200px-Omega_Logo.svg.png',
                     isFeaturedWatch: true
                 },
                 {
@@ -118,7 +118,7 @@ export default {
                     brand: 'Omega',
                     name: 'WatchGuy',
                     value: 375,
-                    logoSrc: 'http://logok.org/wp-content/uploads/2014/07/Omega_Logo-880x660.png',
+                    logoSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Omega_Logo.svg/200px-Omega_Logo.svg.png',
                     isFeaturedWatch: true
                 }
             ],

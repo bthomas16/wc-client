@@ -14,17 +14,17 @@
         <b-nav-item>Discover</b-nav-item>
         <b-nav-item>Watch News</b-nav-item> 
         <b-nav-item @click="logout" class="relative mobile-only" v-if="getAuth">Logout</b-nav-item>     
-        <b-nav-item class="absolute r0 mr-4 rp-2 w-25 d-md-none">
-          <b-row>
-            <b-col md="4" sm="8" id="ads">
+        <!-- <b-nav-item class="absolute t0 r0 p-4 pt-0 w-50 d-md-none" right> -->
+          <!-- <b-row> -->
+            <b-col class="r0 t0 pr-4 pr-sm-2 d-block absolute d-lg-none" cols="5" sm="3" md="2" id="ads">
                 <b-img src="http://www.bistiproofpage.com/wp-content/uploads/2018/04/cute-profile-pics-for-whatsapp-images.png" fluid></b-img>
                 <b-img src="http://www.bistiproofpage.com/wp-content/uploads/2018/04/cute-profile-pics-for-whatsapp-images.png" fluid class="mt-1"></b-img>
             </b-col>
-          </b-row>
-        </b-nav-item>
+          <!-- </b-row> -->
+        <!-- </b-nav-item> -->
     </b-navbar-nav>
 
-    <b-nav-item @click="logout" class="d-absolute r0 mr-md-4 d-xs-none desktop-only white" v-if="getAuth" right>Logout</b-nav-item>      
+    <b-nav-item @click="logout" class="d-absolute r0 mr-md-4 my-0 d-xs-none desktop-only white" v-if="getAuth" right>Logout</b-nav-item>      
 
   </b-collapse>
 

@@ -3,36 +3,34 @@ exports.up = function(knex, Promise) {
     return knex.schema.createTable('watch', (table) => {
         table.increments('id').primary();
         table.integer('user_id').references('id').inTable('peeps');
+        table.integer('order');
+
         table.string('src');
         table.string('name').notNullable();
-        table.integer('acquiredFor');
-        table.boolean('isForSale');
-        table.boolean('isForTrade');
-        table.integer('lowestOfferAccepting');
-        table.integer('sizeWidth');
-        table.integer('sizeHeight');
-        table.integer('sizeLugToLug');
+        table.string('sizeWidth');
+        table.string('sizeHeight');
+        table.string('sizeLugToLug');
         table.string('movementType');
-        table.integer('value');
-        table.integer('yearOfManufacture');
         table.string('brand');
         table.string('ref');
         table.string('model');
-        table.integer('forSalePrice');
-        table.integer('forTradeValue');
         table.string('accuracy');
         table.string('crystal');
         table.string('movement');
         table.string('condition');
-        table.boolean('isFullKit');
+        table.string('band');
         table.string('dateAcquired');
-        table.boolean('isLimitedEdition');
-        table.integer('limitedEditionNumber');
-        table.integer('limitedEditionTotal');
         table.string('watchStyle');
-        table.integer('order');
-        table.integer('userPreferedOrder');
-        table.string('watchLabels');
+
+        table.boolean('isFullKit');
+        table.boolean('isForSale');
+        table.boolean('isForTrade');
+
+        table.integer('acquiredFor');
+        table.integer('forSalePrice');
+        table.integer('forTradeValue');
+        table.integer('marketValue');
+        
     })
   };
   

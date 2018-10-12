@@ -1,5 +1,5 @@
 <template>
-    <b-container>
+    <b-container class="m-0 p-0">
         <b-row>            
             <b-col>
                 <b-form @submit.prevent="submit">
@@ -10,7 +10,7 @@
                             class="m-0 relative"
                             >
                         <div class="card-text mx-auto"> 
-                            <h4>Register to manage your collection!</h4>
+                            <h4>Manage your collection!</h4>
                             <b-alert show v-bind:variant="responseStyle" v-if="showAlert">{{responseMessage}}</b-alert> 
                             <b-form-group id="credentials"
                                 v-if="card == 1"
@@ -66,7 +66,7 @@
                                     <b-button variant="success" :disabled="!form.firstName || !form.lastName" type="submit" v-if="card == 2">Finish</b-button>
                                 </b-col>
                                 <b-col cols="8" class="right-align">
-                                    <p class="h8 m-1 ">Alread have an account? <span class="link nowrap" @click="toggleAuthChild">Login Here</span></p>
+                                    <p class="h8 m-1 ">Already a user? <span class="link nowrap" @click="toggleAuthChild">Login Here</span></p>
                                 </b-col>
                             </b-row>
                         </div>

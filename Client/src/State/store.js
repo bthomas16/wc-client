@@ -15,11 +15,12 @@ const axios = require('axios'),
     INVALIDATE_JWT = "INVALIDATE_JWT",
     NAME_COLLECTION = "NAME_COLLECTION",
     LOAD_COLLECTION = "LOAD_COLLECTION",
-    SUBMIT_WATCH = "SUBMIT_WATCH",
+    SUBMIT_NEW_WATCH = "SUBMIT_NEW_WATCH",
     SELECT_WATCH = "SELECT_WATCH",
     WATCH_ORDER_UPDATED = "WATCH_ORDER_UPDATED",
     TOGGLE_FAVORITE = "TOGGLE_FAVORITE",
-    FAVORITES_COLLECTION = "FAVORITES_COLLECTION";
+    FAVORITES_COLLECTION = "FAVORITES_COLLECTION",
+    SUBMIT_EDIT_WATCH = "SUBMIT_EDIT_WATCH";
 
 const state = 
 {
@@ -70,10 +71,15 @@ const mutations =
         state.isAuthorized = false;
     },
 
-    [SUBMIT_WATCH](state, watch) {
+    [SUBMIT_NEW_WATCH](state, watch) {
         state.isCollectionLoaded = true;
-        console.log(state.Collection)
         state.Collection.push(watch);
+    },
+
+    [SUBMIT_EDIT_WATCH](state, watch) {
+        let watchToUpdate = state.Collection.find(w => w.id == watch.id)
+        console.log('ehuietrg', watchToUpdate, watch)
+        watchToUpdate = watch;
     },
 
     [LOAD_COLLECTION](state, collection) {
@@ -205,7 +211,7 @@ const actions =
         })
     },
 
-    submitWatch(context, watch) {
+    submitNewWatch(context, watch) {
         context.commit(LOADING);        
         return new Promise((resolve, reject) => {
             if(!context.state.Collection) watch.order = 0;
@@ -216,10 +222,28 @@ const actions =
                     'authorization': localStorage.getItem('watchJwt')
                 }
             })
-                .then((res) => {
-                    console.log('SUBMITTED', res.data, res.data.watch)
-                    context.commit(SUBMIT_WATCH, res.data.watch)
-                    resolve(res.data)
+            .then((res) => {
+                context.commit(SUBMIT_NEW_WATCH, res.data.watch)
+                resolve(res.data)
+            }).catch((err) => {
+                reject(err.data);   
+                    context.commit(NOT_LOADING);      
+            })
+        })
+    },
+
+    submitEditWatch(context, watch) {
+        context.commit(LOADING);        
+        return new Promise((resolve, reject) => {
+            axios.put('/api/watch/'+ watch.id, watch, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': localStorage.getItem('watchJwt')
+                }
+            })
+            .then((res) => {
+                context.commit(SUBMIT_EDIT_WATCH, res.data.watch)
+                resolve(res.data)
             }).catch((err) => {
                 reject(err.data);   
                     context.commit(NOT_LOADING);      

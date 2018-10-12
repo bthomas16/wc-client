@@ -1,5 +1,5 @@
 <template>
-    <b-container class="mt3">
+    <b-container class="m-0 p-0">
         <b-row>            
             <b-col cols="12" class="mx-auto" align-h="center">
                 <b-alert v-if="showAlert" v-bind:variant="responseStyle">{{responseMessage}}</b-alert>
@@ -36,11 +36,11 @@
                                 </b-form-input>
                             </b-form-group>
                             <b-row align-v="center">
-                                <b-col>
-                                    <b-button type="submit" variant="primary">Submit</b-button>
+                                <b-col cols="4">
+                                    <b-button type="submit" variant="success">Submit</b-button>
                                 </b-col>
                                 <b-col cols="8" class="right-align">
-                                    <p class="h8 m-1 ">Don't have an account? <span class="link nowrap" @click="toggleAuthChild">Register Here</span></p>
+                                    <p class="h8 m-1 ">Not a user? <span class="link nowrap" @click="toggleAuthChild">Register Here</span></p>
                                 </b-col>
                             </b-row>
                         </div>

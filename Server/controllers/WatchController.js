@@ -2,27 +2,31 @@ const express = require('express');
 const router = express.Router();
 const knex = require('../config/db');
 const Promise = require('promise');
-const Watch = require('../models/watch.js');
+const WatchModel = require('../models/watch.js');
 
 const VerifyToken = require('../middleware/VerifyToken.js');
 
 
 router.post('/', VerifyToken, async (req, res) => {
     let formData = req.body;
-    if(Watch.validateWatchFormData(formData, res))
-        Watch.saveWatchToCollectionDB(formData, req.id, res); 
+    console.log('this is it', formData)
+    if(WatchModel.validateWatchFormData(formData, res))
+    WatchModel.saveWatchToCollectionDB(formData, req.id, res); 
+});
+
+router.put('/:id', VerifyToken, (req, res) => {
+    let formData = req.body;
+    let id = req.params.id
+    WatchModel.updateWatchById(req.params.id, formData, res);
 });
 
 router.get('/', VerifyToken, async (req, res) => {
     console.log('getting watches', req.id)
     try
-    {
-    console.log('getting watches trying')
-        
+    {   
         await knex('watch').where('user_id', req.id)
             .then(collection => {
-    console.log('getting watches collection', collection)
-                
+            console.log('getting watches collection', collection)     
             if(collection.length > 0) 
                 res.status(200).json({collection});
             else 
@@ -33,13 +37,19 @@ router.get('/', VerifyToken, async (req, res) => {
     {
     console.log('getting watches catching')
         
-        res.json({isSuccess: false, message: 'Could not get collection at this time'})
+        res.status(403).json({isSuccess: false, message: 'Could not get collection at this time'})
     } 
 })
 
 router.get('/favorite', VerifyToken, (req, res) => {
-    console.log('server getting faves');
-    knex('user_watch_favorited').where('user_id', req.id).andWhere('isCurrentFavorite', true).then(favorites => {
+    console.log('ahhh i bee hit')
+
+    knex.select('*')
+    .from('user_watch_favorited')
+    .where('user_watch_favorited.isCurrentFavorite', true)
+    .andWhere('user_watch_favorited.user_id', req.id)
+    .fullOuterJoin('watch', 'user_watch_favorited.watch_id', 'watch.id')
+    .then(favorites => {
         res.status(200).json({favorites});
     }).catch(err => {
         console.log(err)
@@ -56,15 +66,18 @@ router.get('/favorite-icon', VerifyToken, (req, res) => {
     })
 })
 
-// api request
 router.post('/favorite', VerifyToken, async (req, res) => {
     let watchId = req.body.watchId; // watch to favorite id
-    let userId = req.id;  // user adding watcht o favorites
+    let userId = req.id;  // user adding watch to favorites
     let isFavoriteRowExist = await getFavoriteRowExist(userId, watchId) // has this watch been favorited before?
         let favoriteWatch = isFavoriteRowExist;
         if(favoriteWatch) toggleWatchfavorite(favoriteWatch, res, userId) // if so, toggle it
         else createNewFavorite(userId, watchId, res)
 })
+
+
+
+//MODEL Methods
 
 function toggleWatchfavorite(favoriteWatch, res, userId) {
     knex('user_watch_favorited').where('id', favoriteWatch.id).returning('*').update({
