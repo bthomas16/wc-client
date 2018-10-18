@@ -16,10 +16,10 @@
                                         </b-img>
                                     </b-col>
                                     <b-col cols="12 center bg-white-opaque my-0 px-3 pt-1">
-                                        <b-img id="brandLogo" :src="watch.logoSrc" fluid class="mx-auto p-0"></b-img>
+                                        <b-img id="brandLogo" :src="watch.logoSrc" fluid class="mx-auto p-3"></b-img>
                                     </b-col>
                                     <b-col cols="12" class="mx-auto p-1 bg-white-opaque">
-                                        <p class="my-0 h8">{{watch.brand}}</p>
+                                        <p class="my-0 h5">{{watch.brand}}</p>
                                         <p class="my-0 h6 m-h3">{{watch.name}}</p>
                                         <p class="green mb-0 m-h3">${{watch.value}}</p>
                                     </b-col>
@@ -60,7 +60,7 @@
 <script>
 import Register from './Register.vue';
 import Login from './Login.vue';
-import SeeMore from '../Profile/Collection/SeeMore.vue';
+import SeeMore from '../Profile/Collection/Modals/SeeMoreModal.vue';
 
 
 export default {

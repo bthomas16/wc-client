@@ -3,21 +3,23 @@
         <b-row v-if="Collection" align-h="center">
             <b-col>
                 <b-row class="my-3 mx-auto center m-left-align" align-v="center" align-h="center">
-                    <b-col cols="12" md="5" class="p-0 m-0 h5 m-h1">
+                    <b-col cols="12" md="5" class="p-0 m-0 h3">
                         <strong>{{User.firstName}}'s Collection</strong>
                     </b-col>
-                    <b-col cols="12" md="6" class="p-0 m-0 right-align m-left-align mt-2 mt-md-0">
-                        <p cols="12" class="mb-1 mb-md-0 m-h2 right w-100">Favorite Piece: <strong>Rolex Submariner</strong> </p> 
-                        <p class="my-0 m-h2 mt-0 right w-100">Total Value: <strong class="green">{{getCollectionTotalValue}}</strong> </p>
+                    <b-col cols="12" md="6" class="p-0 m-0 center m-left-align mt-2 mt-md-0">
+                        <p cols="12" class="mb-1 mb-md-0 m-h2 right-align m-left-align w-75 mw-100">Watch of The Day: <strong>{{getWatchOfTheDay}}</strong> </p> 
+                        <p class="my-0 m-h2 mt-0 right-align m-left-align w-75 mw-100">Total Value: <strong class="green">{{getCollectionTotalValue}}</strong> </p>
                     </b-col>
                 </b-row>
                 
                 <b-row class="w-100 mb-2 mb-md-2 relative" no-gutters align-h="center"> 
                     <b-col cols="12" md="10" class="border-bottom"></b-col>
                     <b-col cols="12" md="10">
-                        <b-row no-gutters align-h="between">
-                            <b-col cols="6" class="left-align pointer gray bold h5 my-1" v-if="isManagingCollection" @click="isManagingCollection = false"><strong class="red">X</strong></b-col>
-                            <b-col cols="6" class="right-align pointer lightgray bold h5 my-1" v-if="isManagingCollection" @click="updatedFilteredCollection"><strong>Reset</strong></b-col>
+                        <b-row no-gutters align-h="between" align-v="center">
+                            <b-col cols="6" class="left-align pointer gray bold h4 m-h2 my-1" v-if="isManagingCollection" >
+                                <strong class="red" @click="notManagingorEditing">X</strong>
+                                <strong @click="updatedFilteredCollection" class="ml-2">Reset</strong>
+                            </b-col>
                         </b-row>
                     </b-col> 
                 </b-row>
@@ -54,16 +56,28 @@
                     </b-col>
                 </b-row>
 
-                <b-row v-else>
-                    <b-col cols="9" md="5" class="mx-auto">
+                <b-row align-v="center" align-h="center" v-else>
+                    <b-col cols="9" md="7" offset-md="1">
                         <b-button variant="info" class="my-0" size="sm" @click="isManagingCollection = true" block>Manage Collection</b-button>
                     </b-col>
+                    <b-row no-gutters class="mt-1 mt-md-0 nowrap">
+                        <b-col cols="3" md="5">
+                        <b-form-checkbox
+                            id="toggleFlags"
+                            label="hi"
+                            v-model="isShowFlags"
+                            :value="true"
+                            :unchecked-value="false"
+                            @change="isShowFlags = !isShowFlags">Show Flags on Watches</b-form-checkbox>
+                    </b-col>
+                    </b-row>
                 </b-row>
                 <watch-collection 
                     @selectWatch="selectWatch" 
                     @editWatchModal="editWatchModal" 
                     :Collection="filteredCollection" 
-                    :isManagingCollection="isManagingCollection">
+                    :isManagingCollection="isManagingCollection"
+                    :isShowFlags="isShowFlags">
                 </watch-collection>
             </b-col>
         </b-row>
@@ -95,10 +109,13 @@
                 :isAddingWatch="isAddingWatch">
             </see-more-modal>
             <div slot="modal-footer" class="w-100 mt-0 p-0">
-                <b-btn size="sm" class="float-right" variant="primary" @click="submitWatch" v-if="isAddingWatch || isEditingExistingWatch">
+                <b-btn  size="sm" class="center white" variant="warning" @click="backToEditStart" v-if="isAddingWatch || isEditingExistingWatch">
+                    Back
+                </b-btn>
+                <b-btn size="sm" class="float-right" variant="info" @click="submitWatch" v-if="isAddingWatch || isEditingExistingWatch">
                     Submit
                 </b-btn>
-                <b-btn size="sm" class="float-right" variant="primary" v-else @click="resetWatchFormAndModals">
+                <b-btn size="sm" class="float-right" variant="info" v-else @click="resetWatchFormAndModals">
                     Ok
                 </b-btn>
             </div>
@@ -120,24 +137,24 @@
                 :addWatchCount="addWatchCount">
             </add-watch-modal>
             <b-row slot="modal-footer" no-gutters class="w-100" align-h="end" align-v="center">
-                <b-col cols="8">
+                <b-col cols="5">
                     <!-- Potential Progress Bar -->
-                    <p v-if="!addWatch.name && addWatchCount == 2" class="red p-0 m-0">*Please add a name for this watch</p>
+                    <p v-if="!addWatch.name && addWatchCount == 2" class="red p-0 m-0 h5 m-h4">Please add a name for this watch</p>
                 </b-col>
-                <b-col cols="4" class="right-align">
+                <b-col cols="7" class="right-align">
                     <b-btn  size="sm" class="center white" :class="addWatchCount == 1 ? 'hidden' : ''" variant="warning" @click="addWatchCount--">
-                       Back
+                       Previous
                     </b-btn>
-                    <b-btn size="sm" :class="addWatchCount == 1 ? '' : 'hidden'" variant="primary" @click="addWatchCount++">
-                        Specs
+                    <b-btn size="sm" :class="addWatchCount == 1 ? '' : 'hidden'" variant="info" @click="addWatchCount++">
+                        Details
                     </b-btn>
                     <b-button size="sm" variant="info" @click="addWatchCount++" :class="addWatchCount == 2 ? '' : 'hidden'" :disabled="!addWatch.name">
                         Continue
                     </b-button>
-                    <b-btn size="sm" :class="addWatchCount == 3 ? '' : 'hidden'" variant="primary" @click="addWatchCount++">
+                    <b-btn size="sm" :class="addWatchCount == 3 ? '' : 'hidden'" variant="info" @click="addWatchCount++">
                         Owner Details
                     </b-btn>
-                    <b-btn size="sm" :class="addWatchCount == 4 ? '' : 'hidden'" variant="primary" @click="previewWatch">
+                    <b-btn size="sm" :class="addWatchCount == 4 ? '' : 'hidden'" variant="info" @click="previewWatch">
                         Preview
                     </b-btn>
                 </b-col>   
@@ -149,14 +166,14 @@
 
 <script>
 import axios from 'axios';
-import SeeMore from './SeeMore.vue';
-import AddWatch from './AddWatch.vue';
+import SeeMoreModal from './Modals/SeeMoreModal.vue';
+import AddWatchModal from './Modals/AddWatchModal.vue';
 import WatchCollection from './WatchCollection.vue';
 
 export default {
     components: {
-        seeMoreModal: SeeMore,
-        addWatchModal: AddWatch,
+        seeMoreModal: SeeMoreModal,
+        addWatchModal: AddWatchModal,
         watchCollection: WatchCollection
     },
     data () {
@@ -203,6 +220,8 @@ export default {
             searchArr: [],
 
             concatFilteredFinal: [],
+
+            isShowFlags: true,
             showDismissibleAlert: false,
             isAddingWatch: false,
             isEditingExistingWatch: false,
@@ -254,14 +273,7 @@ export default {
         
         previewWatch() {
             this.selectedWatch = this.addWatch;
-            if(this.addWatch.id) {
-                this.isAddingWatch = false;
-                this.isEditingExistingWatch = true;
-            }
-            if(!this.addWatch.id) {
-                this.isAddingWatch = true;
-                this.isEditingExistingWatch = false;
-            }
+           
             this.$refs.addWatchModal.hide(); 
             this.$refs.seeMoreModal.show();
         },
@@ -287,6 +299,19 @@ export default {
                     this.addWatchCount = 1; //resets watch count
                 });
             }
+        },
+
+        backToEditStart() {
+            this.addWatchCount = 1;
+            this.$refs.addWatchModal.show(); 
+            this.$refs.seeMoreModal.hide();
+        },
+
+        notManagingorEditing() {
+            this.isManagingCollection = false;
+            this.isEditingExistingWatch = false;
+            this.isAddingWatch = false;
+            this.resetFilteredCollection();
         },
 
         createAddWatch() {
@@ -460,6 +485,12 @@ export default {
         
         User() {
             return this.$store.getters.getUser;
+        },
+
+        getWatchOfTheDay() {
+            let watchCollection = this.$store.getters.getCollection;
+            let randomId = Math.floor(Math.random() * Math.floor(watchCollection.length))   
+            return watchCollection[randomId].name;        
         },
 
         Collection() 

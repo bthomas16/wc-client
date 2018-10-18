@@ -310,13 +310,16 @@
                     <li class="my-2">
                         <b-row align-v="center">
                             <b-col cols="4" class="nowrap m-h2" >
-                                <strong>Sale Price:</strong>  
+                                <strong>Sale Prize:</strong>  
                             </b-col>
-                            <b-col cols="8">
-                                <b-form-input v-model="addWatch.forSalePrice"
+                            <b-col cols="8" class="relative">
+                                <p class="absolute mt-2 h5 green dollarSign">$</p>
+                                <b-form-input 
+                                    v-model="addWatch.forSalePrice"
+                                    :value=" addWatch.forSalePrice"
                                     type="number"
                                     :class="addWatch.forSalePrice ? 'yesValue' : 'formBorder'"
-                                    placeholder="$100"
+                                    placeholder="100"
                                     description="Provide a sale prthis watch"
                                     label="Watch Sale Price">
                                 </b-form-input>
@@ -325,14 +328,16 @@
                     </li>
                     <li>
                         <b-row align-v="center">
-                            <b-col cols="4" class="nowrap m-h2">
+                            <b-col cols="4" class="nowrap m-h3">
                                 <strong>Trade Value:</strong>  
                             </b-col>
                             <b-col cols="8">
+                                <p class="absolute mt-2 h5 green dollarSign">$</p>
+                                
                                 <b-form-input v-model="addWatch.forTradeValue"
                                     type="number"
                                     :class="addWatch.forTradeValue ? 'yesValue' : 'formBorder'"
-                                    placeholder="$150"
+                                    placeholder="150"
                                     description="Provide a trade value for this watch"
                                     label="Watch Trade Value">
                                 </b-form-input>
@@ -354,8 +359,8 @@
                         <b-col cols="6" class="h3 m-h2">
                             <strong>Keeping House:</strong>
                         </b-col>
-                        <b-col cols="5" class="m-h2">
-                            <strong>Turnaround:</strong><span class="green ml-0 ml-md-4"> ${{addWatch.marketValue - addWatch.acquiredFor}}</span> 
+                        <b-col cols="5" class="m-h2 nowrap">
+                            <strong>Turnaround:</strong><span class="green ml-0 ml-md-4"> ${{addWatch.marketValue - addWatch.acquiredFor || 0}}</span> 
                         </b-col>
                     </b-row>
                     <ul>
@@ -644,6 +649,10 @@ export default {
         border-color: inherit;
         -webkit-box-shadow: none;
         box-shadow: none;
+    }
+
+    .dollarSign {
+        margin-left: -.25em;
     }
     
     @media(max-width: 761px) {
