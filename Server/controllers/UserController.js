@@ -35,7 +35,6 @@ router.get('/validate-jwt', (req, res) =>
   // if(!token) res.status(401).json({ isSuccess: false, message: 'No token provided'});
     jwt.verify(token, config.secret, function(err, decoded) { 
     if (err) {
-      console.log(err, decoded, 'hudfh')
       res.status(401).json({ isSuccess: false, message: 'Your session has expired - Please Logout and Login again.'});
     }
     res.status(200).json({isSuccess: true, message: 'User is authorized'})
@@ -45,7 +44,6 @@ router.get('/validate-jwt', (req, res) =>
 
 router.get('/profile', VerifyToken, (req, res) => 
 {
-  console.log('token poopy face mcgee', req.id)
   if(req.id)
   {
     User.FindUser(req.id, res);

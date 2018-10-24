@@ -112,7 +112,6 @@ const mutations =
 
 const actions = 
 {
-
     login(context, formData) 
     {
         context.commit(LOADING); // show spinner
@@ -235,7 +234,10 @@ const actions =
     submitEditWatch(context, watch) {
         context.commit(LOADING);        
         return new Promise((resolve, reject) => {
-            axios.put('/api/watch/'+ watch.id, watch, {
+            axios.put('/api/watch', watch, {
+                params: {
+                    id: watch.id
+                },
                 headers: {
                     'Content-Type': 'application/json',
                     'authorization': localStorage.getItem('watchJwt')
@@ -243,9 +245,54 @@ const actions =
             })
             .then((res) => {
                 context.commit(SUBMIT_EDIT_WATCH, res.data.watch)
+                context.commit(NOT_LOADING);
                 resolve(res.data)
             }).catch((err) => {
                 reject(err.data);   
+                    context.commit(NOT_LOADING);      
+            })
+        })
+    },
+
+    removeExistingWatch(context, watchToRemove) {
+        return new Promise((resolve, reject) => {
+            axios.put('/api/watch/remove', {}, {
+                params: {
+                    id: watchToRemove.id
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': localStorage.getItem('watchJwt')
+                }
+            })
+            .then((res) => {
+                    console.log('updated that watch!', res.data.watch)
+                    context.commit(NOT_LOADING);
+                resolve(res.data)
+            }).catch((err) => {
+                reject(err.data);   
+                    context.commit(NOT_LOADING);      
+            })
+        });
+    },
+
+    createRemoveWatch(context, watchDetails) {
+        context.commit(LOADING);  
+        console.log('storeiiee goes', watchDetails)
+        return new Promise((resolve, reject) => {
+            axios.post('/api/watch/remove', watchDetails, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': localStorage.getItem('watchJwt')
+                }
+            })
+            .then((res) => {
+                console.log('created new watch removed!', res.data.watch)
+                context.commit(NOT_LOADING);
+                resolve(res.data)
+            }).catch((err) => {
+                console.log(err)
+                reject(err);   
                     context.commit(NOT_LOADING);      
             })
         })
@@ -259,20 +306,21 @@ const actions =
         throw new Error('HOLY SHIT!');
     },
 
-    updateWatchOrder(context, watchToUpdate) {
-        if (!watchToUpdate) return false;
-        axios.put('/api/watch', watchToUpdate, {
+    updateCollectionOrder(context, newCollectionOrder) {
+        axios.put('/api/watch/update-order', newCollectionOrder, {
             headers: {
                 'Content-Type': 'application/json',
                 'authorization': localStorage.getItem('watchJwt')
             }
+        }).then(res => {
+            console.log(res.data)
+        }).catch(err => {
+            console.log(err)
         })
-        .then(res => {
-            let reorderedCollection = res.data.reorderedCollection
-            context.commit('WATCH_ORDER_UPDATED', reorderedCollection)
-        }).catch(err =>{
-            console.log(err);
-        });
+    },
+
+    writeCollection() {
+        console.log('owmnfieb')
     },
 
     getFavorites(context) { //On load watch collection

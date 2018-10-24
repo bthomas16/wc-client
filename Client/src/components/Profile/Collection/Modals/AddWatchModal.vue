@@ -102,18 +102,18 @@
                                                 <b-form-radio-group v-model="addWatch.movementType" name="radioSubComponent" type="text">
                                                     <b-row align-v="center" no-gutters>
                                                         <b-col cols="7" md="6">
-                                                            <b-form-radio value="Automatic" :class="addWatch.movementType == 'Automatic' ? 'yesValue' : ''">Automatic</b-form-radio>
+                                                            <b-form-radio value="automatic" :class="addWatch.movementType == 'Automatic' ? 'yesValue' : ''">Automatic</b-form-radio>
                                                         </b-col>
                                                         <b-col cols="5" md="6">
-                                                            <b-form-radio value="Manual" :class="addWatch.movementType == 'Manual' ? 'yesValue' : ''">Manual</b-form-radio>
+                                                            <b-form-radio value="manual" :class="addWatch.movementType == 'Manual' ? 'yesValue' : ''">Manual</b-form-radio>
                                                         </b-col>
                                                     </b-row>
                                                     <b-row align-v="center" no-gutters class="pt-1 pt-md-2">
                                                         <b-col cols="7" md="6">
-                                                            <b-form-radio value="Quartz" :class="addWatch.movementType == 'Quartz' ? 'yesValue' : ''">Quartz</b-form-radio>
+                                                            <b-form-radio value="quartz" :class="addWatch.movementType == 'Quartz' ? 'yesValue' : ''">Quartz</b-form-radio>
                                                         </b-col>
                                                         <b-col cols="5" md="6">
-                                                            <b-form-radio value="Solar" :class="addWatch.movementType == 'Solar' ? 'yesValue' : ''">Solar</b-form-radio>
+                                                            <b-form-radio value="solar" :class="addWatch.movementType == 'Solar' ? 'yesValue' : ''">Solar</b-form-radio>
                                                         </b-col>
                                                     </b-row>
                                                 </b-form-radio-group>

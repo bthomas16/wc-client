@@ -5,9 +5,7 @@
                 <b-img :src="profPic" fluid style="height: auto; max-height: 125px;" class="profPic mx-auto box-shadow" rounded="circle"></b-img>
             </b-col>
             <b-col cols="7" sm="7" md="12" class="left mx-auto p-0 pl-2 mt-2" >
-                <!-- {{state}} -->
                 <p class="p-0 my-1 ml-1 h5 m-h2 bold"><strong>{{User.firstName}} {{User.lastName}}</strong></p>
-                <!-- <b-col class="p-0 my-1 ml-1 h4">Rating</b-col>               -->
                 <p class="p-0 my-1 mt-2 ml-1 m-h2 h7"><strong>({{Collection.length || 0}})</strong> Watches Total</p>
                 <p class="p-0 my-1 ml-1 m-h2 h7"><strong>({{watchesForTrade.length || 0}})</strong> Watches FSOT</p>
                 <p class="p-0 my-1 ml-1 m-h2 h7"><strong>({{Favorites.length || 0}})</strong> Watches Favorited</p>

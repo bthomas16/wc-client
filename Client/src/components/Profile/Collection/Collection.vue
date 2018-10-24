@@ -1,8 +1,10 @@
 <template>
-    <b-container id="collection-container" class="">
-        <b-row v-if="Collection" align-h="center">
+    <b-container fluid>
+
+        
+        <b-row v-if="Collection" align-h="center" no-gutters>
             <b-col>
-                <b-row class="my-3 mx-auto center m-left-align" align-v="center" align-h="center">
+                <b-row class="my-3 mx-auto pl-2 pl-md-0 center m-left-align" align-v="center" align-h="center">
                     <b-col cols="12" md="5" class="p-0 m-0 h3">
                         <strong>{{User.firstName}}'s Collection</strong>
                     </b-col>
@@ -12,21 +14,27 @@
                     </b-col>
                 </b-row>
                 
+
+                <!-- MANAGE COLLECTION -->
+                <!-- MANAGE COLLECTION -->
+                <!-- MANAGE COLLECTION -->
+                <!-- MANAGE COLLECTION -->
+                <!-- MANAGE COLLECTION -->
                 <b-row class="w-100 mb-2 mb-md-2 relative" no-gutters align-h="center"> 
                     <b-col cols="12" md="10" class="border-bottom"></b-col>
-                    <b-col cols="12" md="10">
+                    <b-col cols="12" md="10" class="px-2 px-md-0">
                         <b-row no-gutters align-h="between" align-v="center">
                             <b-col cols="6" class="left-align pointer gray bold h4 m-h2 my-1" v-if="isManagingCollection" >
-                                <strong class="red" @click="notManagingorEditing">X</strong>
+                                <strong class="green" @click="notManagingorEditing">&#x2713;</strong>
                                 <strong @click="updatedFilteredCollection" class="ml-2">Reset</strong>
                             </b-col>
                         </b-row>
                     </b-col> 
                 </b-row>
 
-                <!-- FILTER WATCH ARRAY / RESULTS -->
-                <b-row  align-v="start" align-h="center" v-if="isManagingCollection">
-                    <b-col cols="4" md="4"  class="manage-btn-border" >
+                <!-- FILTER & SORT WATCH ARRAY -->
+                <b-row  class="px-0 px-md-2 px-lg-4" align-v="start" align-h="center" v-if="isManagingCollection" no-gutters>
+                    <b-col cols="4" md="4"  class="manage-btn-border px-2" >
                         <b-row align-v="start" align-h="center" id="watch-controls">
                             <b-col lg="6" cols="12" class="mx-auto center" >
                                 <b-button id="manage" variant="primary" block size="sm">Manage</b-button>
@@ -36,45 +44,55 @@
                             </b-col>
                         </b-row>
                     </b-col>
-                    <b-col cols="8">
-                        <b-form-row align-v="start" align-h="start" >
-                            <b-col cols="6" lg="3" class="selectWrapper">
+                    <b-col cols="8 px-2">
+                        <b-row align-v="start" align-h="start" no-gutters>
+                            <b-col cols="2" class="mx-auto selectWrapper d-none d-lg-block">
                                 <b-form-select id="sortedArr" class="btn m-0 p-0 pl-1" :options="sortOptions" v-model.number="sortFilter" @change="getSortedArr"/>
                             </b-col>
-                            <b-col cols="6" lg="3" class="mt-0 mt-sm-0 selectWrapper">
+                            <b-col cols="6" md="3" class="pr-1 p-lg-0 mx-auto mt-0 selectWrapper" order-sm="2">
                                 <b-form-select class="btn m-0 p-0 pl-1" :options="styleOptions" v-model="styleFilter" @change="getStyleArr"/>  
                             </b-col>
-                            <b-col cols="12"  lg="2" class="mt-2 mt-md-0 d-none d-lg-block selectWrapper">
+                            <b-col cols="6"  md="2" class="pl-1 p-lg-0 mx-auto mt-0 selectWrapper" order-sm="1">
                                 <b-form-select class="btn m-0 p-0 pl-1" :options="statusOptions" v-model="statusFilter" @change="getStatusArr"/>     
                             </b-col>
-                            <b-col cols="12" lg="4" order="3" class="selectWrapper">
+                            <b-col cols="12" md="3" order="3" class="mx-auto selectWrapper pr-3half" order-sm="3">
                                 <b-input-group prepend="&#9906;" class="mt-2 mt-lg-0" size="sm">
-                                    <b-form-input id="searchInput" type="text" placeholder="Searches" size="sm" @input="getSearchArr" v-model="searchFilter"></b-form-input>
+                                    <b-form-input id="searchInput" type="text" placeholder="Search" size="sm" @input="getSearchArr" v-model="searchFilter"></b-form-input>
                                 </b-input-group>
                             </b-col>
-                        </b-form-row>
+                        </b-row>
                     </b-col>
                 </b-row>
 
-                <b-row align-v="center" align-h="center" v-else>
-                    <b-col cols="9" md="7" offset-md="1">
+                <!-- END MANAGE COLLECTION -->
+                <!-- END MANAGE COLLECTION -->
+                <!-- END MANAGE COLLECTION -->
+                <!-- END MANAGE COLLECTION -->
+                <!-- END MANAGE COLLECTION -->
+                
+
+                <b-row align-v="center" align-h="center" v-else no-gutters>
+                    <b-col cols="11" md="7" offset-md="1">
                         <b-button variant="info" class="my-0" size="sm" @click="isManagingCollection = true" block>Manage Collection</b-button>
                     </b-col>
-                    <b-row no-gutters class="mt-1 mt-md-0 nowrap">
-                        <b-col cols="3" md="5">
-                        <b-form-checkbox
-                            id="toggleFlags"
-                            label="hi"
-                            v-model="isShowFlags"
-                            :value="true"
-                            :unchecked-value="false"
-                            @change="isShowFlags = !isShowFlags">Show Flags on Watches</b-form-checkbox>
-                    </b-col>
+                    <b-row no-gutters class="mt-1 mt-md-0 nowrap mw-100">
+                        <b-col cols="3" offset="1" offset-md="0" md="5">
+                            <b-form-checkbox
+                                id="toggleFlags"
+                                class="ml-lg-3 left left-align"
+                                v-model="isShowFlags"
+                                :value="true"
+                                :unchecked-value="false"
+                                @change="isShowFlags = !isShowFlags">
+                                    Show Flags on Watches
+                            </b-form-checkbox>
+                        </b-col>
                     </b-row>
                 </b-row>
                 <watch-collection 
                     @selectWatch="selectWatch" 
                     @editWatchModal="editWatchModal" 
+                    @orderChanged="orderChanged"
                     :Collection="filteredCollection" 
                     :isManagingCollection="isManagingCollection"
                     :isShowFlags="isShowFlags">
@@ -178,6 +196,7 @@ export default {
     },
     data () {
         return {
+            isChangedOrder: false,
             addWatchCount: 1,
             sortFilter: null,
             sortOptions: [
@@ -190,7 +209,7 @@ export default {
 
             styleFilter: null,
             styleOptions: [
-                { value: null, text: 'Select a Style', disabled: true},
+                { value: null, text: 'Style', disabled: true},
                 { value: 'Diver', text: 'Diver'},
                 { value: 'Dress', text: 'Dress'},
                 { value: 'Chronograph', text: 'Chronograph'},
@@ -281,19 +300,14 @@ export default {
         submitWatch() {
             this.isAddingWatch = false;
             this.isEditingExistingWatch = false;
-            
             this.$refs.seeMoreModal.hide();
-            console.log('okay here we go', this.addWatch)
             if(!this.addWatch.id) {
-                console.log('new', this.addWatch.id)
                 this.$store.dispatch('submitNewWatch', this.addWatch).then(() => {
                     this.createAddWatch(); //reset add watch to defaults
                     this.addWatchCount = 1; //resets watch count
                 });
             } 
             else {
-                console.log('edit', this.addWatch.id)
-                
                 this.$store.dispatch('submitEditWatch', this.addWatch).then(() => {
                     this.createAddWatch(); //reset add watch to defaults
                     this.addWatchCount = 1; //resets watch count
@@ -308,9 +322,17 @@ export default {
         },
 
         notManagingorEditing() {
+                console.log('omg 2' , this.hasChangedOrder)
+            
             this.isManagingCollection = false;
             this.isEditingExistingWatch = false;
             this.isAddingWatch = false;
+            if(this.hasChangedOrder) {
+                console.log('omg 3')
+                this.Collection.forEach((watch, index) => {
+                    console.log(watch, index);
+                })
+            }
             this.resetFilteredCollection();
         },
 
@@ -339,6 +361,10 @@ export default {
                 acquiredFor: null,
                 dateAcquired: ''
             }
+        },
+
+        orderChanged() {
+            this.isChangedOrder = true;
         },
 
         getSortedStyle() {
@@ -566,6 +592,11 @@ export default {
         box-shadow: none;
     }
 
+@media(min-width: 991px) {
+    .pr-3half {
+        padding-right: .75em;
+    }
+}
 
 @media(min-width: 580px) {
     .btn  {
@@ -610,6 +641,8 @@ export default {
 .mr-6 {
     margin-right: 6.5em;
 }
+
+
 
 
 </style>

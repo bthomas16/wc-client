@@ -3,11 +3,8 @@
        <b-row no-gutters>
             <b-col lg="2" md="3" cols="12" class="border bg-lightgray mx-auto">
                <app-profile-info></app-profile-info>
-               <b-row class="d-none d-md-block" no-gutters>
-                    <b-col class="mx-auto" cols="12"><app-sidebar></app-sidebar></b-col>
-               </b-row>
-               <b-row class="d-none d-md-block mt-50">
-                    <b-col class="mx-auto" cols="12"><app-sidebar></app-sidebar></b-col>
+               <b-row class="d-none d-md-block" no-gutters style="min-height: 62vh;">
+                    <b-col class="mx-auto" cols="12" ><app-sidebar></app-sidebar></b-col>
                </b-row>
             </b-col>
             <b-col lg="10" md="9" cols="12">

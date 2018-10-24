@@ -7,6 +7,9 @@ const passport = require('passport');
 
 const app = express();
 const UserController = require('./controllers/UserController');
+const FavoriteWatchController = require('./controllers/FavoriteWatchController');
+const RemoveWatchController = require('./controllers/RemoveWatchController');
+const UpdateOrderWatchController = require('./controllers/UpdateOrderWatchController');
 const WatchController = require('./controllers/WatchController');
 const Upload = require('./controllers/UploadController');
 
@@ -26,6 +29,9 @@ app.use(function(req, res, next) {
 app.use(bodyParser.json());
 
 app.use('/api/user', UserController);
+app.use('/api/watch/favorite', FavoriteWatchController);
+app.use('/api/watch/remove', RemoveWatchController);
+app.use('/api/watch/update-order', UpdateOrderWatchController);
 app.use('/api/watch', WatchController);
 app.use('/api/upload', Upload);
 

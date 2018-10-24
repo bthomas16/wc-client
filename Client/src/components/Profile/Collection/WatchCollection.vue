@@ -1,36 +1,36 @@
 <template>
     <b-container fluid>
-        <b-row id="watchRow" align-h="between" class="mt-3 mt-md-4" no-gutters  >
+        <b-row id="watchRow" align-h="between" class="mt-3 mt-md-4 px-0 pl-lg-4 pr-lg-5" no-gutters >
 
-            <draggable :Collection="Collection" :options="dragOptions" :move="onMove" @start="isDragging=true" @end="onEnd">
-                <b-col cols="4" md="3" class="left" v-for="(watch) in Collection" :key="watch.id" :id="watch.id">
-                    <b-row align-v="start" align-h="around" class="watch mb-3" :class="isManagingCollection ? 'mb-4' : ''" no-gutters>
+            <draggable v-model="Collection" @start="drag=true" @end="drag=false" @change="orderChanged">
+                <b-col cols="4" md="3" class="left p-half" v-for="(watch) in Collection" :key="watch.id" :id="watch.id">
+                    <b-row align-v="start" align-h="around" class="watch mb-1" no-gutters>
                         <b-col cols="12" class="p-0 m-0">
                             <b-row no-gutters v-if="isShowFlags && !isManagingCollection">
                                 <!-- FSOT STATUS -->
-                                <b-col cols="5" md="3" class="p-0 m-0" v-if="(watch.isForSale && !watch.isForTrade)">
-                                    <p id="forSaleIcon" class="bg-red detailIcon h6 center pointer z4 mb-0 p-1 white broder-right-white" ><strong class="h5 m-h3">FS</strong></p>
+                                <b-col cols="6" class="bg-red" v-if="(watch.isForSale && !watch.isForTrade)">
+                                    <p id="forSaleIcon" class="detailIcon center pointer z4 flag m-0 white broder-right-white" >Sale</p>
                                 </b-col>
-                                <b-col cols="5" md="3" class="p-0 m-0" v-if="(!watch.isForSale && watch.isForTrade)">
-                                    <p id="forTradeIcon" class="bg-blue detailIcon h6 pointer z4 mb-0 p-1 white broder-right-white center"><strong class="h5 m-h3">FT</strong></p>
+                                <b-col cols="6" class="bg-blue" v-if="(!watch.isForSale && watch.isForTrade)">
+                                    <p id="forTradeIcon" class="detailIcon pointer z4 flag m-0 white broder-right-white center">Trade</p>
                                 </b-col>
-                                <b-col cols="5" md="3" v-if="(!watch.isForSale && !watch.isForTrade)">
-                                    <p id="keeperIcon" class="bg-blue detailIcon h6 pointer z4 mb-0 p-1 white broder-right-white center" ><strong class="h5 m-h3">K</strong></p>
+                                <b-col cols="6" v-if="(!watch.isForSale && !watch.isForTrade)" class="bg-blue">
+                                    <p id="keeperIcon" class="detailIcon pointer z4 flag m-0 white broder-right-white center">Keeper</p>
                                 </b-col>
-                                <b-col cols="5" md="3" v-if="(watch.isForSale && watch.isForTrade)">
-                                    <p id="fsotIcon" class="bg-blue detailIcon h6 pointer z4 mb-0 p-1 white broder-right-white center"><strong class="h5 m-h3">S/T</strong></p>
+                                <b-col cols="6" v-if="(watch.isForSale && watch.isForTrade)" class="bg-blue">
+                                    <p id="fsotIcon" class="detailIcon pointer z4 flag m-0 white broder-right-white center fsot">FSOT</p>
                                 </b-col>
                                 <!-- MOVEMENT TYPE -->
-                                <b-col cols="7" md="3" class="p-0 m-0" v-if="watch.movementType">
-                                    <p id="movementTypeIcon" class="bg-red detailIcon h6 center pointer z4 white mb-0 p-1"><strong class="h5 m-h3">Solr</strong></p>
+                                <b-col cols="6" v-if="watch.movementType" class="bg-red">
+                                    <p id="movementTypeIcon" class="detailIcon center pointer z4 white flag m-0" :class="GetAbbreviatedWatchType(watch.movementType).length > 5 ? 'fitText' : ''">{{GetAbbreviatedWatchType(watch.movementType)}}</p>
                                 </b-col>
                             </b-row>
                             <b-row no-gutters v-if="isManagingCollection">
-                                <b-col cols="6" md="4" v-if="isManagingCollection"  class="p-0 m-0 nowrap">
-                                    <p id="removeIcon" class="bg-red h6 center p-1 pointer z4 white" @click="removeWatchModal(watch)"><strong class="h6 mb-0">X</strong></p>
+                                <b-col cols="6" md="4" v-if="isManagingCollection"  class="p-0 m-0 nowrap bg-red">
+                                    <p id="removeIcon" class="h6 center p-1 pointer z4 white" @click="removeWatchModal(watch)"><strong class="h6 mb-0">X</strong></p>
                                 </b-col>
-                                <b-col cols="6" md="4" v-if="isManagingCollection"  class="p-0 m-0 nowrap">
-                                    <p id="editIcon" class="bg-blue h6 center p-1 pointer z4 white" @click="editWatch(watch)"></p>
+                                <b-col cols="6" md="4" v-if="isManagingCollection"  class="p-0 m-0 nowrap bg-blue">
+                                    <p id="editIcon" class="h6 center p-1 pointer z4 white" @click="editWatch(watch)"></p>
                                 </b-col>
                             </b-row>
                         </b-col>
@@ -69,10 +69,10 @@
             ref="removeWatchModal"
             size="lg">
             <b-row slot="modal-title" no-gutters>Removing &nbsp; <strong>{{ watchToRemove.name}}</strong></b-row>
-            <remove-watch-modal :removeWatchCount="removeWatchCount" :watchIdToRemove="watchIdToRemove" :reasonsWatchMoved="reasonsWatchMoved"></remove-watch-modal>
+            <div slot="modal-header-close" class="w-100 m-h2 mt-2 mt-md-1" @click="resetReasonsWatchMoved">X</div>
+            <remove-watch-modal :watchToRemove="watchToRemove" :reasonsWatchMoved="reasonsWatchMoved"></remove-watch-modal>
             <b-row slot="modal-footer" class="p-2" no-gutters>
-                <button class="btn btn-warning mx-2 white" @click="removeWatchCount--" v-if="reasonsWatchMoved.typeMoved == 1">Previous</button>
-                <button class="btn btn-warning white mx-2" variant="warning" @click="removeWatchCount--" :disabled="reasonsWatchMoved.typeMoved == null">Remove Watch from Collection</button>
+                <button class="btn btn-warning white mx-2" variant="warning" :disabled="reasonsWatchMoved.typeMoved == null" @click="submitRemoveWatchForm">Remove Watch from Collection</button>
             </b-row>
         </b-modal>
     </b-container>
@@ -82,6 +82,7 @@
 import axios from 'axios';
 import draggable from 'vuedraggable';
 import RemoveWatchModal from './Modals/RemoveWatchModal.vue';
+import { setTimeout } from 'timers';
 
 export default {
     name: 'watchCollection',
@@ -96,42 +97,42 @@ export default {
             fullHeart: "http://localhost:8081/api/static-assets/full-heart.png",
             showFlags: true,
             // DRAGABLE PROPERTIES
-
             editable: true,
             isDragging: false,
             delayedDragging: false,
 
             watchToRemove: 'Sample',
-            watchIdToRemove: 0,
-            removeWatchCount: 1,
             reasonsWatchMoved: {
-                watchReceivedBy: null,
+                receivedBy: null,
                 typeMoved: null,
                 value: null,
-                trades: [{
-                    name: '',
-                    value: ''
-                }],
-            },
-            
+                trades: []
+            }
         }
     },
     props: {
-        Collection: Array,
         isManagingCollection: Boolean,
         isShowFlags: Boolean
     },
     methods: {
+        orderChanged() {
+            this.$emit('orderChanged')
+        },
+
+        resetReasonsWatchMoved() {
+            this.reasonsWatchMoved = {
+                receivedBy: null,
+                typeMoved: null,
+                value: null,
+                trades: [] 
+            }
+        },
+
         selectWatch(watch) {
             this.$emit('selectWatch', watch)
         },
 
-        sup(){
-            console.log('choong')
-        },
-
         submitWatch() {
-            console.log('will be submitting this watch', this.addWatch)
             this.isEdit = false;
             this.$store.dispatch('submitWatch', this.addWatch).then(() => {
                 this.addWatch = {}
@@ -145,40 +146,16 @@ export default {
 
         removeWatchModal(watch) {
             this.watchToRemove = watch;
-            this.watchIdToRemove = watch.id;
             this.$refs.removeWatchModal.show();
         },
 
-        // DRAGABLE METHODS 
-
-        onEnd(event) {
-            console.log(event)
-            let watchToUpdate = {
-                    id: event.item.id,
-                    newIndex: event.newIndex,
-                    oldInex: event.oldIndex
-                }
-            // setTimeout(() =>{
-                console.log(this.Collection)
-                this.$store.dispatch('updateWatchOrder', watchToUpdate);
-            // }, 1200)
-        },
-
-        onMove({ relatedContext, draggedContext }) {
-            console.log(relatedElement, draggedElement)
-            const relatedElement = relatedContext.element;
-            const draggedElement = draggedContext.element;
-            return (
-                (!relatedElement || !relatedElement.fixed) && !draggedElement.fixed
-            );
-        },
-
-        handleChange() {
-            console.log('hi');
-        },
-
-        inputChanged(value) {
-            console.log(value);
+        submitRemoveWatchForm() {
+            let watchDetails = { watchToRemove: this.watchToRemove, reasonsWatchMoved: this.reasonsWatchMoved }
+            this.$store.dispatch('createRemoveWatch', watchDetails);
+            this.$store.dispatch('removeExistingWatch', this.watchToRemove);   
+            this.$store.dispatch('loadUserCollection');         
+            this.resetReasonsWatchMoved();
+            this.$refs.removeWatchModal.hide();
         },
 
         favoriteToggle(watchId) {
@@ -193,42 +170,48 @@ export default {
                 if(found) return true
                 else return false
             }
+        },
+
+        GetAbbreviatedWatchType(fullName) {
+            switch(fullName) {
+                case "automatic":
+                    return "Auto";
+                    break;
+                case "solar":
+                    return "Solar";
+                    break;
+                case "quartz":
+                    return "Quartz";
+                    break;  
+                case "manual":
+                    return "Manual";
+                    break; 
+            }
         }
     },
 
     computed: {
-        dragOptions() 
-        {
-            return {
-                animation: 0,
-                group: "description",
-                disabled: !this.editable,
-                ghostClass: "ghost"
-            };
+        Favorites() {
+            return this.$store.state.Favorites;
         },
 
-        Favorites() {
-            return this.$store.getters.getFavorites;
+        Collection: {
+            set(newCollectionOrder) {
+                setTimeout(() => {
+                    this.$store.dispatch('updateCollectionOrder', newCollectionOrder);
+                }, 500)
+            },
+            get() {
+                return this.$store.state.Collection;
+            }
         }
-
-        
-    },
-
-    watch: {
-    isDragging(newValue) {
-      if (newValue) {
-        this.delayedDragging = true;
-        return;
-      }
-      this.$nextTick(() => {
-        this.delayedDragging = false;
-      });
     }
-  }
 }
 </script>
 
 <style scoped>
+
+
     #watchName {
         font-size: .80em;
     }
@@ -270,16 +253,8 @@ export default {
         background-image: url('http://localhost:8081/api/static-assets/editIcon1.png');  
         background-position: center;   
         background-repeat: no-repeat;  
-        background-size: 1.5em;  
-               
-        /* margin-right: 0em;
-        width: 1.75em;
-        height: 1.75em; */
-    }
-
-    /* #deleteIcon {
-        margin-right: 2.5em;
-    } */
+        background-size: 1.5em;           
+     }
 
     .dropZone[aria-dropeffect="move"]  {
         border-color:#68b;
@@ -302,7 +277,19 @@ export default {
     background:lightgreen;
     color:#fff;
     }
-    @media(min-width: 765px) and (max-width: 815px) {
+        
+    .flag {
+        padding: .35em 0 !important;
+        font-size: .75em;
+    }
+
+    .p-half {
+        padding: .5rem;
+    }
+
+
+
+    @media(min-width: 768px) and (max-width: 1000px) {
         #searchRef, #seeMore {
             font-size: .6em;
         }
@@ -314,22 +301,28 @@ export default {
         .heartIcon {
             width: 20px;
         }
-
-        /* #editIcon {
-        background-size: 35%;  
-            
-        } */
     }
 
     @media(max-width: 600px) {
         #editIcon {
         background-size: 1.25em;              
         }
+
+        .flag {
+            font-size: .85rem;
+            padding: .1em !important;
+            
+        }
     }
 
     @media(max-width: 415px) {
         #searchRef, #seeMore {
-            font-size: .65em;
+            font-size: .65rem;
+        }
+
+        .flag {
+            font-size: 10.5px;
+            padding: .2em !important;
         }
     }
 

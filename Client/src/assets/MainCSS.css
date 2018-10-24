@@ -8,6 +8,18 @@
     white-space: nowrap;
 }
 
+.w-65 {
+    width: 65%;
+}
+
+.mb-4half {
+    margin-bottom: 1.675em;
+}
+
+.b-0 {
+    bottom:0;
+}
+
 .t-0 {
     top: 0;
 }

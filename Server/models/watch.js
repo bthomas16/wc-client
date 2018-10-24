@@ -14,7 +14,6 @@ const Watch = (function() {
     async function saveWatchToCollectionDB(formData, user_id, res) {
         try 
         {
-            console.log('hopefully saving watch to db', formData);
             await knex('watch').returning('*').insert(
                 {
                     user_id: user_id,
