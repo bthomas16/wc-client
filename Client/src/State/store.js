@@ -14,12 +14,14 @@ const axios = require('axios'),
     VALIDATE_JWT = "VALIDATE_JWT",
     INVALIDATE_JWT = "INVALIDATE_JWT",
     NAME_COLLECTION = "NAME_COLLECTION",
-    LOAD_COLLECTION = "LOAD_COLLECTION",
+    SET_COLLECTION = "SET_COLLECTION",
     SUBMIT_NEW_WATCH = "SUBMIT_NEW_WATCH",
     SELECT_WATCH = "SELECT_WATCH",
     WATCH_ORDER_UPDATED = "WATCH_ORDER_UPDATED",
     TOGGLE_FAVORITE = "TOGGLE_FAVORITE",
     FAVORITES_COLLECTION = "FAVORITES_COLLECTION",
+    TOGGLE_IS_MANAGING_COLLECTION = "TOGGLE_IS_MANAGING_COLLECTION",
+    TOGGLE_IS_SHOW_FLAGS = "TOGGLE_IS_SHOW_FLAGS",
     SUBMIT_EDIT_WATCH = "SUBMIT_EDIT_WATCH";
 
 const state = 
@@ -29,6 +31,8 @@ const state =
     User: {},
     Collection: [],
     Favorites: [], //array of watch id's
+    isManagingCollection: false,
+    isShowFlags: true,
     isUserLoaded: false,
     isCollectionLoaded: false,
     selectedWatch: {}
@@ -77,12 +81,11 @@ const mutations =
     },
 
     [SUBMIT_EDIT_WATCH](state, watch) {
-        let watchToUpdate = state.Collection.find(w => w.id == watch.id)
-        console.log('ehuietrg', watchToUpdate, watch)
+        let watchToUpdate = state.Collection.find(w => w.id == watch.id);
         watchToUpdate = watch;
     },
 
-    [LOAD_COLLECTION](state, collection) {
+    [SET_COLLECTION](state, collection) {
         state.isLoading = false;     
         state.isCollectionLoaded = true;               
         state.Collection = collection;
@@ -106,7 +109,15 @@ const mutations =
     },
 
     [TOGGLE_FAVORITE](state, favorites) {
-        state.Favorites = favorites
+        state.Favorites = favorites;
+    },
+
+    [TOGGLE_IS_MANAGING_COLLECTION](state) {
+        state.isManagingCollection = !state.isManagingCollection;
+    },
+
+    [TOGGLE_IS_SHOW_FLAGS](state) {
+        state.isShowFlags = !state.isShowFlags;
     }
 }
 
@@ -120,8 +131,10 @@ const actions =
                 .then(res => {
                     localStorage.setItem('watchJwt', res.data.token);
                     context.commit(AUTH_SUCCESS, res.data.user);
+                    context.commit(NOT_LOADING);
                     resolve(res.data)
                 }).catch(err => {
+                    context.commit(NOT_LOADING);
                     context.commit(AUTH_FAILURE);
                         reject(err.data);
                 })
@@ -137,13 +150,15 @@ const actions =
             .then(res => {
                 localStorage.setItem('watchJwt', res.data.token);
                 context.commit(AUTH_SUCCESS, res.data.user);
+                context.commit(NOT_LOADING);                
                 resolve(res.data)
             })
             .catch(err => {
                 this.responseStyle = 'danger';
                 this.responseMessage = err.data.message;
                 this.form = {}; 
-                context.commit(AUTH_FAILURE );     
+                context.commit(AUTH_FAILURE );  
+                context.commit(NOT_LOADING);                   
                 reject(res.data)                              
             })
         })
@@ -157,7 +172,8 @@ const actions =
                 'authorization': localStorage.getItem('watchJwt')
             }
         }).then(res => {
-            context.commit(AUTH_SUCCESS, res.data.user)
+            context.commit(AUTH_SUCCESS, res.data.user);
+            context.commit(NOT_LOADING);            
         }).catch(err => {
             console.log(err)
             context.commit(NOT_LOADING);
@@ -183,6 +199,7 @@ const actions =
                 }
             }).then(res => {
                 context.commit(VALIDATE_JWT);
+                context.commit(NOT_LOADING);                
                 resolve(res.data)
             }).catch(err => {
                 reject()
@@ -201,11 +218,11 @@ const actions =
             }
         })
         .then(res => {
-            context.commit(LOAD_COLLECTION, res.data.collection);
+            context.commit(SET_COLLECTION, res.data.collection);
             context.commit(NOT_LOADING);            
         }).catch(err => {
             console.log('errorreres', err)
-            context.commit(LOAD_COLLECTION, []);
+            context.commit(SET_COLLECTION, []);
             context.commit(NOT_LOADING);            
         })
     },
@@ -222,7 +239,8 @@ const actions =
                 }
             })
             .then((res) => {
-                context.commit(SUBMIT_NEW_WATCH, res.data.watch)
+                context.commit(SUBMIT_NEW_WATCH, res.data.watch);
+                context.commit(NOT_LOADING); 
                 resolve(res.data)
             }).catch((err) => {
                 reject(err.data);   
@@ -234,10 +252,7 @@ const actions =
     submitEditWatch(context, watch) {
         context.commit(LOADING);        
         return new Promise((resolve, reject) => {
-            axios.put('/api/watch', watch, {
-                params: {
-                    id: watch.id
-                },
+            axios.put('/api/watch/' + watch.id, watch, {
                 headers: {
                     'Content-Type': 'application/json',
                     'authorization': localStorage.getItem('watchJwt')
@@ -292,8 +307,8 @@ const actions =
                 resolve(res.data)
             }).catch((err) => {
                 console.log(err)
+                context.commit(NOT_LOADING);      
                 reject(err);   
-                    context.commit(NOT_LOADING);      
             })
         })
     },
@@ -307,6 +322,7 @@ const actions =
     },
 
     updateCollectionOrder(context, newCollectionOrder) {
+        // NO LOADING NEEDING
         axios.put('/api/watch/update-order', newCollectionOrder, {
             headers: {
                 'Content-Type': 'application/json',
@@ -323,7 +339,8 @@ const actions =
         console.log('owmnfieb')
     },
 
-    getFavorites(context) { //On load watch collection
+    getFavorites(context) { 
+        // NO LOADING NEEDING
         axios.get('/api/watch/favorite', {
             headers: {
                 'Content-Type': 'application/json',
@@ -338,6 +355,7 @@ const actions =
     },
 
     toggleWatchFavorite(context, watchId) {
+        // NO LOADING NEEDING        
         axios.post('/api/watch/favorite',  { watchId }, {
             headers: {
                 'Content-Type': 'application/json',
@@ -349,8 +367,63 @@ const actions =
         }).catch(err => {
             console.log('fuckit', err);
         })
-    }
+    }, 
 
+    toggleIsManagingCollection(context) {
+        // NO LOADING NEEDING        
+        context.commit('TOGGLE_IS_MANAGING_COLLECTION');
+    }, 
+
+    toggleIsShowFlags(context) {
+        // NO LOADING NEEDING        
+        context.commit('TOGGLE_IS_SHOW_FLAGS');
+    },
+
+    getFilteredByCondition(context, sortCategory, categoryOption) {
+        context.commit(LOADING);
+        return new Promise((resolve, reject) => {
+            axios.get('/api/watch/sort-filter/' + sortCategory + '/' + categoryOption, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': localStorage.getItem('watchJwt')
+                }
+            })
+            .then((res) => {
+                let collection = res.data.collection;
+                context.commit(SET_COLLECTION, collection);
+                context.commit(NOT_LOADING);
+                resolve(res.data)
+            }).catch((err) => {
+                console.log(err)
+                context.commit(SET_COLLECTION, []);                
+                context.commit(NOT_LOADING);      
+                reject(err);   
+            })
+        })
+    },
+
+    getFilteredBySearchTerm(context, searchTermToFilterBy) {
+        context.commit(LOADING);
+        return new Promise((resolve, reject) => {
+            axios.get('/api/watch/sort-filter/search/' + searchTermToFilterBy, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': localStorage.getItem('watchJwt')
+                }
+            })
+            .then((res) => {
+                let collection = res.data.collection;
+                context.commit(SET_COLLECTION, collection);
+                context.commit(NOT_LOADING);
+                resolve(res.data)
+            }).catch((err) => {
+                console.log(err)
+                context.commit(SET_COLLECTION, []);                
+                context.commit(NOT_LOADING);      
+                reject(err);   
+            })
+        })
+    }
 }
 
 const getters = 

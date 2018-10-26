@@ -110,10 +110,6 @@ export default {
             }
         }
     },
-    props: {
-        isManagingCollection: Boolean,
-        isShowFlags: Boolean
-    },
     methods: {
         orderChanged() {
             this.$emit('orderChanged')
@@ -204,6 +200,14 @@ export default {
             get() {
                 return this.$store.state.Collection;
             }
+        },
+
+        isManagingCollection() {
+            return this.$store.state.isManagingCollection;
+        },
+
+        isShowFlags() {
+            return this.$store.state.isShowFlags;
         }
     }
 }

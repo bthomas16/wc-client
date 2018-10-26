@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const knex = require('../config/db');
 const Promise = require('promise');
-const WatchModel = require('../models/watch.js');
 
 const VerifyToken = require('../middleware/VerifyToken.js');
 
