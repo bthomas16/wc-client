@@ -140,7 +140,7 @@ export default {
         },
 
         isValidToken() {
-            return this.$store.getters.getUserAuthStatus;
+            return this.$store.state.isAuthorized;
         }
     }
 }

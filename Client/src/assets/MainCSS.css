@@ -98,16 +98,21 @@
     color: green !important;
 }
 
+
 .red{
     color: red !important;
 }
 
 .light-green {
-    color: #d4EAC8;
+    color: #d4EAC8 !important;
 }
 
 .bg-light-green {
-    background-color: #d4EAC8;
+    background-color: #d4EAC8 !important;
+}
+
+.bg-light-yellow {
+    background-color: rgb(238, 229, 144) !important;
 }
 
 .light-blue {
@@ -120,6 +125,10 @@
 
 .gray {
     color: gray !important;
+}
+
+.bg-gray {
+    background-color: lightgray !important;
 }
 
 .lightgray {

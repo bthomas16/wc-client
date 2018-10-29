@@ -6,19 +6,35 @@ const WatchModel = require('../models/watch.js');
 
 const VerifyToken = require('../middleware/VerifyToken.js');
 
-async function updateWatchOrder(watch, index) {
-    await knex('watch').where('id', watch.id).returning('*').update({
+function updateWatchOrder(id, index) {
+    console.log('doot doot, id, index')
+    return knex('watch').where('id', id).update({
         order: index
-    }).then(w => {
-        console.log(w, 'updatef this ish')
     })
 }
 
+// router.put('/', VerifyToken, async (req, res) => {
+//     let collection = req.body;
+//     collection.forEach(async (watch, index) => {
+//         await updateWatchOrder(watch, index);
+//     })
+// });
+
 router.put('/', VerifyToken, async (req, res) => {
-    let collection = req.body;
-    collection.forEach(async (watch, index) => {
-        await updateWatchOrder(watch, index);
-    })
-});
+    try
+    {   
+        console.log('ua, gotmme', req.body)
+        let newCollection = req.body;
+        newCollection.forEach(async (watch, index) => {
+            console.log('boot', watch, index)
+            await updateWatchOrder(watch.id, index);
+        });
+        res.status(201).json({collection: newCollection})
+    }
+    catch
+    {   
+        res.status(403).json({isSuccess: false, message: 'Could not get collection at this time'})
+    } 
+})
 
 module.exports = router;

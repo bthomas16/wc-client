@@ -261,8 +261,6 @@ const actions =
 
     submitNewWatch(context, watch) {
         context.commit(LOADING);        
-            if(!context.state.Collection) watch.order = 0;
-            else watch.order = context.state.Collection.length + 1;
             axios({
                 method: 'POST',
                 url: '/api/watch',
@@ -345,12 +343,13 @@ const actions =
     updateCollectionOrder(context, newCollectionOrder) {
         // NO LOADING NEEDING
         axios({
-            method: 'POST',
+            method: 'PUT',
             url: '/api/watch/update-order',
             headers,
             data: newCollectionOrder
         }).then(res => {
-            console.log(res.data)
+            console.log(res.data.collection)
+            context.commit(SET_COLLECTION, res.data.collection)
         }).catch(err => {
             console.log(err)
         })

@@ -45,7 +45,7 @@ export default {
   
   computed: {
     getAuth: function() {
-      return this.$store.getters.getUserAuthStatus;
+      return this.$store.state.isAuthorized;
     }
   }
   

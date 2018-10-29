@@ -23,7 +23,9 @@ router.put('/', VerifyToken, (req, res) => {
 router.get('/', VerifyToken, async (req, res) => {
     try
     {   
-        await knex('watch').where('user_id', req.id)
+        await knex('watch')
+            .orderBy('order', 'asc')
+            .where('user_id', req.id)
             .then(collection => { 
             if(collection.length > 0) 
                 res.status(200).json({collection});
