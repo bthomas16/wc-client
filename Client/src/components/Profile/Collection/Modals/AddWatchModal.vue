@@ -64,10 +64,10 @@
                                             <strong>*Name:</strong>  
                                         </b-col>
                                         <b-col cols="8">
-                                            <b-form-input v-model="addWatch.name"
+                                            <b-form-input 
+                                                v-model="addWatch.name"
                                                 type="text"
                                                 required
-                                                
                                                 :class="addWatch.name ? 'yesValue' : 'formBorder'"
                                                 placeholder="Watch Name"
                                                 description="Provide a name for the watch"
@@ -439,16 +439,16 @@ export default {
             addWatchTitle: "Add your first watch!",
             styleOptions: [
                 { value: null, text: 'Select a Style', disabled: true},
-                { value: 'Diver', text: 'Diver'},
-                { value: 'Dress', text: 'Dress'},
-                { value: 'Chronograph', text: 'Chronograph'},
-                { value: 'Tourbillon', text: 'Tourbillon'},
-                { value: 'Black Tie', text: 'Black Tie'},
-                { value: 'Sport', text: 'Sport'},
-                { value: 'Smart', text: 'Smart'},
-                { value: 'Apple', text: 'Apple'},
-                { value: 'Casual', text: 'Casual'},
-                { value: 'Orienteering', text: 'Orienteering'},
+                { value: 'diver', text: 'Diver'},
+                { value: 'dress', text: 'Dress'},
+                { value: 'chronograph', text: 'Chronograph'},
+                { value: 'tourbillon', text: 'Tourbillon'},
+                { value: 'black tie', text: 'Black Tie'},
+                { value: 'sport', text: 'Sport'},
+                { value: 'smart', text: 'Smart'},
+                { value: 'apple', text: 'Apple'},
+                { value: 'casual', text: 'Casual'},
+                { value: 'orienteering', text: 'Orienteering'},
             ],
 
             accuracyOptions: 
@@ -586,10 +586,6 @@ export default {
             this.isEditMode = true;            
             this.addWatch.specs = 
             localStorage.setItem('addWatch', specs);
-        },
-
-        previewWatch() {
-            this.$emit('previewWatch', this.addWatch)
         }
     },
     computed: {

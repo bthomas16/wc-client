@@ -3,6 +3,12 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
+const headers = {
+        'Content-Type': 'application/json',
+        'authorization': localStorage.getItem('watchJwt')
+    }
+
+
 const axios = require('axios'),
     LOADING = "LOADING",
     NOT_LOADING = "NOT_LOADING",
@@ -15,13 +21,16 @@ const axios = require('axios'),
     INVALIDATE_JWT = "INVALIDATE_JWT",
     NAME_COLLECTION = "NAME_COLLECTION",
     SET_COLLECTION = "SET_COLLECTION",
+    SET_COLLECTION_LENGTH = "SET_COLLECTION_LENGTH",
     SUBMIT_NEW_WATCH = "SUBMIT_NEW_WATCH",
     SELECT_WATCH = "SELECT_WATCH",
     WATCH_ORDER_UPDATED = "WATCH_ORDER_UPDATED",
     TOGGLE_FAVORITE = "TOGGLE_FAVORITE",
+    SET_NUMBER_FSOT = "SET_NUMBER_FSOT",
     FAVORITES_COLLECTION = "FAVORITES_COLLECTION",
     TOGGLE_IS_MANAGING_COLLECTION = "TOGGLE_IS_MANAGING_COLLECTION",
     TOGGLE_IS_SHOW_FLAGS = "TOGGLE_IS_SHOW_FLAGS",
+    TOGGLE_IS_SHOW_EDIT_FLAGS = "TOGGLE_IS_SHOW_EDIT_FLAGS",
     SUBMIT_EDIT_WATCH = "SUBMIT_EDIT_WATCH";
 
 const state = 
@@ -30,9 +39,12 @@ const state =
     isAuthorized: false,
     User: {},
     Collection: [],
-    Favorites: [], //array of watch id's
+    CollectionLength: 0,
+    Favorites: [],
+    NumberFSOT: 0, //array of watch id's
     isManagingCollection: false,
     isShowFlags: true,
+    isShowEditFlags: true,
     isUserLoaded: false,
     isCollectionLoaded: false,
     selectedWatch: {}
@@ -91,6 +103,10 @@ const mutations =
         state.Collection = collection;
     },
 
+    [SET_COLLECTION_LENGTH](state, collectionLength) {
+        state.collectionLength = collectionLength;
+    },
+
     [SELECT_WATCH](state, watch) {
         state.selectedWatch = watch;
     },
@@ -108,6 +124,10 @@ const mutations =
         }
     },
 
+    [SET_NUMBER_FSOT](state, numberFSOT) {
+        state.NumberFSOT = numberFSOT;
+    },
+
     [TOGGLE_FAVORITE](state, favorites) {
         state.Favorites = favorites;
     },
@@ -118,6 +138,10 @@ const mutations =
 
     [TOGGLE_IS_SHOW_FLAGS](state) {
         state.isShowFlags = !state.isShowFlags;
+    },
+
+    [TOGGLE_IS_SHOW_EDIT_FLAGS](state) {
+        state.isShowEditFlags = !state.isShowEditFlags;
     }
 }
 
@@ -146,7 +170,11 @@ const actions =
     {
         context.commit(LOADING);// show spinner
         return new Promise((resolve, reject) => {
-            axios.post('/api/user/register', formData)
+            axios({
+                method: 'POST',
+                url: '/api/user/register',
+                data: formData
+            })
             .then(res => {
                 localStorage.setItem('watchJwt', res.data.token);
                 context.commit(AUTH_SUCCESS, res.data.user);
@@ -166,11 +194,10 @@ const actions =
 
     user(context) {
         context.commit(LOADING);        
-        axios.get('/api/user/profile', {
-            headers: {
-                'Content-Type': 'application/json',
-                'authorization': localStorage.getItem('watchJwt')
-            }
+        axios({
+            method: 'GET',
+            url: '/api/user/profile',
+            headers
         }).then(res => {
             context.commit(AUTH_SUCCESS, res.data.user);
             context.commit(NOT_LOADING);            
@@ -193,7 +220,9 @@ const actions =
         context.commit(LOADING);        
         return new Promise((resolve, reject) => {
             console.log('validating jwt', localStorage.getItem('watchJwt'))
-            axios.get('/api/user/validate-jwt', {
+            axios({
+                method: 'GET',
+                url: '/api/user/validate-jwt/',
                 params: {
                     jwt: localStorage.getItem('watchJwt')
                 }
@@ -210,8 +239,11 @@ const actions =
     },
 
     loadUserCollection(context) {
+        console.log('fuckkkedji im loading')
         context.commit(LOADING);
-        axios.get('/api/watch', {
+        axios({
+            method: 'GET',
+            url: '/api/watch',
             headers: {
                 'Content-Type': 'application/json',
                 'authorization': localStorage.getItem('watchJwt')
@@ -219,9 +251,9 @@ const actions =
         })
         .then(res => {
             context.commit(SET_COLLECTION, res.data.collection);
+            context.commit(SET_COLLECTION_LENGTH, res.data.collection.length);
             context.commit(NOT_LOADING);            
         }).catch(err => {
-            console.log('errorreres', err)
             context.commit(SET_COLLECTION, []);
             context.commit(NOT_LOADING);            
         })
@@ -229,87 +261,76 @@ const actions =
 
     submitNewWatch(context, watch) {
         context.commit(LOADING);        
-        return new Promise((resolve, reject) => {
             if(!context.state.Collection) watch.order = 0;
             else watch.order = context.state.Collection.length + 1;
-            axios.post('/api/watch', watch, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': localStorage.getItem('watchJwt')
-                }
+            axios({
+                method: 'POST',
+                url: '/api/watch',
+                headers,
+                data: watch
             })
             .then((res) => {
                 context.commit(SUBMIT_NEW_WATCH, res.data.watch);
-                context.commit(NOT_LOADING); 
-                resolve(res.data)
+                context.commit(NOT_LOADING);
+                return;
             }).catch((err) => {
-                reject(err.data);   
-                    context.commit(NOT_LOADING);      
-            })
+                context.commit(NOT_LOADING);      
         })
     },
 
     submitEditWatch(context, watch) {
         context.commit(LOADING);        
-        return new Promise((resolve, reject) => {
-            axios.put('/api/watch/' + watch.id, watch, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': localStorage.getItem('watchJwt')
-                }
+            axios({
+                method: 'PUT',
+                url: '/api/watch/',
+                params: {
+                    id: watch.id
+                },
+                headers,
+                data: watch
             })
             .then((res) => {
-                context.commit(SUBMIT_EDIT_WATCH, res.data.watch)
+                context.commit(SUBMIT_EDIT_WATCH, res.data.watch);
                 context.commit(NOT_LOADING);
-                resolve(res.data)
+                return;
             }).catch((err) => {
-                reject(err.data);   
-                    context.commit(NOT_LOADING);      
-            })
+                console.log(err);
+                context.commit(NOT_LOADING);      
         })
     },
 
     removeExistingWatch(context, watchToRemove) {
-        return new Promise((resolve, reject) => {
-            axios.put('/api/watch/remove', {}, {
-                params: {
-                    id: watchToRemove.id
-                },
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': localStorage.getItem('watchJwt')
-                }
-            })
-            .then((res) => {
-                    console.log('updated that watch!', res.data.watch)
-                    context.commit(NOT_LOADING);
-                resolve(res.data)
-            }).catch((err) => {
-                reject(err.data);   
-                    context.commit(NOT_LOADING);      
-            })
-        });
+        axios({
+            method: 'PUT',
+            url: '/api/watch/remove',
+            params: {
+                id: watchToRemove.id
+            },
+            headers
+        })
+        .then((res) => {
+            console.log('updated that watch!', res.data.watch)
+            context.commit(NOT_LOADING);
+            return;
+        }).catch((err) => { 
+            context.commit(NOT_LOADING);      
+        })
     },
 
     createRemoveWatch(context, watchDetails) {
         context.commit(LOADING);  
-        console.log('storeiiee goes', watchDetails)
-        return new Promise((resolve, reject) => {
-            axios.post('/api/watch/remove', watchDetails, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': localStorage.getItem('watchJwt')
-                }
+            axios({
+                method: 'POST',
+                url: '/api/watch/remove',
+                headers,
+                data: watchDetails
             })
             .then((res) => {
                 console.log('created new watch removed!', res.data.watch)
                 context.commit(NOT_LOADING);
-                resolve(res.data)
             }).catch((err) => {
                 console.log(err)
-                context.commit(NOT_LOADING);      
-                reject(err);   
-            })
+                context.commit(NOT_LOADING);        
         })
     },
 
@@ -318,16 +339,16 @@ const actions =
             context.commit('SELECT_WATCH', watch);
             return true;
         }
-        throw new Error('HOLY SHIT!');
+        throw new Error('HOLY SHIT WHAT DID YOU DO?!');
     },
 
     updateCollectionOrder(context, newCollectionOrder) {
         // NO LOADING NEEDING
-        axios.put('/api/watch/update-order', newCollectionOrder, {
-            headers: {
-                'Content-Type': 'application/json',
-                'authorization': localStorage.getItem('watchJwt')
-            }
+        axios({
+            method: 'POST',
+            url: '/api/watch/update-order',
+            headers,
+            data: newCollectionOrder
         }).then(res => {
             console.log(res.data)
         }).catch(err => {
@@ -335,13 +356,11 @@ const actions =
         })
     },
 
-    writeCollection() {
-        console.log('owmnfieb')
-    },
-
     getFavorites(context) { 
         // NO LOADING NEEDING
-        axios.get('/api/watch/favorite', {
+        axios({
+            method: 'GET',
+            url: '/api/watch/favorite',
             headers: {
                 'Content-Type': 'application/json',
                 'authorization': localStorage.getItem('watchJwt')
@@ -354,13 +373,32 @@ const actions =
         })
     },
 
-    toggleWatchFavorite(context, watchId) {
-        // NO LOADING NEEDING        
-        axios.post('/api/watch/favorite',  { watchId }, {
+    getNumberFSOT(context) { 
+        // NO LOADING NEEDING
+        axios({
+            method: 'GET',
+            url: '/api/watch/number-fsot',
             headers: {
                 'Content-Type': 'application/json',
                 'authorization': localStorage.getItem('watchJwt')
             }
+        }).then(res => {
+            console.log('okafhb', res.data.numberFSOT)
+            context.commit('SET_NUMBER_FSOT', +res.data.numberFSOT);
+        }).catch(err => {
+            console.log(err);
+        })
+    },
+
+    toggleWatchFavorite(context, watchId) {
+        // NO LOADING NEEDING        
+        axios({
+            method: 'POST',
+            url: '/api/watch/favorite/',
+            params: {
+                watchId
+            },
+            headers
         }).then(res => {
             console.log('toggled', res.data)
             context.commit('TOGGLE_FAVORITE', res.data.favorites);
@@ -379,49 +417,47 @@ const actions =
         context.commit('TOGGLE_IS_SHOW_FLAGS');
     },
 
-    getFilteredByCondition(context, sortCategory, categoryOption) {
+    toggleIsShowEditFlags(context) {
+        // NO LOADING NEEDED
+        context.commit('TOGGLE_IS_SHOW_EDIT_FLAGS');
+    },
+
+    getFilteredCollection(context, filterObj) {
         context.commit(LOADING);
-        return new Promise((resolve, reject) => {
-            axios.get('/api/watch/sort-filter/' + sortCategory + '/' + categoryOption, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': localStorage.getItem('watchJwt')
-                }
+        console.log(filterObj)
+            axios({
+                method: 'GET',
+                url: `/api/watch/sort-filter/${filterObj.category}/`,
+                params: { option: filterObj.option },
+                headers
             })
             .then((res) => {
                 let collection = res.data.collection;
                 context.commit(SET_COLLECTION, collection);
                 context.commit(NOT_LOADING);
-                resolve(res.data)
             }).catch((err) => {
                 console.log(err)
                 context.commit(SET_COLLECTION, []);                
                 context.commit(NOT_LOADING);      
-                reject(err);   
-            })
         })
     },
 
-    getFilteredBySearchTerm(context, searchTermToFilterBy) {
+    getFilteredCollectionBySearchTerm(context, searchTermToFilterBy) {
         context.commit(LOADING);
-        return new Promise((resolve, reject) => {
-            axios.get('/api/watch/sort-filter/search/' + searchTermToFilterBy, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': localStorage.getItem('watchJwt')
-                }
+            axios({
+                method: 'GET',
+                url: '/api/watch/sort-filter/search/',
+                params: { searchTerm: searchTermToFilterBy },
+                headers
             })
             .then((res) => {
                 let collection = res.data.collection;
                 context.commit(SET_COLLECTION, collection);
                 context.commit(NOT_LOADING);
-                resolve(res.data)
             }).catch((err) => {
                 console.log(err)
                 context.commit(SET_COLLECTION, []);                
-                context.commit(NOT_LOADING);      
-                reject(err);   
-            })
+                context.commit(NOT_LOADING);       
         })
     }
 }

@@ -4,6 +4,8 @@ exports.up = function(knex, Promise) {
         table.increments('id').primary();
         table.integer('user_id').references('id').inTable('peeps');
         table.integer('order');
+        table.integer('condition');
+        
 
         table.string('src');
         table.string('name').notNullable();
@@ -17,7 +19,6 @@ exports.up = function(knex, Promise) {
         table.string('accuracy');
         table.string('crystal');
         table.string('movement');
-        table.string('condition');
         table.string('band');
         table.string('dateAcquired');
         table.string('watchStyle');

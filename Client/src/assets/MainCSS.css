@@ -258,6 +258,10 @@
     border-right: 1px solid white;
 }
 
+.break-word {
+    word-wrap: break-word !important;
+}
+
 
 .z1 {
     z-index: 1;

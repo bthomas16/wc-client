@@ -2,10 +2,27 @@ const knex = require('../config/db');
 
 
 const getWatchCollectionByCondition = (id, conditionToFilterBy) => {
-    return knex('watch').where('user_id', id).andWhere(function() {
-        this.where('condition', conditionToFilterBy)
-        .orWhere('condition', '>', conditionToFilterBy)
-    });
+    switch(conditionToFilterBy) {
+        case 8: 
+            return knex('watch')
+                .where('user_id', id)
+                .andWhere('condition', '>', 7);
+            break;
+        case 5: 
+            return knex('watch')
+                .where('user_id', id)
+                .andWhere(function() {
+                    this.where('condition', '>', 4)
+                    .andWhere('condition', '<', 8)
+                })
+            break;
+        case 1: 
+            return knex('watch')
+                .where('user_id', id)
+                .andWhere('condition', '<', 5);
+            break;
+    }
+    
 }
 
 const getWatchCollectionByStatus = (id, statusToFilterBy) => {
@@ -54,7 +71,7 @@ const getWatchCollectionByStatus = (id, statusToFilterBy) => {
     }
 }
 
-const getWatchCollectionByStyle = (id, statusTypeInTable, styleToFilterBy) => {
+const getWatchCollectionByStyle = (id, styleToFilterBy) => {
     return knex('watch')
         .where('user_id', id)
         .andWhere('watchStyle', styleToFilterBy);
@@ -62,13 +79,54 @@ const getWatchCollectionByStyle = (id, statusTypeInTable, styleToFilterBy) => {
 
 const getWatchCollectionBySearchTerm = (id, searchTerm) => {
     return knex('watch')
-        .where('user_id', id)
-        .andWhere('name', 'like', '%' + searchTerm + '%');
+        .where('user_id', id).andWhere(function() {
+            this.where('name', 'like', '%' + searchTerm + '%')
+            .orWhere('brand', 'like', '%' + searchTerm + '%')
+        })
 }
+
+const getWatchFavorites = (userId, typeOfFavorites) => {
+    switch(typeOfFavorites) {
+        case 'all': 
+            return knex('user_watch_favorited')
+                .where('user_watch_favorited.user_id', userId)
+                .andWhere('user_watch_favorited.isCurrentFavorite', true)
+                    .rightOuterJoin('watch', 'user_watch_favorited.watch_id', 'watch.id');
+                break;
+        // case 'inCollection':
+        //     return knex('user_watch_favorited')
+        //         .distinct()
+        //         .where('user_watch_favorited.user_id', userId)
+        //         .andWhere('user_watch_favorited.isCurrentFavorite', true)
+        //             .rightOuterJoin('watch', 'watch.user_id', '=', userId);
+        //         break;
+        case 'notInCollection':
+            return knex('user_watch_favorited')
+                .where('user_watch_favorited.user_id', userId)
+                .andWhere('user_watch_favorited.isCurrentFavorite', true)
+                    .rightOuterJoin('watch', 'watch.user_id', '!=', userId);
+                break;
+        case 'pastFavorites':
+                return knex('user_watch_favorited')
+                    .where('user_watch_favorited.user_id', userId)
+                    .andWhere('user_watch_favorited.isCurrentFavorite', false)
+                    .rightOuterJoin('watch', 'user_watch_favorited.watch_id', 'watch.id');
+                break;
+        default:
+            return true;
+    }
+}
+
+// return knex('user_watch_favorited').
+// .from('user_watch_favorited')
+//     .where('user_watch_favorited.isCurrentFavorite', true)
+//     .andWhere('user_watch_favorited.user_id', req.id)
+//     .fullOuterJoin('watch', 'user_watch_favorited.watch_id', 'watch.id')
 
 module.exports = {
     getWatchCollectionByCondition,
     getWatchCollectionByStatus,
     getWatchCollectionByStyle,
-    getWatchCollectionBySearchTerm
+    getWatchCollectionBySearchTerm,
+    getWatchFavorites
 }

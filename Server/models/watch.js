@@ -17,7 +17,6 @@ const Watch = (function() {
             await knex('watch').returning('*').insert(
                 {
                     user_id: user_id,
-                    order: formData.order,
 
                     // src: formData.src,
                     condition: formData.condition,
@@ -93,6 +92,7 @@ const Watch = (function() {
                     forTradeValue: formData.forTradeValue,
                     dateAcquired: formData.dateAcquired
                 }).then((watch) => {
+                    console.log('did it!!!',watch)
                     res.json({
                         isSuccess: true,
                         message: 'Watch updated in Collection',

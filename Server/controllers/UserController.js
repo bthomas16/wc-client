@@ -28,7 +28,7 @@ router.post('/login', async (req, res) =>
   }
 });
 
-router.get('/validate-jwt', (req, res) => 
+router.get('/validate-jwt/', (req, res) => 
 {
   let token = req.query.jwt;
   console.log('tokenin', token)

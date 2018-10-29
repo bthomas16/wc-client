@@ -22,11 +22,11 @@
                 <ul class="mt-0 p-0 m-0">
                     <li v-if="selectedWatch.brand">
                         <strong>Brand:</strong>
-                        <span> {{selectedWatch.brand}}</span>
+                        <span> {{titleCase(selectedWatch.brand)}}</span>
                     </li>
                     <li v-if="selectedWatch.name">
                         <strong>Name:</strong>
-                        <span> {{selectedWatch.name}}</span>
+                        <span> {{titleCase(selectedWatch.name)}}</span>
                     </li>
 
                     <li class="italic gray pointer underline" v-if="!isShowDetails"><p @click="isShowDetails = true"><em>Show Details</em></p></li>
@@ -46,7 +46,7 @@
                         </li>
                          <li v-if="selectedWatch.watchStyle">
                             <strong>Style:</strong>
-                            <span> {{selectedWatch.watchStyle}}</span>   
+                            <span> {{watchStyleDisplayName(selectedWatch.watchStyle)}}</span>   
                         </li>
                         <li v-if="selectedWatch.sizeWidth && selectedWatch.sizeHeight">
                             <strong>Size:</strong>
@@ -143,9 +143,17 @@ export default {
         
     },
     methods: {
+        watchStyleDisplayName(style) {
+            return style.charAt(0).toUpperCase() + style.substr(1)
+        }  ,
 
-        
-
+        titleCase(str) {
+            var splitStr = str.toLowerCase().split(' ');
+            for (var i = 0; i < splitStr.length; i++) {
+                splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
+            }
+            return splitStr.join(' '); 
+        }   
     }
 }
 </script>

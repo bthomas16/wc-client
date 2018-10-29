@@ -6,6 +6,9 @@
                 <b-col cols="4" md="3" class="left p-half" v-for="(watch) in Collection" :key="watch.id" :id="watch.id">
                     <b-row align-v="start" align-h="around" class="watch mb-1" no-gutters>
                         <b-col cols="12" class="p-0 m-0">
+                            <b-row no-gutters>
+                                <p class="m-h4 p-0 m-0 d-md-none"><strong>{{truncatedWatchName(titleCase(watch.name), 13)}}</strong></p>
+                            </b-row>
                             <b-row no-gutters v-if="isShowFlags && !isManagingCollection">
                                 <!-- FSOT STATUS -->
                                 <b-col cols="6" class="bg-red" v-if="(watch.isForSale && !watch.isForTrade)">
@@ -25,7 +28,7 @@
                                     <p id="movementTypeIcon" class="detailIcon center pointer z4 white flag m-0" :class="GetAbbreviatedWatchType(watch.movementType).length > 5 ? 'fitText' : ''">{{GetAbbreviatedWatchType(watch.movementType)}}</p>
                                 </b-col>
                             </b-row>
-                            <b-row no-gutters v-if="isManagingCollection">
+                            <b-row no-gutters v-if="isManagingCollection && isShowEditFlags">
                                 <b-col cols="6" md="4" v-if="isManagingCollection"  class="p-0 m-0 nowrap bg-red">
                                     <p id="removeIcon" class="h6 center p-1 pointer z4 white" @click="removeWatchModal(watch)"><strong class="h6 mb-0">X</strong></p>
                                 </b-col>
@@ -44,10 +47,15 @@
                                     fluid class="pointer">
                                     </b-img>
                                 </b-col>
-                                <b-col cols="12" xl="6" class="d-none d-md-block mx-auto">
+                                <b-col cols="12" xl="6" class="d-none d-md-block mx-auto mt-md-2 mt-xl-0">
+                                    <b-row no-gutters align-h="end">
+                                        <b-col class="right-align right pr-md-3 h5 mt-lg-2">
+                                            {{truncatedWatchName(titleCase(watch.name), 13)}}
+                                        </b-col>
+                                    </b-row>
                                     <b-row align-h="center" no-gutters>
-                                        <h6 id="watchName" class=" right-align right r0 mt-3 mr-0 mr-md-3 absolute col-11 overflow-hidden"><strong>{{watch.name}}</strong></h6>
-                                        <b-col cols="10" class="mt-0 mt-md-5">
+                                        <!-- <h6 id="watchName" class="border"><strong></strong></h6> -->
+                                        <b-col cols="10" class="mt-0 mt-md-3">
                                             <b-button id="seeMore" variant="outline-info" size="sm" block @click="selectWatch(watch)" class="z4 py-1 center">See More</b-button>
                                         </b-col>
                                         <b-col cols="10"> 
@@ -67,8 +75,9 @@
 
         <b-modal id="remove-watch-modal"
             ref="removeWatchModal"
-            size="lg">
-            <b-row slot="modal-title" no-gutters>Removing &nbsp; <strong>{{ watchToRemove.name}}</strong></b-row>
+            size="lg"
+            v-if="watchToRemove">
+            <b-row slot="modal-title" no-gutters>Removing &nbsp; <strong>{{ titleCase(watchToRemove.name)}}</strong></b-row>
             <div slot="modal-header-close" class="w-100 m-h2 mt-2 mt-md-1" @click="resetReasonsWatchMoved">X</div>
             <remove-watch-modal :watchToRemove="watchToRemove" :reasonsWatchMoved="reasonsWatchMoved"></remove-watch-modal>
             <b-row slot="modal-footer" class="p-2" no-gutters>
@@ -101,7 +110,7 @@ export default {
             isDragging: false,
             delayedDragging: false,
 
-            watchToRemove: 'Sample',
+            watchToRemove: null,
             reasonsWatchMoved: {
                 receivedBy: null,
                 typeMoved: null,
@@ -183,6 +192,22 @@ export default {
                     return "Manual";
                     break; 
             }
+        },
+
+        truncatedWatchName(name, lengthToTruncate) {
+            if(name.length > lengthToTruncate) {
+                return name.substring(0, lengthToTruncate) + '...';
+            }
+            else 
+                return name;
+        },
+
+         titleCase(str) {
+            var splitStr = str.toLowerCase().split(' ');
+            for (var i = 0; i < splitStr.length; i++) {
+                splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
+            }
+            return splitStr.join(' '); 
         }
     },
 
@@ -193,6 +218,7 @@ export default {
 
         Collection: {
             set(newCollectionOrder) {
+                window.clearTimeout();
                 setTimeout(() => {
                     this.$store.dispatch('updateCollectionOrder', newCollectionOrder);
                 }, 500)
@@ -208,6 +234,10 @@ export default {
 
         isShowFlags() {
             return this.$store.state.isShowFlags;
+        },
+
+        isShowEditFlags() {
+            return this.$store.state.isShowEditFlags;
         }
     }
 }

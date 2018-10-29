@@ -7,8 +7,8 @@
             <b-col cols="7" sm="7" md="12" class="left mx-auto p-0 pl-2 mt-2" >
                 <p class="p-0 my-1 ml-1 h5 m-h2 bold"><strong>{{User.firstName}} {{User.lastName}}</strong></p>
                 <p class="p-0 my-1 mt-2 ml-1 m-h2 h7"><strong>({{Collection.length || 0}})</strong> Watches Total</p>
-                <p class="p-0 my-1 ml-1 m-h2 h7"><strong>({{watchesForTrade.length || 0}})</strong> Watches FSOT</p>
-                <p class="p-0 my-1 ml-1 m-h2 h7"><strong>({{Favorites.length || 0}})</strong> Watches Favorited</p>
+                <p class="p-0 my-1 ml-1 m-h2 h7"><strong>({{watchesFSOT}})</strong> Watches FSOT</p>
+                <p class="p-0 my-1 ml-1 m-h2 h7"><strong>({{Favorites || 0}})</strong> Watches Favorited</p>
             </b-col>
             
         </b-row>
@@ -20,6 +20,7 @@
     export default {
     data () {
         return {
+
             profPic: "http://www.bistiproofpage.com/wp-content/uploads/2018/04/cute-profile-pics-for-whatsapp-images.png"
         }
     },
@@ -32,20 +33,20 @@
         },
 
         Collection() {
-            return this.$store.getters.getCollection;
+            return this.$store.state.Collection;
         },
 
-        watchesForTrade() {
-            let Collection = this.$store.getters.getCollection;
-            let filteredCollection = Collection.filter(watch => {
-                return (watch.isForSale || watch.isForTrade)     == true;
-            })
-            return filteredCollection;
+        watchesFSOT() {
+            return this.$store.state.NumberFSOT;
         },
 
         Favorites() {
-            return this.$store.state.Favorites;
+            return this.$store.state.Favorites.length;
         }
+    },
+
+    created: function() {
+        this.$store.dispatch('getNumberFSOT');
     }
 }
 </script>

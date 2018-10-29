@@ -5,8 +5,8 @@ const Promise = require('promise');
 
 const VerifyToken = require('../middleware/VerifyToken.js');
 
-router.put('/:id', VerifyToken, (req, res) => {
-    removeWatchNullUserId(req.params.id, res)
+router.put('/', VerifyToken, (req, res) => {
+    removeWatchNullUserId(req.body.watchToRemove.id, res)
  })
  
  // change watch to be owned to no user

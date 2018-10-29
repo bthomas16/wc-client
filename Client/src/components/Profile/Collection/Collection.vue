@@ -1,8 +1,7 @@
 <template>
     <b-container fluid>
-
         
-        <b-row v-if="Collection" align-h="center" no-gutters>
+        <b-row v-if="!CollectionLengthUnSorted" align-h="center" no-gutters>
             <b-col>
                 <b-row class="my-3 mx-auto pl-2 pl-md-0 center m-left-align" align-v="center" align-h="center">
                     <b-col cols="12" md="5" class="p-0 m-0 h3">
@@ -14,17 +13,13 @@
                     </b-col>
                 </b-row>
                 
-                <manage-collection :createAddWatch="createAddWatch"></manage-collection>
+                <manage-collection v-on:addNewWatch="addWatchModal"></manage-collection>
                 
                 <watch-collection 
                     @selectWatch="selectWatch" 
                     @editWatchModal="editWatchModal" 
                     @orderChanged="orderChanged"
                     :Collection="Collection">
-                    <!-- 
-                    1. Get managingCollection from store state
-                    2. Get isShowFlags from store state 
-                    -->
                 </watch-collection>
             </b-col>
         </b-row>
@@ -32,11 +27,11 @@
         <!-- No watch collection / Start Collection -->
         <b-row v-else align-h="center">
             <b-col cols="11" md="8" class="border my-5 center p-2 p-md-5" id="begin-collection">
-                <p class="h3 m-h1 center">Welcome to your <span class="nowrap">WATCH COLLECTION!</span></p>  
-                <p class="h5 m-h2 mt-4 mt-md-5">Get started by adding a watch</p>
+                <p class="h2 center">Welcome to your <span class="nowrap">Watch Collection!</span></p>  
+                <p class="h5 m-h2 mt-4 mt-md-5">Get started by adding a watch!</p>
                 <b-row>
                     <b-col cols="6" class="mx-auto my-3">
-                        <b-button variant="success" class="my-2" size="lg" @click="addWatchModal" block>Okay!</b-button>
+                        <b-button variant="success" class="my-2" size="lg" @click="addWatchModal" block>Add Watch</b-button>
                     </b-col>
                 </b-row>
             </b-col>
@@ -45,9 +40,8 @@
         <!-- SEE MORE MODAL -->
         <b-modal 
             ref="seeMoreModal" 
-            id="see-more-modal"
-            :title="selectedWatch.name">
-            <div slot="modal-title">{{ selectedWatch.name }}</div>            
+            id="see-more-modal">
+            <div slot="modal-title" v-if="selectedWatch.name">{{ titleCase(selectedWatch.name) }}</div>            
             <div slot="modal-header-close" class="w-100 m-h2 mt-2 mt-md-1" @click="resetWatchFormAndModals">
                 X
             </div>
@@ -74,7 +68,7 @@
             ref="addWatchModal"
             size="lg">
             <div slot="modal-title" v-if="isAddingWatch">Adding Watch</div>
-            <div slot="modal-title" v-if="isEditingExistingWatch">Editing {{addWatch.name}}</div>
+            <div slot="modal-title" v-if="isEditingExistingWatch">Editing {{titleCase(addWatch.name)}}</div>
             <div slot="modal-header-close" class="w-100 m-h2 mt-2 mt-md-1" @click="resetWatchFormAndModals">
                 X
             </div>
@@ -117,6 +111,7 @@ import SeeMoreModal from './Modals/SeeMoreModal.vue';
 import AddWatchModal from './Modals/AddWatchModal.vue';
 import WatchCollection from './WatchCollection.vue';
 import ManageCollection from './ManageCollection.vue';
+import { setTimeout } from 'timers';
 
 export default {
     components: {
@@ -159,7 +154,13 @@ export default {
             this.addWatch = watch;
             this.isAddingWatch = false;
             this.isEditingExistingWatch = true;
+            this.addWatch.name = this.titleCase(watch.name);
+            this.addWatch.brand = this.titleCase(watch.brand);
             this.$refs.addWatchModal.show();            
+        },
+
+        openWatchModal() {
+            this.$rers.addWatchModal.show();
         },
 
         addWatchModal() {
@@ -180,6 +181,10 @@ export default {
         },
         
         previewWatch() {
+            if(this.addWatch.brand)
+                this.addWatch.brand = this.addWatch.brand.toLowerCase();
+            this.addWatch.name = this.addWatch.name.toLowerCase();
+            console.log(this.addWatch)
             this.selectedWatch = this.addWatch;
            
             this.$refs.addWatchModal.hide(); 
@@ -202,6 +207,11 @@ export default {
                     this.addWatchCount = 1; //resets watch count
                 });
             }
+            // TODO: NOT THIS
+            setTimeout(() => {
+                this.$store.dispatch('getNumberFSOT');
+                this.$store.dispatch('loadUserCollection');
+            }, 500)
         },
 
         backToEditStart() {
@@ -239,10 +249,19 @@ export default {
 
         orderChanged() {
             this.isChangedOrder = true;
+        },
+
+        titleCase(str) {
+            var splitStr = str.toLowerCase().split(' ');
+            for (var i = 0; i < splitStr.length; i++) {
+                splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
+            }
+            return splitStr.join(' '); 
         }
     },
 
-    computed: {  
+    computed: 
+    {  
         getCollectionTotalValue() 
         {
             return 'N/A'
@@ -260,7 +279,12 @@ export default {
 
         Collection() 
         {
-        return this.$store.state.Collection;
+            return this.$store.state.Collection;
+        },
+
+        CollectionLengthUnSorted()
+        {
+            return this.$store.state.CollectionLength;
         }
     },
 

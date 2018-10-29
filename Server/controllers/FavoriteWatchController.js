@@ -30,7 +30,7 @@ router.get('/heart-icons', VerifyToken, (req, res) => {
 })
 
 router.post('/', VerifyToken, async (req, res) => {
-    let watchId = req.body.watchId; // watch to favorite id
+    let watchId = +req.query.watchId; // watch to favorite id
     let userId = req.id;  // user adding watch to favorites
     let isFavoriteRowExist = await getFavoriteRowExist(userId, watchId) // has this watch been favorited before?
         let favoriteWatch = isFavoriteRowExist;
