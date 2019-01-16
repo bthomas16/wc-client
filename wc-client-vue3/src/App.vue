@@ -1,50 +1,49 @@
 <template>
   <b-container fluid id="app" class="w-100 p-0">
-      <app-header id="header"></app-header>
+    <!-- <app-loader v-if="isLoading" class="h-100 bg-white absolute z-4"></app-loader> -->
+      <app-header id="header" v-if="!isLoading"></app-header>
       <div class="wrapper w-100 p-0">
         <transition name="slide-fade">
           <router-view id="body" :key="$route.fullPath"></router-view>
         </transition>
       </div>
-      <app-footer id="footer" class="w-100 m-0 p-0"></app-footer>
-  </b-container> 
+      <app-footer v-if="!isLoading" id="footer" class="w-100 m-0 p-0"></app-footer>
+      
+  </b-container>
 </template>
 
 <script>
-    
+
 import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
+import Loader from './components/Loader.vue'
 
-  export default {
+export default {
 
-    components: {
-      appHeader: Header,
-      appFooter: Footer
-    },
+  components: {
+    appHeader: Header,
+    appFooter: Footer,
+    appLoader: Loader
+  },
 
-    computed: {
-      isLoading() {
-        return this.$store.state.isLoading;
-      }
-    },
-
-    mounted() {
-      console.log(process.env)
+  computed: {
+    isLoading () {
+      return this.$store.state.isLoading
     }
+  },
+
+  mounted () {
+    console.log(process.env)
+  }
 }
 </script>
 
 <style scoped>
 
 .wrapper {
-  min-height: 100%;
-  /* margin-bottom: 2.5em; */
+  min-height: 100vh;
+  height: auto;
 }
-
-/* #footer {
-  height: 2.5em;
-} */
-
 .slide-fade-enter-active {
   transition: all .5s ease;
 }

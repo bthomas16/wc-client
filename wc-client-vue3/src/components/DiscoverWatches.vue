@@ -2,25 +2,24 @@
 <template>
     <b-container fluid :class="env == 'development' ? 'devBackground' : 'background'">
         <b-row no-gutters align-h="center">
-            <b-col cols="12">
-                <p class="h1 m-0 p-1 p-md-2 white bg-lightgray">Featured collection</p>
-            </b-col>
-            <b-col cols="12" md="5" class="bg-black white op-4 p-2 p-md-4 order-2 order-md-1">
+            <b-col cols="12" md="5" class="infoBox bg-black white op-4 p-2 p-md-4 order-2 order-md-1">
                 <b-row no-gutters>
                     <p class="ml-md-1 h4 w-100">Learn About Our Featured Brands</p>
                     <b-col>
-                        <button class="btn m-1" rounded @click="getWatchInfoById(1)">Ocean Crawler</button>
-                        <button class="btn m-1" rounded @click="getWatchInfoById(2)">Aragon</button>
-                        <button class="btn m-1" rounded @click="getWatchInfoById(3)">Christopher Ward</button>
-                        <button class="btn m-1" rounded @click="getWatchInfoById(4)">Zelos</button>
-                        <button class="btn m-1" rounded @click="getWatchInfoById(5)">Terra Cielo Mare</button>
+                        <b-btn class="btn bg-slate m-1" rounded @click="getWatchInfoById(1)">Ocean Crawler</b-btn>
+                        <b-btn class="btn bg-slate m-1" rounded @click="getWatchInfoById(2)">Aragon</b-btn>
+                        <b-btn class="btn bg-slate m-1" rounded @click="getWatchInfoById(3)">Christopher Ward</b-btn>
+                        <b-btn class="btn bg-slate m-1" rounded @click="getWatchInfoById(4)">Zelos</b-btn>
+                        <b-btn class="btn bg-slate m-1" rounded @click="getWatchInfoById(5)">Terra Cielo Mare</b-btn>
                     </b-col>
                 </b-row>
-                <b-row class="p-3">
+                <b-row class="p-3" no-gutters>
                     <b-col class="p-0">
                         <p class="h3">{{currentWatchInfo.brand}}</p>
                         <p v-if="currentWatchInfo.siteLink"><a target="_blank" class="pointer" :href="currentWatchInfo.siteLink">Shop {{currentWatchInfo.brand}}</a></p>
-                        <p class="h5">{{currentWatchInfo.text}}</p>
+                        <p class="h5" v-for="(line, index) in currentWatchInfo.description" :key="index">
+                            {{line}}
+                        </p>
                         <p class="h5 pointer" v-if="currentWatchInfo.siteLink"><a :href="currentWatchInfo.siteLink" target="_blank">Learn More</a></p>
                         <b-row align-h="center" v-if="currentWatchInfo.logoSrc" class="mt-md-5" no-gutters>
                             <b-col class="mx-auto mt-3 center" cols="5">
@@ -38,42 +37,46 @@
 </template>
 
 <script>
-    import FeaturedCollection from './FeaturedCollection.vue';
-    const ROOT_API = process.env.VUE_APP_ROOT_API;
+import FeaturedCollection from './FeaturedCollection.vue'
 
-    export default {
-        
-        name: 'discoverWatches',
-        components: {
-            featuredCollection: FeaturedCollection
-        },
+export default {
 
-        data: function() {
-            return {
-                env: process.env.NODE_ENV,
-                currentWatchInfo: {
-                    brand: "From Micro to Mega",
-                    text: "From micro brands up to the most prestigious watch brands today, we aim to offer the the background, reasoning and devotion that goes into the creation of our Featured Collection timepieces."
-                },
-                ROOT_API: ROOT_API
-            }
-        },
+  name: 'discoverWatches',
+  components: {
+    featuredCollection: FeaturedCollection
+  },
 
-        methods: {
-            getWatchInfoById(watchInfoId) {
-                this.$store.dispatch('getWatchInfoById', watchInfoId).then(res => {
-                    console.log('res', res)
-                    this.currentWatchInfo = res;
-                })
-            }
-        }
+  data: function () {
+    return {
+      env: process.env.NODE_ENV,
+      currentWatchInfo: {
+        brand: 'From Micro to Mega',
+        description: ['From micro brands up to the most prestigious watch brands today, we aim to offer the the background, reasoning and devotion that goes into the creation of our Featured Collection timepieces.']
+      },
+      ROOT_API: process.env.VUE_APP_ROOT_API
     }
+  },
+
+  methods: {
+    getWatchInfoById (watchInfoId) {
+      this.$store.dispatch('getWatchInfoById', watchInfoId).then(res => {
+        console.log('res', res)
+        this.currentWatchInfo = res
+      })
+    }
+  }
+}
 </script>
 
 <style scoped>
+    .infoBox {
+        min-height: 100vh;
+    }
+
     .devBackground {
         background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("http://localhost:8081/api/static-assets/tablebg.jpg");
         height: auto;
+        min-height: 94vh;
         /* background-position: center; */
         background-repeat:repeat;
         background-size: cover;
@@ -81,12 +84,12 @@
     }
 
     .background {
-        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("http://localhost:8081/api/static-assets/tablebg.jpg");
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("/api/static-assets/tablebg.jpg");
         height: auto;
         /* background-position: center; */
         background-repeat:repeat;
         background-size: cover;
         /* position: relative; */
     }
-    
+
 </style>

@@ -1,8 +1,8 @@
 <template>
     <b-container>
         <b-row>
-            <div class="card-text mx-auto w-100"> 
-                <b-alert show v-bind:variant="responseStyle" v-if="showAlert" class="py-1 py-md-0 my-1">{{responseMessage}} <em v-if="isRefreshPage" @click="reloadPage"> - Try Again</em></b-alert> 
+            <div class="card-text mx-auto w-100">
+                <b-alert show v-bind:variant="responseStyle" v-if="showAlert" class="py-1 py-md-0 my-1">{{responseMessage}} <em v-if="isRefreshPage" @click="reloadPage"> - Try Again</em></b-alert>
                 <b-form @submit.prevent="onSubmit">
                     <b-form-group id="email"
                         v-if="card == 1"
@@ -61,7 +61,7 @@
                         </b-form-input>
                 </b-form-group>
                 <h6 class="red thin h7">{{passwordErrMsg}}</h6>
-                <b-row align-v="center" class="my-md-1 pt-md-2">
+                <b-row align-v="center" class="my-md-2 pt-md-3">
                     <b-col cols="4">
                         <b-button variant="success" @click="card=2" :disabled="form.password.length < 4" v-if="card == 1">Continue</b-button>
                         <b-button variant="success" :disabled="!form.firstName || !form.lastName" type="submit" v-if="card == 2">Finish</b-button>
@@ -72,107 +72,98 @@
                 </b-row>
             </b-form>
         </div>
-        </b-row>         
-            
+        </b-row>
+
     </b-container>
 </template>
 
 <script>
-    import axios from 'axios';
-    export default {
-    name: 'register',
-    data () {
-        return {
-            ROOT_API: process.env.VUE_APP_ROOT_API,
-            form: {
-                email: '',
-                firstName: '',
-                lastName: '',
-                password: ''
-            },
-            card: 1,
-            showAlert: false,
-            responseMessage: '',
-            responseStyle: 'light',
-            isRefreshPage: false,
-            showForm: true,
-            passwordErrMsg: '',
-            formValid: true
-        }
-    },
-    methods: {
-        onSubmit () 
-        {
-            this.showAlert = false;
-            this.form.email.toLowerCase();
-            this.$store.dispatch('register', this.form)
-            .then((res) => {
-                if(res.isSuccess) {
-                    this.$store.dispatch('sendWelcomeEmail', this.form);
-                    this.$router.push({path: '/profile'});
-                }
-                else {
-                    this.showAlert = true;
-                    this.responseMessage = res.message;
-                    this.responseStyle = 'danger';
-                    this.isRefreshPage = res.isRefreshPage;
-                }
-            }).catch(err => {
-                this.showAlert = true;
-                this.responseMessage = err.message;
-                this.responseStyle = 'danger';
-            })
-        },
-
-        toggleAuthChild ()
-        {
-            this.$emit('toggleAuthView')
-        },
-
-        validateEmail(email) 
-        {
-            // regex expression making sure email is in valid format
-            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if(re.test(email)) {
-                return true;
-            }
-            else {
-                this.form.password = '';
-                return re.test(email);
-            }
-        },
-
-        validatePassword(password) 
-        {
-            if(password.length < 4) 
-            {
-                this.passwordErrMsg = 'Password must be at least 4 characters';
-                return false;
-            }
-            else {
-                this.passwordErrMsg = '';
-                return true;
-            }
-        },
-
-        validateNames(first, last) 
-        {
-            if(first.length && last.length) return true;
-            else return false;
-        },
-
-        reloadPage() {
-            location.reload();
-        }
-
-        // isDuplicateEmail(email)
-        // {
-        //     console.log('should check', email)
-        //     axios.get('/api/user/isDuplicateEmail?email=' + email).then(res => {
-        //         console.log(res)
-        //     })
-        // }
+import axios from 'axios'
+export default {
+  name: 'register',
+  data () {
+    return {
+      ROOT_API: process.env.VUE_APP_ROOT_API,
+      form: {
+        email: '',
+        firstName: '',
+        lastName: '',
+        password: ''
+      },
+      card: 1,
+      showAlert: false,
+      responseMessage: '',
+      responseStyle: 'light',
+      isRefreshPage: false,
+      showForm: true,
+      passwordErrMsg: '',
+      formValid: true
     }
+  },
+  methods: {
+    onSubmit () {
+      this.showAlert = false
+      this.form.email.toLowerCase()
+      this.$store.dispatch('register', this.form)
+        .then((res) => {
+          if (res.isSuccess) {
+            this.$store.dispatch('sendWelcomeEmail', this.form)
+            this.$router.push({ path: '/profile' })
+          } else {
+            this.showAlert = true
+            this.responseMessage = res.message
+            this.responseStyle = 'danger'
+            this.isRefreshPage = res.isRefreshPage
+          }
+        }).catch(err => {
+          this.showAlert = true
+          this.responseMessage = err.message
+          this.responseStyle = 'danger'
+        })
+    },
+
+    toggleAuthChild () {
+      this.$emit('toggleAuthView')
+    },
+
+    validateEmail (email) {
+      // regex expression making sure email is in valid format
+      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      if (re.test(email)) {
+        return true
+      } else {
+        this.form.password = ''
+        return re.test(email)
+      }
+    },
+
+    validatePassword (password) {
+      if (password.length < 4) {
+        this.passwordErrMsg = 'Password must be at least 4 characters'
+        return false
+      } else {
+        this.passwordErrMsg = ''
+        return true
+      }
+    },
+
+    validateNames (first, last) {
+      if (first.length && last.length) return true
+      else return false
+    },
+
+    reloadPage () {
+      location.reload()
+    }
+
+    // isDuplicateEmail(email)
+    // {
+    //     console.log('should check', email)
+    //     axios.get('/api/user/isDuplicateEmail?email=' + email).then(res => {
+    //         console.log(res)
+    //     })
+    // }
+  }
 }
 </script>
 

@@ -15,7 +15,7 @@
            <b-col cols="8" md="6" class="mx-auto center" v-else>
                 <label class="file-select">
                     <!-- We can't use a normal button element here, as it would become the target of the label. -->
-                    <div class="select-button pointer">
+                    <div class="select-button pointer bg-light-blue">
                     <!-- Display the filename if a file has been selected. -->
                     <span class="m-h2">Select Images</span>
                     </div>
@@ -28,31 +28,34 @@
 </template>
 
 <script>
-    export default {
-        name: 'fileSelector',
-        props: {
-            value: File,
-            isPreviewBox: Boolean
-        },
-        data: function() {
-            return{ 
-                ROOT_API: process.env.VUE_APP_ROOT_API
-            }
-        },
-
-        methods: {
-            uploadImagesToAwsS3(e) {
-                let files = event.target.files
-                console.log('foos', files)
-                this.$store.dispatch('uploadImagesToAwsS3', files)
-                .then(data => {
-                    console.log('omg', data)
-                    this.$emit('setImagesOnAddWatch', data);
-                }).catch(err => console.log(err));
-            }
-        }
-
+export default {
+  name: 'fileSelector',
+  props: {
+    value: File,
+    isPreviewBox: Boolean
+  },
+  data: function () {
+    return {
+      ROOT_API: process.env.VUE_APP_ROOT_API,
+      isS3Uploading: false
     }
+  },
+
+  methods: {
+    uploadImagesToAwsS3 (e) {;
+      let files = event.target.files
+      this.isS3Uploading = true
+      this.$emit('isS3UploadingEvent', this.isS3Uploading)
+      this.$store.dispatch('uploadImagesToAwsS3', files)
+        .then(data => {
+          this.$emit('setImagesOnAddWatch', data)
+          this.isS3Uploading = false
+          this.$emit('isS3UploadingEvent', this.isS3Uploading)
+        }).catch(err => console.log(err))
+    }
+  }
+
+}
 </script>
 
 <style>
@@ -60,7 +63,6 @@
         padding: 1rem;
 
         color: white;
-        background-color: #56A3A6;
 
         border-radius: .3rem;
 
@@ -73,4 +75,3 @@
         display: none;
     }
 </style>
-

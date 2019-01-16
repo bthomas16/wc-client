@@ -1,22 +1,22 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" class="bg-header">
+  <b-navbar toggleable="lg" type="dark" class="bg-light-blue">
 
   <b-navbar-toggle target="navCollapse"></b-navbar-toggle>
 
-  <b-navbar-brand><router-link class="white rubik" :to="isAuthorized ? '/profile' : '/'">Watch SOC</router-link></b-navbar-brand>
+  <b-navbar-brand><router-link class="white rubik" :to="isAuthorized ? '/profile' : '/'"><b-img src="/img/icons/logo.png" class="logo"></b-img></router-link></b-navbar-brand>
 
-  <b-collapse is-nav ref="navCollapse" id="navCollapse" class="rubik">  
+  <b-collapse is-nav ref="navCollapse" id="navCollapse" class="rubik">
 
-    <b-navbar-nav class="mt1 white ml-0 ml-md-5 relative" @click="tryToggle">
-        <b-nav-item v-if="!isAuthorized"><router-link to="/">Home</router-link></b-nav-item>
+    <b-navbar-nav class="mt1 white ml-0 relative" @click="tryToggle">
         <b-nav-item v-if="isAuthorized"><router-link to="/profile">My Profile</router-link></b-nav-item>
+        <b-nav-item v-else><router-link to="/">Home</router-link></b-nav-item>
         <b-nav-item><router-link to="/discover">Discover</router-link></b-nav-item>
         <!-- <b-nav-item><router-link to="/watch-news">Watch News</router-link></b-nav-item>  -->
-        <b-nav-item><router-link to="/contact">Contact Us</router-link></b-nav-item> 
-        <b-nav-item @click="logout" class="white d-block d-md-none absolute t-0 r-0 r0 right" v-if="isAuthorized"><em class="grey">Logout</em></b-nav-item>     
+        <b-nav-item><router-link to="/contact">Contact Us</router-link></b-nav-item>
+        <b-nav-item @click="logout" class="white d-block d-lg-none absolute t-0 r-0 r0 right" v-if="isAuthorized"><em class="grey">Logout</em></b-nav-item>
     </b-navbar-nav>
 
-    <b-nav-item @click="logout" class="d-absolute r0 mr-md-4 my-0 d-xs-none desktop-only white" v-if="isAuthorized" right><em class="grey">Logout</em></b-nav-item>      
+    <b-nav-item @click="logout" class="d-none absolute d-lg-block r0 mr-md-4 my-0 white" v-if="isAuthorized" right><em class="grey">Logout</em></b-nav-item>
 
   </b-collapse>
 </b-navbar>
@@ -26,35 +26,35 @@
 <script>
 export default {
   methods: {
-    logout() {
+    logout () {
       this.$store.dispatch('logout').then(() => {
-        location.reload();
+        location.reload()
       })
     },
 
-    tryToggle() {
+    tryToggle () {
       if (window.innerWidth < 993) {
-        this.$refs.navCollapse.toggle();
+        this.$refs.navCollapse.toggle()
       }
-    },
-  },
-  
-  computed: {
-    isAuthorized() {
-      return this.$store.state.isAuthorized;
     }
   },
 
-  created: function() {
-    this.$store.dispatch('validateJwt');
+  computed: {
+    isAuthorized () {
+      return this.$store.state.isAuthorized
+    }
   }
 }
 </script>
 
 <style>
 
-.bg-header {
+/* .bg-header {
   background-color: rgba(86, 163, 166, .85)
+} */
+
+.logo {
+  width: 10rem;
 }
 
 li a {
@@ -98,7 +98,7 @@ li.nav-item a {
   .navbar-brand {
       font-size: 1.5em;
   }
-  
+
   .navbar-toggler, .navbar-toggler:focus {
       border:none;
       outline: none;
@@ -135,4 +135,3 @@ li.nav-item a {
 }
 
 </style>
-

@@ -2,14 +2,15 @@
     <b-container fluid>
         <b-row align-h="center" v-if="selectedWatch.src">
             <!-- <b-col cols="8" class="mx-auto pb-3 border-bottom"> -->
-                <b-carousel 
+                <b-carousel
                     style="text-shadow: 1px 1px 2px #333;"
                     img-width="1024"
                     img-height="480"
                     background="lightgray"
+                    :interval=0
                     :controls="selectedWatch.src.images.length > 1 ? true : false"
                     :indicators="selectedWatch.src.images.length > 1 ? true : false">
-                    <b-carousel-slide 
+                    <b-carousel-slide
                         v-for="image in selectedWatch.src.images" :key="image.order" class="watchImgWrapper">
                         <b-img slot="img" class="watchImg"
                         :src="image.src" alt="image slot" fluid>
@@ -17,7 +18,6 @@
                     </b-carousel-slide>
                 </b-carousel>
 
-                
             <!-- </b-col> -->
         </b-row>
         <b-row align-h="start">
@@ -27,7 +27,7 @@
                         <h5 class="m-0 p-0 underline">Specs:</h5>
                     </b-col>
                     <b-col cols="6" class="nowrap right-align px-0 pr-2" v-if="!selectedWatch.isFeaturedWatch">
-                        <strong class="relative">Condition:</strong><span class="brown nowrap"> {{selectedWatch.condition || 0}}/10</span> 
+                        <strong class="relative">Condition:</strong><span class="brown nowrap"> {{selectedWatch.condition || 0}}/10</span>
                         <p class="absolute nowrap h8 r0 mr-2 pt-1 underline gray pointer" v-if="isShowDetails" @click="isShowDetails = false"><em>Hide Details</em></p>
                     </b-col>
                 </b-row>
@@ -50,31 +50,35 @@
                         </li>
                         <li v-if="selectedWatch.movementType">
                             <strong>Movement Type:</strong>
-                            <span> {{CapitalizedMovementType}}</span>   
+                            <span> {{CapitalizedMovementType}}</span>
                         </li>
                         <li v-if="selectedWatch.movement">
                             <strong>Movement:</strong>
-                            <span> {{selectedWatch.movement}}</span>   
+                            <span> {{selectedWatch.movement}}</span>
                         </li>
                          <li v-if="selectedWatch.watchStyle">
                             <strong>Style:</strong>
-                            <span> {{watchStyleDisplayName(selectedWatch.watchStyle)}}</span>   
+                            <span> {{watchStyleDisplayName(selectedWatch.watchStyle)}}</span>
                         </li>
                         <li v-if="selectedWatch.sizeWidth && selectedWatch.sizeHeight">
                             <strong>Size:</strong>
                             <span> {{selectedWatch.sizeWidth}} x {{selectedWatch.sizeHeight}}</span>
                         </li>
+                        <li v-if="selectedWatch.sizeLugToLug">
+                            <strong>Lug Size:</strong>
+                            <span> {{selectedWatch.sizeLugToLug}}</span>
+                        </li>
                         <li v-if="selectedWatch.crystal">
                             <strong>Crystal:</strong>
-                            <span> {{CapitalizeCrystal}}</span>   
+                            <span> {{CapitalizeCrystal}}</span>
                         </li>
                         <li v-if="selectedWatch.isFullKit">
                             <strong>Full Kit:</strong>
-                            <span> {{selectedWatch.isFullKit ? 'Yes' : 'No'}}</span>   
+                            <span> {{selectedWatch.isFullKit ? 'Yes' : 'No'}}</span>
                         </li>
                         <li v-if="selectedWatch.band">
                             <strong>Band:</strong>
-                            <span> {{selectedWatch.band}}</span>   
+                            <span> {{selectedWatch.band}}</span>
                         </li>
                         <li v-if="selectedWatch.model">
                             <strong>Model #:</strong>
@@ -96,23 +100,26 @@
                             <strong>For Trade Value:</strong>
                             <span class="brown"> ${{selectedWatch.forTradeValue}}</span>
                         </li>
+                        <p class="h4 mt-2 underline" v-if="selectedWatch.Features"><strong>Features:</strong></p>
+                        <li v-for="(feature, index) in selectedWatch.Features" :key="index" v-if="selectedWatch.Features">
+                           <span>-</span> {{feature}}
+                        </li>
                     </span>
-                    
+
                 </ul>
                 <h5 v-if="selectedWatch.descriptionNotes">{{selectedWatch.descriptionNotes}}</h5>
-                
+
             </b-col>
 
-            
             <b-col class="mt-3" cols="12" v-if="isUsersWatch">
-            <h6 class="lightgray mx-auto mt-2 m-h2 nowrap">This section is only visible to you</h6>                        
+            <h6 class="lightgray mx-auto mt-2 m-h2 nowrap">This section is only visible to you</h6>
             <b-col v-if="!isEdit" cols="8" class="border-bottom mx-auto"></b-col>
                 <b-row align-v="center">
                     <b-col cols="6">
                         <h5>Keeping House:</h5>
                     </b-col>
                     <b-col cols="5" class="border p-2">
-                        <strong>Turnaround:</strong><span class="green ml-4"> ${{selectedWatch.lowestOfferAccepting - selectedWatch.acquiredFor}}</span> 
+                        <strong>Turnaround:</strong><span class="green ml-4"> ${{selectedWatch.lowestOfferAccepting - selectedWatch.acquiredFor}}</span>
                     </b-col>
                 </b-row>
                 <ul>
@@ -141,51 +148,54 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
 
 export default {
-    name: 'seeMoreModal',
+  name: 'seeMoreModal',
 
-    props: ['selectedWatch', 'isEdit'],
+  props: ['selectedWatch', 'isEdit'],
 
-    data () {
-        return {
-            isUsersWatch: false,
-            isShowDetails: false
-        }
-    },
-    methods: {
-        watchStyleDisplayName(style) {
-            return style.charAt(0).toUpperCase() + style.substr(1)
-        },
-
-        titleCase(str) {
-            var splitStr = str.toLowerCase().split(' ');
-            for (var i = 0; i < splitStr.length; i++) {
-                splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
-            }
-            return splitStr.join(' '); 
-        },
-
-        CapitalizeFirstLetter(string) {
-            let lower = string;
-            return lower.replace(/^\w/, c => c.toUpperCase());
-        }
-    },
-
-    computed: {
-        CapitalizedMovementType() {
-            return this.CapitalizeFirstLetter(this.selectedWatch.movementType)
-        },
-
-        CapitalizeCrystal() {
-            return this.CapitalizeFirstLetter(this.selectedWatch.crystal)
-        }
+  data () {
+    return {
+      isUsersWatch: false,
+      isShowDetails: false
     }
+  },
+  methods: {
+    watchStyleDisplayName (style) {
+      return style.charAt(0).toUpperCase() + style.substr(1)
+    },
+
+    titleCase (str) {
+      var splitStr = str.toLowerCase().split(' ')
+      for (var i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1)
+      }
+      return splitStr.join(' ')
+    },
+
+    CapitalizeFirstLetter (string) {
+      let lower = string
+      return lower.replace(/^\w/, c => c.toUpperCase())
+    }
+  },
+
+  computed: {
+    CapitalizedMovementType () {
+      return this.CapitalizeFirstLetter(this.selectedWatch.movementType)
+    },
+
+    CapitalizeCrystal () {
+      return this.CapitalizeFirstLetter(this.selectedWatch.crystal)
+    }
+  }
 }
 </script>
 
 <style scoped>
+.container-fluid {
+    height: auto !important;
+}
 
 li {
     list-style: none;
@@ -202,6 +212,4 @@ li {
     object-fit: center;
 }
 
-
 </style>
-

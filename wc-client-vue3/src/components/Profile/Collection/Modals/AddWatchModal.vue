@@ -1,28 +1,30 @@
 <template>
-    <b-container fluid>
-        
+    <b-container fluid class="relative">
+
+            <b-row no-gutters v-show="isS3UploadEvent" class="p-2">
+                <loader></loader>
+            </b-row>
             <!-- Add Img Row -->
 
-            <b-row align-h="center" align-v="center" :class="addWatchCount == 1 ? '' : 'hidden'" no-gutters>
-                <b-col cols="12" class="mx-auto p-1 m-0">
-                    <b-row align-h="start" no-gutters>
+            <b-row v-show="!isS3UploadEvent" align-h="center" align-v="center" :class="addWatchCount == 1 ? '' : 'hidden'" no-gutters>
+                <b-col cols="12" class="mx-auto">
+                    <!-- <b-row align-h="start" no-gutters class="border"> -->
 
-                        <draggable @start="startDrag" @end="endDrag" v-model="watchImages" clas="p-0 m-0">
+                        <draggable @start="startDrag" @end="endDrag" v-model="watchImages">
                             <transition-group name="swap-list" class="row">
-                                <b-col cols="6" class="relative p-1 watchImgWrapper center" v-for="(image, index) in addWatch.src.images" :key="image.src">
-                                    <div class="absolute t-0 white bg-red r0 p-1 h8 pointer white border-radius-qtr" @click="removeWatchImage(index)" v-if="addWatch.src.images.length > 1">X</div>
-
-                                    <b-img  :src="image.src" fluid class="watchImg"></b-img>
+                                <b-col cols="6" class="relative watchImgWrapper p-1" v-for="(image, index) in addWatch.src.images" :key="index">
+                                    <!-- <div class="absolute t-0 white bg-red r0 p-1 h8 pointer white border-radius-qtr" @click="removeWatchImage(index)" v-if="addWatch.src.images.length > 1">X</div> -->
+                                    <b-img :src="image.src" fluid class="mx-auto watchImg"></b-img>
                                 </b-col>
                             </transition-group>
                         </draggable>
 
                         <b-col cols="5" md="3" class="border box-shadow p-0 m-1 addWatchContainer imgTile" v-if="!addWatch.src.images.length">
-                            <file-selector id="fileSelector" :isPreviewBox="true" v-model="file" v-on:setImagesOnAddWatch="setImagesOnAddWatch"></file-selector>
+                            <file-selector id="fileSelector" :isPreviewBox="true" v-model="file" v-on:setImagesOnAddWatch="setImagesOnAddWatch" v-on:isS3UploadingEvent="isS3UploadingEventListener"></file-selector>
                         </b-col>
-                    </b-row>
+                    <!-- </b-row> -->
                 </b-col>
-                <file-selector id="fileSelector" :isPreviewBox="false" v-model="file" v-on:setImagesOnAddWatch="setImagesOnAddWatch" class="mt-4"></file-selector>  
+                <file-selector id="fileSelector" :isPreviewBox="false" v-model="file" v-on:setImagesOnAddWatch="setImagesOnAddWatch" v-on:isS3UploadingEvent="isS3UploadingEventListener" class="mt-4"></file-selector>
             </b-row>
 
             <!-- Add Specs Row -->
@@ -38,13 +40,14 @@
                             <b-row align-h="end" align-v="center">
                                 <b-col class="d-none d-sm-inline-block right-align">Condition:</b-col>
                                 <b-col cols="3" md="2" class="right-align p-0 m-0 red bold">
-                                    <b-form-input 
+                                    <b-form-input
                                         v-model="addWatch.condition"
                                         type="number"
                                         class="condition w-100 p-0 m-0 center formBorder"
                                         :class="addWatch.condition ? 'yesValue' : 'formBorder'"
                                         placeholder="N/A"
                                         max="10"
+                                        @change="checkValidInput"
                                         description="Provide a condition for the watch"
                                         label="Watch Condition">
                                     </b-form-input>
@@ -59,13 +62,13 @@
                                 <li>
                                     <b-row align-v="center">
                                         <b-col cols="4" >
-                                            <strong>Brand:</strong>  
+                                            <strong>Brand:</strong>
                                         </b-col>
                                         <b-col cols="8">
                                             <b-form-input v-model="addWatch.brand"
                                                 type="text"
                                                 placeholder="Watch Brand"
-                                                
+
                                                 :class="addWatch.brand ? 'yesValue' : 'formBorder'"
                                                 description="Provide a brand for the watch"
                                                 label="Watch Brand">
@@ -76,10 +79,10 @@
                                 <li>
                                     <b-row align-v="center">
                                         <b-col cols="4" >
-                                            <strong>*Name:</strong>  
+                                            <strong>*Name:</strong>
                                         </b-col>
                                         <b-col cols="8">
-                                            <b-form-input 
+                                            <b-form-input
                                                 v-model="addWatch.name"
                                                 type="text"
                                                 required
@@ -94,15 +97,15 @@
                                 <li>
                                     <b-row align-v="center">
                                         <b-col cols="4" >
-                                            <strong>Watch Style:</strong>  
+                                            <strong>Watch Style:</strong>
                                         </b-col>
                                         <b-col cols="8">
-                                            <b-form-select 
+                                            <b-form-select
                                             type="text"
-                                            
+
                                             :class="addWatch.watchStyle ? 'yesValue' : 'formBorder'"
-                                            :options="styleOptions" 
-                                            v-model="addWatch.watchStyle" 
+                                            :options="styleOptions"
+                                            v-model="addWatch.watchStyle"
                                             />
                                         </b-col>
                                     </b-row>
@@ -110,7 +113,7 @@
                                 <li>
                                     <b-row align-v="center" class="mt-0 mt-md-3">
                                         <b-col cols="12" md="4">
-                                            <strong>Movement Type:</strong>  
+                                            <strong>Movement Type:</strong>
                                         </b-col>
                                         <b-col cols="12" md="8" class="mt-1 md-md-0">
                                             <b-form-group class="my-0">
@@ -139,38 +142,38 @@
                                 <li>
                                     <b-row align-v="center">
                                         <b-col cols="12" sm="4" >
-                                            <strong>Movement Caliber:</strong>  
+                                            <strong>Movement Caliber:</strong>
                                         </b-col>
                                         <b-col cols="12" sm="8">
                                             <b-form-input :class="addWatch.movement ? 'yesValue' : 'formBorder'" v-model="addWatch.movement" type="text"></b-form-input>
                                             <!-- <b-form-select :class="addWatch.movement ? 'yesValue' : 'formBorder'" :options="movementOptions" v-model="addWatch.movement" type="text"/> -->
                                         </b-col>
-                                    </b-row>   
+                                    </b-row>
                                 </li>
                                 <li>
                                     <b-row align-v="center">
                                         <b-col cols="12" md="4">
-                                            <strong>Size (Lug to Lug):</strong>  
+                                            <strong>Size (Lug to Lug):</strong>
                                         </b-col>
                                         <b-col cols="12" md="8">
                                             <b-form-select :class="addWatch.sizeLugToLug ? 'yesValue' : 'formBorder'" :options="sizeLugToLugOptions" v-model="addWatch.sizeLugToLug" type="text"/>
                                         </b-col>
-                                    </b-row>   
+                                    </b-row>
                                 </li>
                                 <li>
                                     <b-row align-v="center">
                                         <b-col cols="12" md="4">
-                                            <strong>Size:</strong>  
+                                            <strong>Size:</strong>
                                         </b-col>
                                         <b-col cols="12" md="8" class="">
                                             <b-row no-gutters align-v="baseline">
                                                 <b-col class="px-1">
-                                                    <b-form-select :class="addWatch.sizeWidth ? 'yesValue' : 'formBorder'" :options="sizeWidthOptions" v-model="addWatch.sizeWidth" type="number"/> 
+                                                    <b-form-select :class="addWatch.sizeWidth ? 'yesValue' : 'formBorder'" :options="sizeWidthOptions" v-model="addWatch.sizeWidth" type="number"/>
                                                     <p class="center h8 p-0 m-0"><em>Width</em></p>
                                                 </b-col>
                                                 <h6 class="p-2">X</h6>
                                                 <b-col class="px-1">
-                                                    <b-form-select :class="addWatch.sizeHeight ? 'yesValue' : 'formBorder'" :options="sizeHeightOptions" v-model="addWatch.sizeHeight" type="number"/> 
+                                                    <b-form-select :class="addWatch.sizeHeight ? 'yesValue' : 'formBorder'" :options="sizeHeightOptions" v-model="addWatch.sizeHeight" type="number"/>
                                                     <p class="center h8 p-0 m-0"><em>Height</em></p>
                                                 </b-col>
                                             </b-row>
@@ -180,7 +183,7 @@
                                 <li>
                                     <b-row align-v="center">
                                         <b-col cols="12" md="4" >
-                                            <strong>Crystal:</strong>  
+                                            <strong>Crystal:</strong>
                                         </b-col>
                                         <b-col cols="12" md="8">
                                             <b-form-group class="my-auto">
@@ -204,7 +207,7 @@
                                                 </b-form-radio-group>
                                             </b-form-group>
                                         </b-col>
-                                    </b-row>   
+                                    </b-row>
                                 </li>
                             </ul>
                         </b-col>
@@ -219,8 +222,7 @@
                     <h4 class="p-md-0 m-md-0"><strong>Specs Continued:</strong> </h4>
                 </b-col>
                 <ul class="m-0 p-0 w-100 mx-auto">
-                    <li class="border bg-lightgray left-align m-center p-1 px-md-3 pt-md-2">
-
+                    <li class="border bg-gray left-align m-center p-1 px-md-3 pt-md-2">
 
                         <b-row no-gutters>
                             <b-col cols="12" class="left">
@@ -228,13 +230,14 @@
                                     <b-form-radio-group id="fullKit"
                                                         buttons
                                                         size="sm"
-                                                        button-variant="info"
+                                                        button-variant="primary"
+                                                        class="bg-light-blue red"
                                                         v-model="addWatch.isFullKit"
                                                         :options="fullKitOptions"
                                                         name="fullKitOptions" />
                                 </b-form-group>
                             </b-col>
-                            
+
                         </b-row>
                         <b-row no-gutters align-="center" class="left">
                             <b-col cols="12">
@@ -242,7 +245,7 @@
                                     <b-form-radio-group id="forSale"
                                                         buttons
                                                         size="sm"
-                                                        button-variant="info"
+                                                        button-variant="primary"
                                                         v-model="addWatch.isForSale"
                                                         :options="isForSaleOptions"
                                                         name="fullKitOptions" />
@@ -255,7 +258,7 @@
                                     <b-form-radio-group id="forTrade"
                                                         buttons
                                                         size="sm"
-                                                        button-variant="info"
+                                                        button-variant="primary"
                                                         v-model="addWatch.isForTrade"
                                                         :options="isForTradeOptions"
                                                         name="fullKitOptions" />
@@ -266,23 +269,23 @@
                     <li class="my-2">
                         <b-row align-v="center">
                             <b-col cols="4" >
-                                <strong>Band:</strong>  
+                                <strong>Strap:</strong>
                             </b-col>
                             <b-col cols="8">
                                 <b-form-input v-model="addWatch.band"
                                     type="text"
                                     :class="addWatch.band ? 'yesValue' : 'formBorder'"
-                                    placeholder="Watch Band"
-                                    description="Provide band details for this watch"
-                                    label="Watch Band">
+                                    placeholder="Watch Strap"
+                                    description="Provide strap details for this watch"
+                                    label="Watch Strap">
                                 </b-form-input>
                             </b-col>
-                        </b-row>   
+                        </b-row>
                     </li>
                     <li class="my-2">
                         <b-row align-v="center">
                             <b-col cols="4" class="nowrap">
-                                <strong>Model #:</strong>  
+                                <strong>Model #:</strong>
                             </b-col>
                             <b-col cols="8">
                                 <b-form-input v-model="addWatch.model"
@@ -293,12 +296,12 @@
                                     label="Watch Model Number">
                                 </b-form-input>
                             </b-col>
-                        </b-row>   
+                        </b-row>
                     </li>
                     <li class="my-2">
                         <b-row align-v="center">
                             <b-col cols="4" >
-                                <strong>Ref #:</strong>  
+                                <strong>Ref #:</strong>
                             </b-col>
                             <b-col cols="8">
                                 <b-form-input v-model="addWatch.ref"
@@ -309,31 +312,31 @@
                                     label="Watch Reference Number">
                                 </b-form-input>
                             </b-col>
-                        </b-row>   
+                        </b-row>
                     </li>
                     <li class="my-2">
                         <b-row align-v="center">
                             <b-col cols="4" class="m-h2">
-                                <strong>Accuracy:</strong>  
+                                <strong>Accuracy:</strong>
                             </b-col>
                             <b-col cols="8" class="red">
-                                <b-form-select 
+                                <b-form-select
                                 type="text"
-                                class="m-h2" 
-                                :class="addWatch.accuracy ? 'yesValue' : 'formBorder'" 
-                                :options="accuracyOptions" 
+                                class="m-h2"
+                                :class="addWatch.accuracy ? 'yesValue' : 'formBorder'"
+                                :options="accuracyOptions"
                                 v-model="addWatch.accuracy"/>
                             </b-col>
-                        </b-row>   
+                        </b-row>
                     </li>
                     <li class="my-2">
                         <b-row align-v="center">
                             <b-col cols="4" class="nowrap m-h2" >
-                                <strong>Sale Prize:</strong>  
+                                <strong>Sale Prize:</strong>
                             </b-col>
                             <b-col cols="8" class="relative">
                                 <p class="absolute mt-2 h5 green dollarSign">$</p>
-                                <b-form-input 
+                                <b-form-input
                                     v-model="addWatch.forSalePrice"
                                     :value=" addWatch.forSalePrice"
                                     type="number"
@@ -343,16 +346,16 @@
                                     label="Watch Sale Price">
                                 </b-form-input>
                             </b-col>
-                        </b-row>   
+                        </b-row>
                     </li>
                     <li>
                         <b-row align-v="center">
                             <b-col cols="4" class="nowrap m-h3">
-                                <strong>Trade Value:</strong>  
+                                <strong>Trade Value:</strong>
                             </b-col>
                             <b-col cols="8">
                                 <p class="absolute mt-2 h5 green dollarSign">$</p>
-                                
+
                                 <b-form-input v-model="addWatch.forTradeValue"
                                     type="number"
                                     :class="addWatch.forTradeValue ? 'yesValue' : 'formBorder'"
@@ -361,7 +364,7 @@
                                     label="Watch Trade Value">
                                 </b-form-input>
                             </b-col>
-                        </b-row>   
+                        </b-row>
                     </li>
                 </ul>
             </b-row>
@@ -369,17 +372,16 @@
             <!-- Keeping House -->
 
             <b-row id="add-keeping-house" :class="addWatchCount == 4 ? '' : 'hidden'" align-h="center" no-gutters>
-                <!-- <b-col cols="8" v-if="!isEditMode" class="border-bottom mx-auto"></b-col> -->
 
-                <p class="gray center mt-2 border-bottom m-h2 nowrap">This section is only visible to you</p>                        
-                
+                <p class="gray center mt-2 border-bottom m-h2 nowrap">This section is only visible to you</p>
+
                 <b-col class="mt-3" cols="12">
                     <b-row align-v="center">
                         <b-col cols="6" class="h3 m-h2">
                             <strong>Keeping House:</strong>
                         </b-col>
                         <b-col cols="5" class="m-h2 nowrap">
-                            <strong>Turnaround:</strong><span class="green ml-0 ml-md-4"> ${{addWatch.marketValue - addWatch.acquiredFor || 0}}</span> 
+                            <strong>Turnaround:</strong><span class="green ml-0 ml-md-4"> ${{addWatch.marketValue - addWatch.acquiredFor || 0}}</span>
                         </b-col>
                     </b-row>
                     <ul>
@@ -442,266 +444,281 @@
                     </b-form-textarea>
                 </b-col>
             </b-row>
-            
+
         </b-container>
 </template>
 
 <script>
-import axios from 'axios';
-import draggable from 'vuedraggable';
-import FileSelector from '../FileSelector.vue';
+import axios from 'axios'
+import draggable from 'vuedraggable'
+import loader from '../../../Loader.vue'
+import FileSelector from '../FileSelector.vue'
 
 export default {
-    components: {
-        draggable,
-        fileSelector: FileSelector
+  components: {
+    draggable,
+    loader,
+    fileSelector: FileSelector
+  },
+  name: 'addWatchModal',
+  props: {
+    addWatch: {
+      src: Array
     },
-    name: 'addWatchModal',
-    props: {
-        addWatch: { 
-            src: Array,
-        },
-        addWatchCount: Number
-    },
+    addWatchCount: Number
+  },
 
-    data () {
-        return {
-            file: null,
-            addWatchTitle: "Add your first watch!",
+  data () {
+    return {
+      isS3UploadEvent: false,        
+      file: null,
+      addWatchTitle: 'Add your first watch!',
 
-            fullKitOptions: [
-                { text: 'Full Kit', value: true },
-                { text: 'Not Full Kit', value: false },
-                // { text: 'Box / No Papers', value: 3},
-                // { text: 'Box / No Strap', value: 4 }
-            ],
+      fullKitOptions: [
+        { text: 'Full Kit', value: true },
+        { text: 'Not Full Kit', value: false }
+        // { text: 'Box / No Papers', value: 3},
+        // { text: 'Box / No Strap', value: 4 }
+      ],
 
-            isForSaleOptions: [
-                { text: 'For Sale', value: true },
-                { text: 'Not For Sale', value: false },
-                // { text: 'Accepting Offers', value: 3},
-            ],
+      isForSaleOptions: [
+        { text: 'For Sale', value: true },
+        { text: 'Not For Sale', value: false }
+        // { text: 'Accepting Offers', value: 3},
+      ],
 
-            isForTradeOptions: [
-                { text: 'For Trade', value: true },
-                { text: 'Not For Trade', value: false },
-                // { text: 'Accepting Offers', value: 3},
-            ],
+      isForTradeOptions: [
+        { text: 'For Trade', value: true },
+        { text: 'Not For Trade', value: false }
+        // { text: 'Accepting Offers', value: 3},
+      ],
 
-            styleOptions: [
-                { value: null, text: 'Select a Style', disabled: true},
-                { value: 'diver', text: 'Diver'},
-                { value: 'dress', text: 'Dress'},
-                { value: 'chronograph', text: 'Chronograph'},
-                { value: 'tourbillon', text: 'Tourbillon'},
-                { value: 'black tie', text: 'Black Tie'},
-                { value: 'sport', text: 'Sport'},
-                { value: 'smart', text: 'Smart'},
-                { value: 'apple', text: 'Apple'},
-                { value: 'casual', text: 'Casual'},
-                { value: 'orienteering', text: 'Orienteering'},
-            ],
+      styleOptions: [
+        { value: null, text: 'Select a Style', disabled: true },
+        { value: 'diver', text: 'Diver' },
+        { value: 'dress', text: 'Dress' },
+        { value: 'chronograph', text: 'Chronograph' },
+        { value: 'tourbillon', text: 'Tourbillon' },
+        { value: 'black tie', text: 'Black Tie' },
+        { value: 'sport', text: 'Sport' },
+        { value: 'smart', text: 'Smart' },
+        { value: 'apple', text: 'Apple' },
+        { value: 'casual', text: 'Casual' },
+        { value: 'orienteering', text: 'Orienteering' }
+      ],
 
-            accuracyOptions: 
+      accuracyOptions:
             [
-                {value: null, text: 'Select Accuracy' },
-                { value: '-6 -', text: '-6 seconds or less'},
-                { value: '-5', text: '-5 seconds' },
-                { value: '-4', text: '-4 seconds' },
-                { value: '-3', text: '-3 seconds' },
-                { value: '-2', text: '-2 seconds' },
-                { value: '-1', text: '-1 seconds' },
-                { value: '0', text: '0 seconds' },
-                { value: '+1', text: '+1 seconds' },
-                { value: '+2', text: '+2 seconds' },
-                { value: '+3', text: '+3 seconds' },
-                { value: '+4', text: '+4 seconds' },
-                { value: '+5', text: '+5 seconds' },
-                { value: '+6', text: '+6 seconds' },
-                { value: '+6 +', text: '+6 seconds or more'}
+              { value: null, text: 'Select Accuracy' },
+              { value: '-6 -', text: '-6 seconds or less' },
+              { value: '-5', text: '-5 seconds' },
+              { value: '-4', text: '-4 seconds' },
+              { value: '-3', text: '-3 seconds' },
+              { value: '-2', text: '-2 seconds' },
+              { value: '-1', text: '-1 seconds' },
+              { value: '0', text: '0 seconds' },
+              { value: '+1', text: '+1 seconds' },
+              { value: '+2', text: '+2 seconds' },
+              { value: '+3', text: '+3 seconds' },
+              { value: '+4', text: '+4 seconds' },
+              { value: '+5', text: '+5 seconds' },
+              { value: '+6', text: '+6 seconds' },
+              { value: '+6 +', text: '+6 seconds or more' }
             ],
 
-            // movementOptions: 
-            // [
-            //     { value: null, text: 'Select a Movement' },
-            //     { value: 'Swiss - ETA 2824-2', text: 'Swiss - ETA 2824-2'},
-            //     { value: 'Swiss - ETA 2824-2', text: 'Swiss - ETA 2824-2'},
-            //     { value: 'Swiss - ETA 2824-2', text: 'Swiss - ETA 2824-2'},
-            //     { value: 'Swiss - ETA 2824-2', text: 'Swiss - ETA 2824-2'},
-            //     { value: 'Swiss - ETA 2824-2', text: 'Swiss - ETA 2824-2'},
-            //     { value: 'Swiss - ETA 2824-2', text: 'Swiss - ETA 2824-2'},
-            //     { value: 'Swiss - ETA 2824-2', text: 'Swiss - ETA 2824-2'},
-            //     { value: 'Swiss - ETA 2824-2', text: 'Swiss - ETA 2824-2'}
-            // ],
+      // movementOptions:
+      // [
+      //     { value: null, text: 'Select a Movement' },
+      //     { value: 'Swiss - ETA 2824-2', text: 'Swiss - ETA 2824-2'},
+      //     { value: 'Swiss - ETA 2824-2', text: 'Swiss - ETA 2824-2'},
+      //     { value: 'Swiss - ETA 2824-2', text: 'Swiss - ETA 2824-2'},
+      //     { value: 'Swiss - ETA 2824-2', text: 'Swiss - ETA 2824-2'},
+      //     { value: 'Swiss - ETA 2824-2', text: 'Swiss - ETA 2824-2'},
+      //     { value: 'Swiss - ETA 2824-2', text: 'Swiss - ETA 2824-2'},
+      //     { value: 'Swiss - ETA 2824-2', text: 'Swiss - ETA 2824-2'},
+      //     { value: 'Swiss - ETA 2824-2', text: 'Swiss - ETA 2824-2'}
+      // ],
 
-            sizeLugToLugOptions: 
+      sizeLugToLugOptions:
             [
-                { value: null, text: 'Select a Lug to Lug Size', disabled: true},
-                { value: '15mm', text: 'Under 16mm wide' },
-                { value: '16mm', text: '16mm' },
-                { value: '17mm', text: '17mm' },
-                { value: '18mm', text: '18mm' },
-                { value: '19mm', text: '19mm' },
-                { value: '20mm', text: '20mm' },
-                { value: '21mm', text: '21mm' },
-                { value: '22mm', text: '22mm' },
-                { value: '23mm', text: '23mm' },
-                { value: '24mm', text: '24mm' },
-                { value: '25mm', text: '25mm' },
-                { value: '26mm', text: '26mm' },
-                { value: '27mm', text: '27mm' },
-                { value: '28mm', text: '28mm' },
-                { value: '29mm', text: '29mm' },
-                { value: '30mm', text: '30mm' },
-                { value: '31mm', text: '31mm' },
-                { value: '32mm', text: '32mm' },
-                { value: '33mm', text: '33mm' },
-                { value: '34mm', text: '34mm' },
-                { value: '35mm', text: '35mm' },
-                { value: '36mm', text: 'Over 35mm wide' }
+              { value: null, text: 'Select a Lug to Lug Size', disabled: true },
+              { value: '15mm', text: 'Under 16mm wide' },
+              { value: '16mm', text: '16mm' },
+              { value: '17mm', text: '17mm' },
+              { value: '18mm', text: '18mm' },
+              { value: '19mm', text: '19mm' },
+              { value: '20mm', text: '20mm' },
+              { value: '21mm', text: '21mm' },
+              { value: '22mm', text: '22mm' },
+              { value: '23mm', text: '23mm' },
+              { value: '24mm', text: '24mm' },
+              { value: '25mm', text: '25mm' },
+              { value: '26mm', text: '26mm' },
+              { value: '27mm', text: '27mm' },
+              { value: '28mm', text: '28mm' },
+              { value: '29mm', text: '29mm' },
+              { value: '30mm', text: '30mm' },
+              { value: '31mm', text: '31mm' },
+              { value: '32mm', text: '32mm' },
+              { value: '33mm', text: '33mm' },
+              { value: '34mm', text: '34mm' },
+              { value: '35mm', text: '35mm' },
+              { value: '36mm', text: 'Over 35mm wide' }
             ],
-            
-            sizeWidthOptions: 
+
+      sizeWidthOptions:
             [
-                { value: null, text: 'Width', disabled: true},
-                { value: '27mm', text: 'Under 28mm wide' },
-                { value: '28mm', text: '28mm' },
-                { value: '29mm', text: '29mm' },
-                { value: '30mm', text: '30mm' },
-                { value: '31mm', text: '31mm' },
-                { value: '32mm', text: '32mm' },
-                { value: '33mm', text: '33mm' },
-                { value: '34mm', text: '34mm' },
-                { value: '35mm', text: '35mm' },
-                { value: '36mm', text: '36mm' },
-                { value: '37mm', text: '37mm' },
-                { value: '38mm', text: '38mm' },
-                { value: '39mm', text: '39mm' },
-                { value: '40mm', text: '40mm' },
-                { value: '41mm', text: '41mm' },
-                { value: '42mm', text: '42mm' },
-                { value: '43mm', text: '43mm' },
-                { value: '44mm', text: '44mm' },
-                { value: '45mm', text: '45mm' },
-                { value: '46mm', text: '46mm' },
-                { value: '47mm', text: '47mm' },
-                { value: '48mm', text: '48mm' },
-                { value: '49mm', text: '49mm' },
-                { value: '50mm', text: '50mm' },
-                { value: '51mm', text: '51mm' },
-                { value: '52mm', text: '52mm' },
-                { value: '53mm', text: '53mm' },
-                { value: '54mm', text: '54mm' },
-                { value: '55mm', text: '55mm' },
-                { value: '56mm', text: '56mm' },
-                { value: '57mm', text: '57mm' },
-                { value: '58mm', text: '58mm' },
-                { value: '59mm', text: '59mm' },
-                { value: '60mm', text: 'Over 59mm wide' }
+              { value: null, text: 'Width', disabled: true },
+              { value: '27mm', text: 'Under 28mm wide' },
+              { value: '28mm', text: '28mm' },
+              { value: '29mm', text: '29mm' },
+              { value: '30mm', text: '30mm' },
+              { value: '31mm', text: '31mm' },
+              { value: '32mm', text: '32mm' },
+              { value: '33mm', text: '33mm' },
+              { value: '34mm', text: '34mm' },
+              { value: '35mm', text: '35mm' },
+              { value: '36mm', text: '36mm' },
+              { value: '37mm', text: '37mm' },
+              { value: '38mm', text: '38mm' },
+              { value: '39mm', text: '39mm' },
+              { value: '40mm', text: '40mm' },
+              { value: '41mm', text: '41mm' },
+              { value: '42mm', text: '42mm' },
+              { value: '43mm', text: '43mm' },
+              { value: '44mm', text: '44mm' },
+              { value: '45mm', text: '45mm' },
+              { value: '46mm', text: '46mm' },
+              { value: '47mm', text: '47mm' },
+              { value: '48mm', text: '48mm' },
+              { value: '49mm', text: '49mm' },
+              { value: '50mm', text: '50mm' },
+              { value: '51mm', text: '51mm' },
+              { value: '52mm', text: '52mm' },
+              { value: '53mm', text: '53mm' },
+              { value: '54mm', text: '54mm' },
+              { value: '55mm', text: '55mm' },
+              { value: '56mm', text: '56mm' },
+              { value: '57mm', text: '57mm' },
+              { value: '58mm', text: '58mm' },
+              { value: '59mm', text: '59mm' },
+              { value: '60mm', text: 'Over 59mm wide' }
             ],
 
-            sizeHeightOptions: 
+      sizeHeightOptions:
             [
-                { value: null, text: 'Height', disabled: true},
-                { value: '6mm', text: 'Under 7mm Height' },
-                { value: '7mm', text: '7mm' },
-                { value: '8mm', text: '8mm' },
-                { value: '9mm', text: '9mm' },
-                { value: '10mm', text: '10mm' },
-                { value: '11mm', text: '11mm' },
-                { value: '12mm', text: '12mm' },
-                { value: '13mm', text: '13mm' },
-                { value: '14mm', text: '14mm' },
-                { value: '15mm', text: '15mm' },
-                { value: '16mm', text: '16mm' },
-                { value: '17mm', text: '17mm' },
-                { value: '18mm', text: '18mm' },
-                { value: '19mm', text: '19mm' },
-                { value: '20mm', text: '20mm' },
-                { value: '21mm', text: '21mm' },
-                { value: '22mm', text: '22mm' },
-                { value: '23mm', text: '23mm' },
-                { value: '24mm', text: '24mm' },
-                { value: '25mm', text: '25mm' },
-                { value: '26mm', text: '26mm' },
-                { value: '27mm', text: '27mm' },
-                { value: '28mm', text: '28mm' },
-                { value: '29mm', text: '29mm' },
-                { value: '30mm', text: 'Over 29mm Height'}
+              { value: null, text: 'Height', disabled: true },
+              { value: '6mm', text: 'Under 7mm Height' },
+              { value: '7mm', text: '7mm' },
+              { value: '8mm', text: '8mm' },
+              { value: '9mm', text: '9mm' },
+              { value: '10mm', text: '10mm' },
+              { value: '11mm', text: '11mm' },
+              { value: '12mm', text: '12mm' },
+              { value: '13mm', text: '13mm' },
+              { value: '14mm', text: '14mm' },
+              { value: '15mm', text: '15mm' },
+              { value: '16mm', text: '16mm' },
+              { value: '17mm', text: '17mm' },
+              { value: '18mm', text: '18mm' },
+              { value: '19mm', text: '19mm' },
+              { value: '20mm', text: '20mm' },
+              { value: '21mm', text: '21mm' },
+              { value: '22mm', text: '22mm' },
+              { value: '23mm', text: '23mm' },
+              { value: '24mm', text: '24mm' },
+              { value: '25mm', text: '25mm' },
+              { value: '26mm', text: '26mm' },
+              { value: '27mm', text: '27mm' },
+              { value: '28mm', text: '28mm' },
+              { value: '29mm', text: '29mm' },
+              { value: '30mm', text: 'Over 29mm Height' }
             ],
-            drag: false,
-            draggingId: '',
-        }
-    },
-
-    methods: {
-        addWatchSpecs(specs) {
-            this.isEditMode = true;            
-            this.addWatch.specs = 
-            localStorage.setItem('addWatch', specs);
-        },
-
-        setImagesOnAddWatch(images) {
-            console.log(images, 'das it')
-            images.forEach(image => {
-                let imageObjToPush = {
-                    src: image.Location,
-                    order: image.order
-                };
-                this.addWatch.src.images.push(imageObjToPush)
-            })
-        },
-
-        removeWatchImage(indexToRemove) {
-            if (this.addWatch.src.images.length > 1) {
-                this.addWatch.src.images.splice(indexToRemove, 1);
-            } else {
-                return false;
-            }
-        },
-
-        startDrag(e) {
-            this.drag = true;
-            this.draggingId = e.item.id;
-        },
-
-        endDrag(e) {
-            this.drag = false;
-        }
-
-        
-    },
-
-    computed: {
-        checkScreenSize() {
-            console.log(window.innerWidth, 'dick')
-            if (window.innerWidth > 800) {
-                return 5
-            } else {
-                return 8
-            }
-        },
-
-        addWatchAccuracy() {
-            this.addWatch.accuracy = null;
-        },
-
-        watchImages: {
-            set(newImagesOrder) {
-                this.addWatch.src.images = newImagesOrder;
-                },
-            get() {
-               return this.addWatch.src.images
-            }
-        },
+      drag: false,
+      draggingId: ''
     }
+  },
+
+  methods: {
+    addWatchSpecs (specs) {
+      this.addWatch.specs =
+            localStorage.setItem('addWatch', specs)
+    },
+
+    checkValidInput(val) {
+        if (val < 0) {
+            this.addWatch.condition = 0
+        } 
+        else if (val > 10) {
+            this.addWatch.condition = 10
+        }
+        else {
+            this.addWatch.condition = val
+        }
+    },
+
+    setImagesOnAddWatch (images) {
+      images.forEach(image => {
+        let imageObjToPush = {
+          src: image.Location,
+          order: image.order
+        }
+        this.addWatch.src.images.push(imageObjToPush)
+      })
+    },
+
+    isS3UploadingEventListener(value) {
+        this.isS3UploadEvent = value;
+    },
+
+    removeWatchImage (indexToRemove) {
+      if (this.addWatch.src.images.length > 1) {
+        this.addWatch.src.images.splice(indexToRemove, 1)
+      } else {
+        return false
+      }
+    },
+
+    startDrag (e) {
+      this.drag = true
+      this.draggingId = e.item.id
+    },
+
+    endDrag (e) {
+      this.drag = false
+    }
+
+  },
+
+  computed: {
+    checkScreenSize () {
+      if (window.innerWidth > 800) {
+        return 5
+      } else {
+        return 8
+      }
+    },
+
+    addWatchAccuracy () {
+      this.addWatch.accuracy = null
+    },
+
+    watchImages: {
+      set (newImagesOrder) {
+        this.addWatch.src.images = newImagesOrder
+      },
+      get () {
+        return this.addWatch.src.images
+      }
+    }
+  }
 }
 </script>
 
 <style scoped>
     .imgTile {
        width: 100%;
-       height:auto; 
+       height:auto;
     }
 
     .addWatchContainer {
@@ -770,7 +787,6 @@ export default {
     }
 
     .watchImgWrapper {
-    width: 100%;
     height: 10.5rem;
     }
 
@@ -780,7 +796,7 @@ export default {
         height: 100%;
         background-color: white;
     }
-    
+
     @media(max-width: 761px) {
         ul {
         max-width: 100%;
@@ -792,10 +808,9 @@ export default {
 
         .imgTile {
         width: 100%;
-        min-height: 6rem; 
+        min-height: 6rem;
         }
     }
-
 
     /* ANIMATIONS */
 
@@ -803,4 +818,3 @@ export default {
         transition: transform .75s;
     }
 </style>
-

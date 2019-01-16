@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import VueScrollTo from 'vue-scrollto'
 import App from './App.vue'
 import BootstrapVue from 'bootstrap-vue'
 import MainCSS from './assets/MainCSS.css'
@@ -13,20 +12,7 @@ import VueAnalytics from 'vue-analytics'
 
 const env = process.env.NODE_ENV
 
-Vue.use(VueAnalytics, {
-  id: 'UA-131185774-1',
-  VueRouter,
-  autoTracking: {
-    exception: true
-  },
-  debug: {
-    enabled: env === 'development',
-    sendHitTask: env === 'production' || 'staging'
-  }
-})
-
 Vue.use(VueRouter)
-Vue.use(VueScrollTo)
 Vue.use(BootstrapVue)
 Vue.use(MainCSS)
 
@@ -38,7 +24,23 @@ const router = new VueRouter({
   routes
 })
 
-new Vue({
+Vue.use(VueAnalytics, {
+  id: 'UA-131185774-1',
+  router,
+  autoTracking: {
+    exception: true
+  },
+  debug: {
+    enabled: env !== 'production',
+    sendHitTask: env === 'production'
+  }
+})
+
+if (('serviceWorker' in navigator) && (process.env.NODE_ENV !== 'development')) {
+  navigator.serviceWorker.register('/service-worker.js')
+}
+
+new Vue({ // eslint-disable-line no-new
   el: '#app',
   router,
   store,

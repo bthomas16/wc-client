@@ -1,5 +1,10 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto);
 
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
 .none {
     display: none !important;
 }
@@ -49,6 +54,14 @@
     cursor: pointer !important;
 }
 
+.form-control {
+    font-size: 16px !important;
+}
+
+.bg-slate {
+    background-color:#708090; 
+}
+
 ::-webkit-scrollbar { 
     display: none; 
     width: 0 !important;
@@ -84,7 +97,7 @@
 }
 
 .bg-red {
-    background-color:crimson;
+    background-color:#ed553b;
 }
 
 .brown {
@@ -96,11 +109,11 @@
 }
 
 .yellow {
-    color:#CAD49D
+    color:#F0E68C
 }
 
-.bg-yellow {
-    background-color:#CAD49D
+.bg-navy {
+    background-color:#173f5f
 }
 
 .green{
@@ -109,7 +122,7 @@
 
 
 .red{
-    color: red !important;
+    color: #ed553b !important;
 }
 
 .light-green {
@@ -121,7 +134,7 @@
 }
 
 .bg-light-yellow {
-    background-color: rgb(238, 229, 144) !important;
+    background-color: #BDB76B	 !important;
 }
 
 .light-blue {
@@ -129,7 +142,7 @@
 }
 
 .bg-light-blue {
-    background-color: #C0D8E0;
+    background-color: #20639b;
 }
 
 .gray {

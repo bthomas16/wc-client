@@ -13,42 +13,41 @@
 </template>
 
 <script>
-    // export default {
-    //     name: 'watchNews',
-        
-    //     data: function() {
-    //         return {
-    //             article: '',
-    //             ROOT_API: process.env.VUE_APP_ROOT_API
-    //         }
-    //     },
+// export default {
+//     name: 'watchNews',
 
-    //     methods: {
+//     data: function() {
+//         return {
+//             article: '',
+//             ROOT_API: process.env.VUE_APP_ROOT_API
+//         }
+//     },
 
-    //     },
+//     methods: {
 
-    //     computed: {
+//     },
 
-    //     },
+//     computed: {
 
-    //     created() {
-    //         let id = this.$route.params.id;
-    //         this.$store.dispatch('getWatchNewsArticleById', id).then(article => {
-    //             this.article = article;
-    //         })
-    //     }
-    // }
+//     },
+
+//     created() {
+//         let id = this.$route.params.id;
+//         this.$store.dispatch('getWatchNewsArticleById', id).then(article => {
+//             this.article = article;
+//         })
+//     }
+// }
 </script>
 
 <style scoped>
 /* .img {
     max-height: 25rem;
-} 
+}
 
 @media(max-width: 800px) {
     .img {
     max-height: 15rem;
-} 
+}
 } */
 </style>
-

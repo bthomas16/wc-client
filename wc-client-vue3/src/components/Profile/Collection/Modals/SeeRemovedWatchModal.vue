@@ -2,15 +2,16 @@
     <b-container fluid>
         <b-row align-h="center" no-gutters>
             <b-col cols="auto">
-                <b-carousel 
+                <b-carousel
                     style="text-shadow: 1px 1px 2px #333;"
                     img-width="1024"
                     img-height="480"
                     background="lightgray"
+                    :interval=0
                     :controls="removedWatchToSee.src.images.length > 1 ? true : false"
                     :indicators="removedWatchToSee.src.images.length > 1 ? true : false">
-                    <b-carousel-slide v-for="image in removedWatchToSee.src.images" :key="image.order" >
-                        <b-img slot="img" 
+                    <b-carousel-slide v-for="(image, index) in removedWatchToSee.src.images" :key="index" >
+                        <b-img slot="img"
                         :src="image.src" alt="image slot" v-if="image" fluid>
                         </b-img>
                     </b-carousel-slide>
@@ -22,7 +23,7 @@
                     <li v-if="removedWatchToSee.value">Watch Value: <strong>${{removedWatchToSee.value}}</strong></li>
                     <li v-if="removedWatchToSee.receivedBy">New watch recipient: <strong>{{removedWatchToSee.receivedBy}}</strong></li>
                     <li v-if="removedWatchToSee.receivedInReturn">Received in return: <strong>{{removedWatchToSee.receivedInReturn}}</strong></li>
-                </ul>   
+                </ul>
             </b-col>
 
         </b-row>
@@ -31,12 +32,11 @@
 
 <script>
 export default {
-    name: 'removedWatchModal',
-    props: ['removedWatchToSee']
+  name: 'removedWatchModal',
+  props: ['removedWatchToSee']
 }
 </script>
 
 <style scoped>
 
 </style>
-

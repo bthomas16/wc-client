@@ -2,13 +2,13 @@
     <b-container>
         <b-row align-v="center" align-h="center" class="py-3 relative">
             <b-col cols="4" offset="8" class="pointer relative settingIconWrapper">
-                <b-img fluid :src="ROOT_API + '/api/static-assets/settings.png'" v-b-modal.editProfileModal id="settingIcon" class="mr-2 absolute t-0 right-align"></b-img>
+                <b-img fluid :src="ROOT_API + '/api/static-assets/editIcon.png'" v-b-modal.editProfileModal id="settingIcon" class="mr-2 absolute t-0 right-align"></b-img>
             </b-col>
             <b-col cols="5" sm="4" md="12" class="m-0 mx-auto center p-md-2 pt-lg-3">
-                
+
                 <b-img v-if="!isLoaded" :src="User.imgSrc || ROOT_API + '/api/static-assets/blankprofpic.png'" fluid style="height: auto; max-height: 125px;" class="profPic mx-auto box-shadow-light" rounded></b-img>
                 <div id="loader" class="h-100" v-if="isLoaded">Loading...</div>
-                
+
             </b-col>
             <b-col cols="7" sm="7" md="12" class="left mx-auto p-0 pl-2 mt-2" >
                 <p class="p-0 my-1 ml-1 h5 m-h2 bold"><strong>{{User.firstName}} {{User.lastName}}</strong></p>
@@ -16,6 +16,8 @@
                 <p class="p-0 my-1 ml-1 m-h2 h7"><strong>({{watchesFSOT}})</strong> Watches FSOT</p>
                 <p class="p-0 my-1 ml-1 m-h2 h7"><strong>({{Favorites || 0}})</strong> Watches Favorited</p>
             </b-col>
+
+            <!-- // Edit Modal -->
             <b-row no-gutters>
                 <b-modal id="editProfileModal" ref="editProfileModal">
                     <div slot="modal-title">
@@ -30,9 +32,7 @@
                                 <p class="red m-h3 nowrap" v-if="userProfileEditing.newPassword.length < 4 && userProfileEditing.newPassword != ''">Password must have 4 characters</p>
                                 <p class="red m-h3 nowrap" v-if="(userProfileEditing.newPassword != userProfileEditing.confirmNewPassword) && (userProfileEditing.newPassword.length >= 4)">New Password does not match</p>
 
-
                                 <p class="blue m-h3 nowrap" v-if="userProfileEditing.email && userProfileEditing.firstName && (userProfileEditing.newPassword.length >= 4) && (userProfileEditing.newPassword == userProfileEditing.confirmNewPassword) && (userProfileEditing.oldPassword) && (userProfileEditing.newPassword)">Ready to Submit!</p>
-
 
                                 <p class="red m-h3 nowrap" v-if="(userProfileEditing.newPassword.length >= 4 ) && (userProfileEditing.confirmNewPassword.length >= 4) && (!userProfileEditing.oldPassword) && (userProfileEditing.newPassword)">Please provide your old password</p>
                             </b-col>
@@ -51,93 +51,89 @@
                     </div>
                 </b-modal>
             </b-row>
-            
+
         </b-row>
     </b-container>
 </template>
 
 <script>
-    import axios from 'axios';
-    import EditProfile from './Collection/Modals/EditProfileModal.vue';
-    
-    export default {
+import axios from 'axios'
+import EditProfile from './Collection/Modals/EditProfileModal.vue'
 
-    components: {
-        editProfile: EditProfile  
-    },
+export default {
 
-    data () {
-        return {
-            userProfileEditing: {},
-            errorObj: {
-                isSuccess: true,
-                message: ''
-            },
-            isShowErrorMessage: false,
-            isLoaded: false,
-            ROOT_API: process.env.VUE_APP_ROOT_API,
-        }
-    },
-    methods: {
-        submitEditProfile() {
-            this.isShowErrorMessage = false;            
-            this.$store.dispatch('editUserProfile', this.userProfileEditing).then((data) => { //edit profile
-            console.log('got this fuck back', data)
-            if (data.isSuccess) {
-                this.$refs.editProfileModal.hide();
-                this.$store.dispatch('user'); //reload user
-            }
-            else {
-                this.errorObj.isSuccess = data.isSuccess;
-                this.errorObj.message = data.message;
-                console.log('new errorObj is', this.errorObj)
-            }
-        }).catch(err => {
-            console.log(err)
-        })
-        },
+  components: {
+    editProfile: EditProfile
+  },
 
-        loaded() {
-            this.isLoaded = true;
-        }
-    },
-    computed: {
-        User() {
-            let u = this.$store.state.User
-            this.userProfileEditing = u;
-            this.userProfileEditing.oldPassword
-            this.userProfileEditing.newPassword
-            this.userProfileEditing.confirmNewPassword
-            return u;
-        },
-
-        Collection() {
-            let length = this.$store.state.Collection.length;
-            if(this.$store.state.Collection.length > 0) {
-                return length;
-            }
-            else return 0;
-        },
-
-        watchesFSOT() {
-            return this.$store.state.NumberFSOT;
-        },
-
-        Favorites() {
-            return this.$store.state.Favorites.length;
-        },
-
-        // errorObj() {
-        //     return {
-        //         isSuccess: true,
-        //         message: 'Test'
-        //     }
-        // }
-    },
-
-    created: function() {
-        this.$store.dispatch('getNumberFSOT');
+  data () {
+    return {
+      userProfileEditing: {},
+      errorObj: {
+        isSuccess: true,
+        message: ''
+      },
+      isShowErrorMessage: false,
+      isLoaded: false,
+      ROOT_API: process.env.VUE_APP_ROOT_API
     }
+  },
+  methods: {
+    submitEditProfile () {
+      this.isShowErrorMessage = false
+      this.$store.dispatch('editUserProfile', this.userProfileEditing).then((data) => { // edit profile
+        if (data.isSuccess) {
+          this.$refs.editProfileModal.hide()
+          this.$store.dispatch('user') // reload user
+        } else {
+          this.errorObj.isSuccess = data.isSuccess
+          this.errorObj.message = data.message
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+
+    loaded () {
+      this.isLoaded = true
+    }
+  },
+  computed: {
+    User () {
+      let u = this.$store.state.User
+      this.userProfileEditing = u
+      this.userProfileEditing.oldPassword
+      this.userProfileEditing.newPassword
+      this.userProfileEditing.confirmNewPassword
+      return u
+    },
+
+    Collection () {
+      let length = this.$store.state.Collection.length
+      if (this.$store.state.Collection.length > 0) {
+        return length
+      } else return 0
+    },
+
+    watchesFSOT () {
+      return this.$store.state.NumberFSOT
+    },
+
+    Favorites () {
+      return this.$store.state.Favorites.length
+    }
+
+    // errorObj() {
+    //     return {
+    //         isSuccess: true,
+    //         message: 'Test'
+    //     }
+    // }
+  },
+
+  created: function () {
+    this.$store.dispatch('getNumberFSOT')
+  }
 }
 </script>
 
@@ -150,7 +146,7 @@
 #settingIcon{
     right: 0;
     top: 0;
-    width: 1.15em; 
+    width: 1.15em;
 }
 
 .settingIconWrapper {
@@ -174,6 +170,4 @@
     height:10rem !important;
 }
 
-
-  
 </style>

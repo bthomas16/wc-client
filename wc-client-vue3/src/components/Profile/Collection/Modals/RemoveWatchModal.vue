@@ -164,28 +164,28 @@
 
 <script>
 
-    export default {
-    name: 'removeWatchModal',
-    props: ['reasonsWatchMoved', 'removeWatchCount'],
+export default {
+  name: 'removeWatchModal',
+  props: ['reasonsWatchMoved', 'removeWatchCount'],
 
-    data () {
-        return {
-            watchId: 0,
-            watchTradedForBrand: null,
-            watchTradedForName: null,
-            watchTradedFor: '',
-            watchesTradedFor: []
-        }
-    },
-    methods:{
-        addWatchTraded() {
-            this.watchTradedFor = this.watchTradedForBrand + ' - ' + this.watchTradedForName;
-            this.reasonsWatchMoved.trades.push(this.watchTradedFor);
-            this.watchTradedForBrand = null;
-            this.watchTradedForName = null;
-        }
+  data () {
+    return {
+      watchId: 0,
+      watchTradedForBrand: null,
+      watchTradedForName: null,
+      watchTradedFor: '',
+      watchesTradedFor: []
     }
-        
+  },
+  methods: {
+    addWatchTraded () {
+      this.watchTradedFor = this.watchTradedForBrand + ' - ' + this.watchTradedForName
+      this.reasonsWatchMoved.trades.push(this.watchTradedFor)
+      this.watchTradedForBrand = null
+      this.watchTradedForName = null
+    }
+  }
+
 }
 </script>
 
@@ -207,9 +207,8 @@
 
     .b-form-group, .form-group {
         padding: 0em;
-    }   
+    }
 
 }
 
 </style>
-

@@ -3,7 +3,7 @@
         <b-row no-gutters align-v="center">
             <b-col id="titleCard" class="bg-lightgray mx-auto mt-3 mt-md-4 p-1" cols="11" md="6">
                 <p class="h2 white center">Watch Collecton</p>
-                <p class="h4 white center">Manage your current, past and future <strong>Watch Collection</strong> </p>
+                <p class="h4 white center">Manage your current, past and future <strong>Watch SOC</strong> </p>
             </b-col>
             <b-col cols="11" md="8" class="mx-auto mt-3 mt-md-4 p-0">
                 <b-card>
@@ -21,7 +21,7 @@
                                 </b-col>
                                 <p class="mt-3 mb-0">Your message here:</p>
                                 <b-input-group cols="12" class="p-0">
-                                    <textarea placeholder="I love using Watch Collection because..." class="border w-100 p-2 mt-0" name="contactMessage" rows="5" v-model="form.messageBody"></textarea>
+                                    <textarea placeholder="I love using Watch SOC because..." class="border w-100 p-2 mt-0" name="contactMessage" rows="5" v-model="form.messageBody"></textarea>
                                 </b-input-group>
                             </b-col>
                             <b-col cols="12" class="mt-2">
@@ -35,37 +35,36 @@
     </b-container>
 </template>
 
-
 <script>
 export default {
-    name: 'contactPage',
-    data: function() {
-        return {
-            showResMessage: false,
-            isResSuccess: false,
-            env: process.env.NODE_ENV,
-            resMessage: '',
-            form: {
-                emailTo: '',
-                messageBody: ''
-            }
-        }
-    },
-
-    methods: {
-        submit() {
-            this.$store.dispatch('contacUsEmail', this.form).then(res => {
-                this.showResMessage = true;
-                this.isResSuccess = res.isSuccess;
-                this.resMessage = res.message;
-            }).catch((err) => {     
-                console.log(err);
-                this.showResMessage = true;
-                this.isResSuccess = res.isSuccess;
-                this.resMessage = res.message;
-            })
-        }
+  name: 'contactPage',
+  data: function () {
+    return {
+      showResMessage: false,
+      isResSuccess: false,
+      env: process.env.NODE_ENV,
+      resMessage: '',
+      form: {
+        emailTo: '',
+        messageBody: ''
+      }
     }
+  },
+
+  methods: {
+    submit () {
+      this.$store.dispatch('contacUsEmail', this.form).then(res => {
+        this.showResMessage = true
+        this.isResSuccess = res.isSuccess
+        this.resMessage = res.message
+      }).catch((err) => {
+        console.log(err)
+        this.showResMessage = true
+        this.isResSuccess = res.isSuccess
+        this.resMessage = res.message
+      })
+    }
+  }
 }
 </script>
 

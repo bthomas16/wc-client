@@ -56,33 +56,31 @@
 
 <script>
 
-    export default {
-    name: 'editProfileModal',
-    props: ['userProfileEditing', 'errorObj'],
+export default {
+  name: 'editProfileModal',
+  props: ['userProfileEditing', 'errorObj'],
 
-    data () {
-        return {
-            newPassword: '',
-            ROOT_API: process.env.VUE_APP_ROOT_API,
-        }
-    },
-    methods:{
-        uploadProfileImageToAwsS3(e) {
-                console.log(event.target.files[0])
-                let files = event.target.files[0];
-                this.$store.dispatch('uploadProfileImageToAwsS3', files).then((data) => {
-                    console.log('returned this dickle', data)
-                    this.userProfileEditing.imgSrc = data.Location;                    
-                })
-            },
-    },
-
-    computed: {
-        User() {
-            return this.$store.state.User;
-        }
+  data () {
+    return {
+      newPassword: '',
+      ROOT_API: process.env.VUE_APP_ROOT_API
     }
-        
+  },
+  methods: {
+    uploadProfileImageToAwsS3 (e) {
+      let files = event.target.files[0]
+      this.$store.dispatch('uploadProfileImageToAwsS3', files).then((data) => {
+        this.userProfileEditing.imgSrc = data.Location
+      })
+    }
+  },
+
+  computed: {
+    User () {
+      return this.$store.state.User
+    }
+  }
+
 }
 </script>
 
@@ -102,4 +100,3 @@
         max-height: 275px;
     }
 </style>
-
