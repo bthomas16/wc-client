@@ -2,8 +2,8 @@
     <b-container fluid>
         <draggable  v-model="Collection" @start="startDrag" @end="endDrag" class="py-2" :options="addWatchDragOptions">
             <transition-group name="swap-list">
-                <b-col :cols="smSizeCard" :md="mdSizeCard" class="dropdzone left p-half" v-for="watch in Collection" :key="watch.id" :id="watch.id">
-                    <b-row align-v="start" align-h="around" class="watch mb-1" :class="drag && (draggingId  != watch.id) ? 'bg-light-green' : ''" no-gutters>
+                <b-col :cols="smSizeCard" :md="mdSizeCard" class="left p-half" v-for="watch in Collection" :key="watch.id" :id="watch.id">
+                    <b-row align-v="start" align-h="around" class="watch mb-1" :class="drag && (draggingId  != watch.id) ? 'op-2' : 'op-0'" no-gutters>
                         <watch-flags
                             :watch="watch"
                             :isShowFlags="isShowFlags"
@@ -15,19 +15,31 @@
                         </watch-flags>
 
                         <!-- // WATCH // -->
-                        <b-col cols="12" class="watch-wrapper order-1 box-shadow p-0">
+                        <b-col cols="12" class="watch-wrapper order-1 box-shadow p-0 bg-gray">
                             <b-row class="center" align-v="center" align-h="center" no-gutters>
-                                <b-col cols="12" class="center" :class="(currentCardSize == 'sm') ? 'watchImgWrapper_Sm' : (currentCardSize == 'md') ? 'watchImgWrapper_Md' : (currentCardSize == 'lg') ? 'watchImgWrapper_Lg' : 'watchImgWrapper_Sm'">
+                                <b-col cols="12" class="center relative">
                                     <b-img v-if="!isViewingPreviousWatches" :src="isFavoriteWatch(watch.id) ? fullHeart : emptyHeart"
                                         class="pointer right absolute t-0 r0 right-align r-0 m-0" :class="currentCardSize == 'sm' ? 'smallHeartIcon' : 'heartIcon'"
                                         @click="favoriteToggle(watch.id)">
                                     </b-img>
-                                    <b-img
-                                        v-if="watch.src.images[0]"
-                                        @click="isViewingPreviousWatches ?  removedWatchModal(watch) : selectWatch(watch)"
-                                        :src="watch.src.images[0].src"
-                                        class="watchImg pointer mx-auto center">
-                                    </b-img>
+                                    <b-row no-gutters align-h="center">
+                                        <b-col cols="12" :lg="currentCardSize == 'sm' ? 5 : 5" :class="(currentCardSize == 'sm') ? 'watchImgWrapper_Sm' : (currentCardSize == 'md') ? 'watchImgWrapper_Md' : (currentCardSize == 'lg') ? 'watchImgWrapper_Lg' : 'watchImgWrapper_Sm'">
+                                            <b-img
+                                                v-if="watch.src.images[0]"
+                                                @click="isViewingPreviousWatches ?  removedWatchModal(watch) : selectWatch(watch)"
+                                                :src="watch.src.images[0].src"
+                                                class="watchImg pointer">
+                                            </b-img>
+                                        </b-col>
+                                        <b-col cols="5" lg="7" class="d-none d-lg-block left left-align relative bg-gray" v-if="currentCardSize == 'md' || currentCardSize == 'lg'">
+                                                <ul class="specList ml-1 m-0 p-0 pb-2 bold b-0 b0 absolute">
+                                                    <li v-if="watch.brand">{{truncatedWatchName(titleCase(watch.brand), currentTruncatedLength)}}</li>
+                                                    <li>{{truncatedWatchName(titleCase(watch.name), currentTruncatedLength)}}</li>
+                                                    <li v-if="watch.sizeWidth">{{watch.sizeWidth}}mm</li>
+                                                    <li v-if="watch.movement">{{watch.movement}}</li>
+                                                </ul>
+                                        </b-col>
+                                    </b-row>
                                 </b-col>
                             </b-row>
                         </b-col>
@@ -43,8 +55,8 @@
             <b-row slot="modal-title" no-gutters v-if="watchToRemove">Removing &nbsp; <strong>{{ titleCase(watchToRemove.name)}}</strong></b-row>
             <div slot="modal-header-close" class="w-100 m-h2 mt-2 mt-md-1" @click="resetReasonsWatchMoved">X</div>
             <remove-watch-modal :watchToRemove="watchToRemove" :reasonsWatchMoved="reasonsWatchMoved"></remove-watch-modal>
-            <b-row slot="modal-footer" class="p-2" no-gutters>
-                <button class="btn btn-warning white mx-2" variant="warning" :disabled="reasonsWatchMoved.typeMoved == null" @click="submitRemoveWatchForm">Remove Watch from Collection</button>
+            <b-row slot="modal-footer" class="p-2 w-100" no-gutters>
+                <b-btn class="bg-red white mx-2 w-100" variant="default" :disabled="reasonsWatchMoved.typeMoved == null" @click="submitRemoveWatchForm">Remove Watch</b-btn>
             </b-row>
         </b-modal>
 
@@ -181,9 +193,9 @@ export default {
       this.$store.dispatch('removeExistingWatch', this.watchToRemove.id).then(() => {
         // TODO: NOT THIS
         setTimeout(() => {
+          this.resetReasonsWatchMoved()
           this.$store.dispatch('getNumberFSOT')
           this.$store.dispatch('loadUserCollection')
-          this.resetReasonsWatchMoved()
           this.$refs.removeWatchModal.hide()
         }, 1)
       })
@@ -203,22 +215,21 @@ export default {
       }
     },
 
-    // truncatedWatchName(name, lengthToTruncate) {
-    //     if(name.length > lengthToTruncate) {
-    //         return name.substring(0, lengthToTruncate) + '...';
-    //     }
-    //     else
-    //         return name;
-    // },
-
     titleCase (str) {
       var splitStr = str.toLowerCase().split(' ')
       for (var i = 0; i < splitStr.length; i++) {
         splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1)
       }
       return splitStr.join(' ')
+    },
+
+  truncatedWatchName (name, lengthToTruncate) {
+      if (name.length > lengthToTruncate) {
+        return name.substring(0, lengthToTruncate) + '...'
+      } else { return name }
     }
   },
+
 
   computed: {
     Favorites () {
@@ -227,6 +238,25 @@ export default {
 
     isFilteringCollection () {
       return this.$store.state.isFilteringCollection
+    },
+
+    currentTruncatedLength () {
+      let val;
+      let currentButtonState = this.$store.state.CurrentCardSize
+      switch (currentButtonState) {
+        case 'sm':
+          val = 8
+          break
+        case 'md':
+          val = 11
+          break
+        case 'lg':
+          val = 18
+          break
+        default:
+          val = 8
+      }
+        return val      
     },
 
     Collection: {
@@ -283,6 +313,16 @@ export default {
 </script>
 
 <style scoped>
+    ul > li {
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    .specList {
+        list-style: none;
+        text-align:  left;
+        position: absolute;
+    }
     .no-pointer {
         pointer-events: none;
     }
@@ -299,9 +339,9 @@ export default {
         font-size: .60em;
     }
 
-    .btn {
+    /* .btn {
         box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    }
+    } */
 
     .right {
         float: right;
@@ -326,17 +366,40 @@ export default {
 
     .watchImgWrapper_Sm {
         width: 100%;
-        height: 8rem;
+        height: 6.5rem;
     }
 
     .watchImgWrapper_Md {
         width: 100%;
-        height:11.5rem;
+        height:8rem;
     }
 
     .watchImgWrapper_Lg {
         width: 100%;
-        height: 17.5rem;
+        height: 11rem;
+        
+    }
+
+    .watchImg {
+        text-align: left;
+        float:left;
+        width: auto;
+        max-width: 100%;
+        min-height: 75%;
+        height: auto;
+        margin:auto;
+        max-height: 100%;
+    }
+
+    @media(max-width: 990px) {
+        .specList {
+            position: relative;
+        }
+
+        .watchImg {
+            text-align: center;
+            float: none;
+        }
     }
 
     @media(max-width: 850px) {
@@ -354,15 +417,7 @@ export default {
             width: 100%;
             height: 6rem;
         }
-    }
 
-    .watchImg {
-        width: auto;
-        max-width: 100%;
-        min-height: 75%;
-        height: auto;
-        margin:auto;
-        max-height: 100%;
     }
 
     .tallWatchImg {
@@ -429,7 +484,7 @@ export default {
         .smallHeartIcon {
         width: 15px;
         z-index: 999;
-    }
+        }
     }
 
     @media(max-width: 415px) {
@@ -446,36 +501,4 @@ export default {
             width: 22.5px;
         }
     }
-
-/* ANIMATIONS */
-
-/* .bounce {
-  animation: pulse .5s;
-}
-
-@keyframes pulse {
-  100% {
-    transform: scale(1.2);
-  }
-} */
-
-    .dropZone[aria-dropeffect="move"]  {
-        border-color:#68b;
-        background-color: red;
-    }
-      .dropZone[aria-dropeffect="move"] .watch-wrapper {
-        background-color: #C0D8E0;
-    }
-     .dropZone[aria-dropeffect="move"]:focus,
-    .dropZone[aria-dropeffect="move"].dragover
-    {
-    outline:none;
-    box-shadow:0 0 0 1px #fff, 0 0 0 3px #68b;
-    }
-     .watch[aria-grabbed="true"] .watch-wrapper
-    {
-    background:lightgreen;
-    color:#fff;
-    }
-
 </style>

@@ -2,12 +2,12 @@
     <b-container fluid :class="env == 'development' ? 'devBackground' : 'background'">
 
         <!-- <p v-if="img1.src">LOADING</p> -->
-        <b-row align-v="start" align-h="center" no-gutters class="pt-lg-1">
+        <b-row align-v="start" align-h="center" no-gutters class="pt-lg-1 pt-xl-4">
             <b-col cols="12" md="12" lg="6" xl="7" order="2" order-lg="1" class="mx-auto mt-lg-2 p-lg-1">
                 <featured-collection></featured-collection>
             </b-col>
             <b-col cols="12" lg="6" xl="5" class="mx-auto p-0 mt-lg-2 p-lg-1">
-                <b-row align-h="center" no-gutters>
+                <b-row align-h="center" no-gutters class="rowContainer">
                     <b-col cols="12">
                         <b-card :img-src="ROOT_API + '/api/static-assets/watcheshomecardbg.jpg'" img-alt="Card image" class="p-0 card">
                             <b-row no-gutters align-h="center" align-v="center">
@@ -15,8 +15,8 @@
                                     <p class="h2 white center underline">Watch SOC: </p>
                                     <p class="h4 white center">Manage your current, past & future <strong>Watch SOC</strong> </p>
                                 </b-col>
-                                <p v-if="isRegister" class="h3 my-0 left w-100">Register to<span class="nowrap left"> Manage your collection!</span></p>
-                                <p v-if="!isRegister" class="h3 my-0 left w-100">Login to<span class="nowrap left"> Manage your collection!</span></p>
+                                <p v-if="isRegister" class="h4 p-0 m-0 left w-100">Register to<span class="nowrap left"> Manage your collection!</span></p>
+                                <p v-if="!isRegister" class="h4 p-0 m-0 left w-100">Login to<span class="nowrap left"> Manage your collection!</span></p>
                                 <app-register class="mt-2 mt-md-3" v-if="isRegister" v-on:toggleAuthView="toggleAuthParent"></app-register>
                                 <app-login class="mt-2 mt-md-3" v-if="!isRegister" v-on:toggleAuthView="toggleAuthParent"></app-login>
                             </b-row>
@@ -65,6 +65,9 @@ export default {
 </script>
 
 <style scoped>
+    .rowContainer {
+        height: 40rem;
+    }
 
     #titleCard {
         position: absolute;
@@ -89,7 +92,6 @@ export default {
         background-position: center;
         background-repeat:repeat;
         background-size: cover;
-        /* position: relative; */
     }
 
 /*  */
@@ -129,6 +131,10 @@ export default {
     }
 
     @media(max-width: 995px){
+        .rowContainer {
+            height: 100%;
+        }
+
         .card {
             border: none;
             border-radius: 0;

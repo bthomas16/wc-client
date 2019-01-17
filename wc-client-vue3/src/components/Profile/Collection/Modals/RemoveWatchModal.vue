@@ -2,11 +2,11 @@
     <b-container fluid>
         <p class="h3 w-100">How did you move this piece?</p>
         <b-row no-gutters align-h="center">
-            <button block class="btn btn-primary mx-auto my-md-2 my-1 w-100" variant="primary" @click="reasonsWatchMoved.typeMoved = 'sale'" :class="reasonsWatchMoved.typeMoved == 'sale' ? 'bg-green white' : ''">Sale</button>
-            <button block class="btn btn-primary mx-auto my-md-2 my-1 w-100" variant="primary" @click="reasonsWatchMoved.typeMoved = 'trade'" :class="reasonsWatchMoved.typeMoved == 'trade' ? 'bg-green white' : ''">Trade</button>
-            <button block class="btn btn-primary mx-auto my-md-2 my-1 w-100" variant="primary" @click="reasonsWatchMoved.typeMoved = 'trade_cash'" :class="reasonsWatchMoved.typeMoved == 'trade_cash' ? 'bg-green white' : ''">Trade + Cash</button>
-            <button block class="btn btn-primary mx-auto my-md-2 my-1 w-100" variant="primary" @click="reasonsWatchMoved.typeMoved = 'gifted'" :class="reasonsWatchMoved.typeMoved == 'gifted' ? 'bg-green white' : ''">Gifted</button>
-            <button block class="btn btn-primary mx-auto my-md-2 my-1 w-100" variant="primary" @click="reasonsWatchMoved.typeMoved = 'charity'" :class="reasonsWatchMoved.typeMoved == 'charity' ? 'bg-green white' : ''">Charity</button>
+            <b-btn block class="bg-light-blue white mx-auto my-md-2 my-1 w-100" variant="default" @click="reasonsWatchMoved.typeMoved = 'sale'" :class="reasonsWatchMoved.typeMoved == 'sale' ? 'bg-light-yellow' : ''">Sale</b-btn>
+            <b-btn block class="bg-light-blue white mx-auto my-md-2 my-1 w-100" variant="default" @click="reasonsWatchMoved.typeMoved = 'trade'" :class="reasonsWatchMoved.typeMoved == 'trade' ? 'bg-light-yellow' : ''">Trade</b-btn>
+            <b-btn block class="bg-light-blue white mx-auto my-md-2 my-1 w-100" variant="default" @click="reasonsWatchMoved.typeMoved = 'trade_cash'" :class="reasonsWatchMoved.typeMoved == 'trade_cash' ? 'bg-light-yellow' : ''">Trade + Cash</b-btn>
+            <b-btn block class="bg-light-blue white mx-auto my-md-2 my-1 w-100" variant="default" @click="reasonsWatchMoved.typeMoved = 'gifted'" :class="reasonsWatchMoved.typeMoved == 'gifted' ? 'bg-light-yellow' : ''">Gifted</b-btn>
+            <b-btn block class="bg-light-blue white mx-auto my-md-2 my-1 w-100" variant="default" @click="reasonsWatchMoved.typeMoved = 'charity'" :class="reasonsWatchMoved.typeMoved == 'charity' ? 'bg-light-yellow' : ''">Charity</b-btn>
         </b-row>
 
         <b-form-row v-if="reasonsWatchMoved.typeMoved == 'sale'" class="mt-2 mt-md-4 w-100 mw-100">
@@ -56,22 +56,25 @@
                 class="w-100 px-2 my-0 mb-0"
                 label="Watch traded for:"
                 label-for="inputHorizontal">
-                <b-row v-if="reasonsWatchMoved.trades.length" class="mb-2 pl-1 bg-lightgray b-0 w-100 d-block d-md-none" no-gutters order="2">
+                <b-row v-if="reasonsWatchMoved.trades.length" class="mb-2 pl-1 bg-gray b-0 w-100 d-block d-md-none" no-gutters order="2">
                     <ul class="p-1 m-0">
                         <li v-for="(w, index) in reasonsWatchMoved.trades" :key="w.id">{{index + 1}}. {{w}}</li>
                     </ul>
                 </b-row>
                 <b-row no-gutters>
-                    <b-col class="pr-1">
+                    <b-col cols="3">
+                         <b-form-input class="m-h4 h6 " placeholder="$Value" v-model="watchTradedForValue"></b-form-input>
+                    </b-col>
+                    <b-col class="pr-1 m-h4 h6">
                          <b-form-input  placeholder="Brand" v-model="watchTradedForBrand"></b-form-input>
                     </b-col>
-                    <b-col class="pl-1">
+                    <b-col class="pl-1 m-h4 h6">
                          <b-form-input  placeholder="Name" v-model="watchTradedForName"></b-form-input>
                     </b-col>
                 </b-row>
-                <button class="btn btn-info right mt-2" @click="addWatchTraded">Add Watch</button>
+                <b-btn class="bg-navy white right mt-2" variant="default" @click="addWatchTraded">Add Watch</b-btn>
             </b-form-group>
-            <b-row v-if="reasonsWatchMoved.trades.length" class="tradedWatchList bg-lightgray b-0 w-65 d-none d-md-block" no-gutters order="2">
+            <b-row v-if="reasonsWatchMoved.trades.length" class="tradedWatchList bg-gray b-0 w-65 d-none d-md-block" no-gutters order="2">
                 <ul class="p-1 m-0">
                     <li v-for="(w, index) in reasonsWatchMoved.trades" :key="w.id">{{index + 1}}. {{w}}</li>
                 </ul>
@@ -84,9 +87,9 @@
                 :label-cols="5"
                 breakpoint="md"
                 class="w-100 px-2 my-0"
-                label="How much money did you receive?"
+                label="Money Recieved?"
                 label-for="inputHorizontal">
-                <b-form-input placeholder="Orienteering"></b-form-input>
+                <b-form-input placeholder="$175" type="number"></b-form-input>
             </b-form-group>
             <b-form-group id=""
                 horizontal
@@ -105,22 +108,26 @@
                 label="Watch traded for:"
                 label-for="inputHorizontal"
                 order="1">
-                <b-row v-if="reasonsWatchMoved.trades.length" class="mb-2 pl-1 bg-lightgray b-0 w-100 d-block d-md-none" no-gutters order="2">
+                <b-row v-if="reasonsWatchMoved.trades.length" class="mb-2 pl-1 bg-gray b-0 w-100 d-block d-md-none" no-gutters order="2">
                     <ul class="p-1 m-0">
                         <li v-for="(w, index) in reasonsWatchMoved.trades" :key="w.id">{{index + 1}}. {{w}}</li>
                     </ul>
                 </b-row>
                 <b-row no-gutters order="3">
-                    <b-col class="pr-1 relative">
+                    <b-col cols="3" class="pr-1">
+                         <b-form-input class="m-h4 h6" placeholder="$Value" v-model="watchTradedForValue"></b-form-input>
+                    </b-col>
+                    <b-col class="pr-1 m-h4 h6 relative">
                          <b-form-input  placeholder="Brand" v-model="watchTradedForBrand"></b-form-input>
                     </b-col>
-                    <b-col class="pl-1">
+                    <b-col class="pl-1 m-h4 h6">
                          <b-form-input  placeholder="Name" v-model="watchTradedForName"></b-form-input>
                     </b-col>
                 </b-row>
-                <button class="btn btn-info right mt-2" @click="addWatchTraded" :disabled="!watchTradedForName">Add Watch</button>
+                <b-btn class="bg-navy white right mt-2" variant="default" @click="addWatchTraded" :disabled="!watchTradedForName">Add Watch</b-btn>
+                
             </b-form-group>
-            <b-row v-if="reasonsWatchMoved.trades.length" class="tradedWatchList bg-lightgray b-0 w-65 d-none d-md-block" no-gutters order="2">
+            <b-row v-if="reasonsWatchMoved.trades.length" class="tradedWatchList bg-gray b-0 w-65 d-none d-md-block" no-gutters order="2">
                 <ul class="p-1 m-0">
                     <li v-for="(w, index) in reasonsWatchMoved.trades" :key="w.id">{{index + 1}}. {{w}}</li>
                 </ul>
@@ -173,16 +180,18 @@ export default {
       watchId: 0,
       watchTradedForBrand: null,
       watchTradedForName: null,
+      watchTradedForValue: null,
       watchTradedFor: '',
       watchesTradedFor: []
     }
   },
   methods: {
     addWatchTraded () {
-      this.watchTradedFor = this.watchTradedForBrand + ' - ' + this.watchTradedForName
+      this.watchTradedFor = '($' + this.watchTradedForValue + ') ' + this.watchTradedForBrand + ' - ' + this.watchTradedForName
       this.reasonsWatchMoved.trades.push(this.watchTradedFor)
       this.watchTradedForBrand = null
       this.watchTradedForName = null
+      this.watchTradedForValue = null
     }
   }
 
@@ -197,6 +206,11 @@ export default {
     .tradedWatchList {
         margin-top: -2.85em;
         padding-left: .5em;
+    }
+
+    li {
+        list-style: none;
+        text-decoration: none;
     }
 
     @media(max-width:766px) {

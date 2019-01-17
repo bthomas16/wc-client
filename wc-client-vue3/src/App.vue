@@ -30,10 +30,6 @@ export default {
     isLoading () {
       return this.$store.state.isLoading
     }
-  },
-
-  mounted () {
-    console.log(process.env)
   }
 }
 </script>

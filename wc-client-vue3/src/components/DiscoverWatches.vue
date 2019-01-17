@@ -92,4 +92,11 @@ export default {
         /* position: relative; */
     }
 
+    @media(max-width: 768px) {
+         .infoBox {
+             min-height: auto;
+            height: auto;
+         }
+    }
+
 </style>

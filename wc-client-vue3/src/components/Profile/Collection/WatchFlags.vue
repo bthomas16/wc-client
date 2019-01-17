@@ -4,7 +4,7 @@
             <b-col cols="12" class="p-0 m-0">
                 <b-row no-gutters v-if="isShowFlags && !isManagingCollection">
                     <!-- Truncated Watch Name -->
-                    <p class="w-100 h5 m-h7 p-0 m-0"><strong>{{truncatedWatchName(titleCase(watch.name), currentTruncatedLength)}}</strong></p>
+                    <p class="w-100 h5 m-h7 p-0 m-0" :class="currentCardSize == 'sm' ? 'd-block' : 'd-block d-lg-none'"><strong>{{truncatedWatchName(titleCase(watch.name), currentTruncatedLength)}}</strong></p>
 
                     <!-- FSOT STATUS -->
                     <b-col cols="6" class="bg-green" v-if="(watch.isForSale && !watch.isForTrade)">
@@ -20,7 +20,7 @@
                         <p id="fsotIcon" class=" pointer z4 flag m-0 white broder-right-white center fsot">FSOT</p>
                     </b-col>
                     <!-- MOVEMENT TYPE -->
-                    <b-col cols="6" v-if="watch.movementType" class="bg-light-blue">
+                    <b-col cols="6" v-if="watch.movementType" class="bg-navy">
                         <p id="movementTypeIcon" class=" center pointer z4 white flag m-0" :class="GetAbbreviatedWatchType(watch.movementType).length > 5 ? 'fitText' : ''">{{GetAbbreviatedWatchType(watch.movementType)}}</p>
                     </b-col>
                 </b-row>
@@ -36,7 +36,7 @@
                     </b-col>
                 </b-row>
                 <b-row no-gutters v-if="isManagingCollection && isShowEditFlags && IsViewingPreviousWatches">
-                    <b-col cols="12" v-if="isManagingCollection"  class="p-0 m-0 nowrap bg-blue">
+                    <b-col cols="12" v-if="isManagingCollection"  class="p-0 m-0 nowrap bg-light-blue">
                         <p class="h6 center p-1 pointer z4 white" @click="removedWatchModal(watch)"><strong class="h5 mb-0">Details</strong></p>
                     </b-col>
                 </b-row>
@@ -83,20 +83,22 @@ export default {
     },
 
     GetAbbreviatedWatchType (fullName) {
+      let val;
       switch (fullName) {
         case 'automatic':
-          return 'Auto'
+          val = 'Auto'
           break
         case 'solar':
-          return 'Solar'
+          val = 'Solar'
           break
         case 'quartz':
-          return 'Quartz'
+          val = 'Quartz'
           break
         case 'manual':
-          return 'Manual'
+          val = 'Manual'
           break
       }
+      return val;
     }
   },
 
@@ -112,12 +114,16 @@ export default {
           val = 18
           break
         case 'lg':
-          val = 22
+          val = 21
           break
         default:
           val = 8
       }
-    return val      
+        return val      
+    },
+
+    currentCardSize() {
+        return this.$store.state.CurrentCardSize
     },
 
     IsViewingPreviousWatches () {

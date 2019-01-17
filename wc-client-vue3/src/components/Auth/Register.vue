@@ -61,7 +61,7 @@
                         </b-form-input>
                 </b-form-group>
                 <h6 class="red thin h7">{{passwordErrMsg}}</h6>
-                <b-row align-v="center" class="my-md-2 pt-md-3">
+                <b-row align-v="center" class="my-md-3 pt-md-2">
                     <b-col cols="4">
                         <b-button variant="success" @click="card=2" :disabled="form.password.length < 4" v-if="card == 1">Continue</b-button>
                         <b-button variant="success" :disabled="!form.firstName || !form.lastName" type="submit" v-if="card == 2">Finish</b-button>

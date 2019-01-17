@@ -340,7 +340,6 @@ const actions =
         jwt: localStorage.getItem('watchJwt')
       }
     }).then(res => {
-      console.log('store responseon', res)
       if (res.data.isSuccess) {
         context.commit(VALIDATE_JWT)
         context.commit(NOT_LOADING)
@@ -587,19 +586,19 @@ const actions =
         'Content-Type': 'application/json',
         'authorization': localStorage.getItem('watchJwt')
       }
+    }).then((res) => {
+      let collection = res.data.collection
+      // context.commit(SET_COLLECTION, collection)
+      context.commit(SET_FILTERED_COLLECTION, collection)
+      if (filterObj.category === 'previous') {
+        context.commit(VIEWING_PREVIOUS_WATCHES, true)
+      }
+    }).catch((err) => {
+      console.log(err)
+      context.commit(INVALIDATE_JWT)
+      context.commit(SERVER_VALIDATION_ERROR)
+      return err
     })
-      .then((res) => {
-        let collection = res.data.collection
-        // context.commit(SET_COLLECTION, collection)
-        context.commit(SET_FILTERED_COLLECTION, collection)
-        context.commit(NOT_LOADING)
-      }).catch((err) => {
-        console.log(err)
-        context.commit(NOT_LOADING)
-        context.commit(INVALIDATE_JWT)
-        context.commit(SERVER_VALIDATION_ERROR)
-        return err
-      })
   },
 
   getFilteredCollectionBySearchTerm (context, searchTermToFilterByLowerCase) {
@@ -709,7 +708,6 @@ const actions =
       params: {
         watchInfoId: watchInfoId
       } }).then(res => {
-      console.log('res from store', res)
       return res.data.watchInfo
     }).catch(err => {
       console.log(err)
@@ -789,7 +787,6 @@ const actions =
   },
 
   sendWelcomeEmail (context, formData) {
-    console.log('hello, sir from store', formData)
     context.commit(LOADING)
     return axios({
       method: 'POST',

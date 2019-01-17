@@ -1,13 +1,13 @@
 
 <template>
     <b-container fluid>
-        <b-row no-gutters>
-            <p class="bg-lightgray p-1 p-lg-2 white h2 m-h1 nowrap w-100"><strong>Featured Collection</strong></p>
-            <b-col cols="12" class="mt-lg-1">
+        <b-row no-gutters class="rowContainer">
+            <p class="bg-lightgray p-1 p-lg-2 white h2 m-h1 mb-0 nowrap w-100 mb-2"><strong>Featured Collection</strong></p>
+            <b-col cols="12">
                 <b-row no-gutters>
-                    <b-col cols="6" md="4" v-for="watch in FeaturedWatches" :key="watch.id" class="pointer px-1 watchCard"  @click="selectWatch(watch)">
-                        <b-row align-v="start" align-h="end" class="mb-3 bg-white" no-gutters>
-                            <b-col cols="12" class="border p-1 p-lg-3 bg-white watchImgWrapper center">
+                    <b-col cols="6" md="4" v-for="watch in FeaturedWatches" :key="watch.id" class="pointer px-1 watchCard my-0 mb-0 mb-md-2 mb-lg-3"  @click="selectWatch(watch)">
+                        <b-row align-v="start" align-h="center" class="bg-white" no-gutters>
+                            <b-col cols="12" class="p-1 p-lg-3 bg-white watchImgWrapper center">
                                 <b-img
                                 @click="selectWatch(watch)"
                                 :src="ROOT_API + watch.src.images[0].src"
@@ -15,11 +15,11 @@
                                 </b-img>
                             </b-col>
                             <b-col cols="12" class="mx-auto p-1 bg-white-opaque">
-                                <p class="my-0 h4 m-h2"><strong>{{watch.brand}}</strong> </p>
+                                <p class="my-0 h5 m-h2"><strong>{{watch.brand}}</strong> </p>
                                 <p class="watchName my-0">{{watch.name}}</p>
                             </b-col>
                             <b-col cols="12 center bg-white-opaque my-0 pt-1 watchLogoWrapper">
-                                <b-img id="brandLogo" :src="ROOT_API + watch.logoSrc_lg" class="watchLogo mx-auto p-1 p-md-2 p-lg-3"></b-img>
+                                <b-img id="brandLogo" :src="ROOT_API + watch.logoSrc_lg" class="watchLogo mx-auto p-2 p-md-2 p-lg-3"></b-img>
                             </b-col>
                         </b-row>
                     </b-col>
@@ -190,22 +190,17 @@ export default {
 </script>
 
 <style scoped>
-    .container-fluid {
-        height: 100vh;
-    }
 
-    .watchName {
-        font-size: 1vw;
-    }
-
+@media(min-width: 2000px) {
     .watchCard {
-        height: 18.75rem !important;
+        height: 23rem;
+        position: relative;
     }
 
     .watchImgWrapper {
-        width: 100%;
-        height: 10rem;
-
+        max-width: 100%;
+        width: auto;
+        height: 16rem;
     }
 
     .watchImg {
@@ -217,27 +212,91 @@ export default {
 
     .watchLogoWrapper {
         width: 100%;
-        height:4.75rem;
+        height:4.25rem;
         background-color:#708090;
     }
 
     .watchLogo {
         width: auto;
         height: 100%;
-
+    }
+}
+    .watchName {
+        font-size: .7rem;
     }
 
-    @media(max-width: 1000px) {
+    .container-fluid {
+        height: 40rem;
+    }
+
+    .watchCard {
+        height: 18.5rem;
+        position: relative;
+    }
+
+    .watchImgWrapper {
+        max-width: 100%;
+        width: auto;
+        height: 12.25rem;
+    }
+
+    .watchImg {
+        width: auto;
+        max-width: 100%;
+        height: 100%;
+        background-color: white;
+    }
+
+    .watchLogoWrapper {
+        width: 100%;
+        height:3.725rem;
+        background-color:#708090;
+    }
+
+    .watchLogo {
+        width: auto;
+        height: 100%;
+    }
+
+
+@media(max-width: 1300px) {
+    .watchCard {
+        /* height: 16rem; */
+        position: relative;
+    }
+
+    .watchImgWrapper {
+        max-width: 100%;
+        width: auto;
+        height: 11.375rem;
+    }
+
+    .watchImg {
+        width: auto;
+        max-width: 100%;
+        height: 100%;
+        background-color: white;
+    }
+
+    .watchLogoWrapper {
+        width: 100%;
+        height:3.725rem;
+        background-color:#708090;
+    }
+
+    .watchLogo {
+        width: auto;
+        height: 100%;
+    }
+}
+
+    @media(max-width:1024px) {
         .container-fluid {
             height: auto;
         }
 
-        .watchName {
-            font-size: 1.5vw;
-        }
-
         .watchCard {
-        height: 19.5rem !important;
+        height: 17.5rem !important;
     }
 
         .watchImgWrapper {
@@ -254,11 +313,6 @@ export default {
 
     .watchLogoWrapper {
         height: 3.5rem;
-        padding: .75rem;
-    }
-
-    .watchLogo {
-            margin-top: .25rem;
         }
     }
 
@@ -269,7 +323,7 @@ export default {
         }
 
         .watchName {
-            font-size: 3vw;
+            font-size: .9rem;
         }
     }
 

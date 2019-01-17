@@ -10,7 +10,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VueAnalytics from 'vue-analytics'
 
-const env = process.env.NODE_ENV
+const isProd = process.env.NODE_ENV === 'production'
 
 Vue.use(VueRouter)
 Vue.use(BootstrapVue)
@@ -27,12 +27,9 @@ const router = new VueRouter({
 Vue.use(VueAnalytics, {
   id: 'UA-131185774-1',
   router,
-  autoTracking: {
-    exception: true
-  },
   debug: {
-    enabled: env !== 'production',
-    sendHitTask: env === 'production'
+    enabled: !isProd,
+    sendHitTask: isProd
   }
 })
 

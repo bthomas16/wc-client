@@ -10,7 +10,7 @@
                 <b-img id="profileImgEditModal" class="box-shadow-light mb-2 center ml-0" fluid :src="userProfileEditing.imgSrc || ROOT_API + '/api/static-assets/blankprofpic.png'"></b-img>
                 <label class="file-select w-100 mw-100">
                     <!-- We can't use a normal button element here, as it would become the target of the label. -->
-                    <div class="select-button pointer py-2 mt-2 bg">
+                    <div class="bg-navy  white pointer py-2 mt-2 bg">
                     <!-- Display the filename if a file has been selected. -->
                     <span>Select Images</span>
                     </div>

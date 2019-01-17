@@ -8,10 +8,12 @@
                     <b-col cols="12" md="10" class="border-bottom"></b-col>
                     <b-col cols="12" md="10" class="px-2 px-md-0">
                         <b-row no-gutters align-h="between" align-v="center">
-                            <b-col cols="12" md="6" class="left-align pointer gray bold h4 m-h2 my-1" v-if="isManagingCollection" >
-                                <strong class="green" @click="toggleIsManagingCollection">&#x2713;</strong>
-                                <strong class="ml-2" @click="resetCollectionFilter">Reset</strong>
-                                <strong v-if="isTryingShuffle" class="right red" >*Can't organize while Managing Collection</strong>
+                            <b-col cols="12">
+                                <strong v-if="isTryingShuffle" class="left red h4 m-h2" >*Can't organize while Managing Collection</strong>
+                            </b-col>
+                            <b-col cols="12" md="6" class="left-align gray bold h4 m-h2 my-1" v-if="isManagingCollection" >
+                                <b-btn variant="outline-success" class="p-1 px-2 green pointer" @click="toggleIsManagingCollection">Done</b-btn>
+                                <b-btn v-if="sortCategory != null || searchTermToFilterBy != ''" variant="outline-secondary" class="p-1 px-2 ml-4 pointer" @click="resetCollectionFilter">Reset Filters</b-btn>
                             </b-col>
                         </b-row>
                     </b-col>
@@ -22,10 +24,10 @@
                     <b-col cols="4" md="5"  class="manage-btn-border px-2" >
                         <b-row align-v="start" align-h="center" id="watch-controls">
                             <b-col lg="6" cols="12" class="mx-auto center" >
-                                <b-button id="manageButton" variant="default" class="bg-light-blue white m-h4" block size="" @click="selectRandomWatch">Random Watch</b-button>
+                                <b-button id="manageButton" variant="default" class="m-h5 bg-light-blue white randomFont" block size="" @click="selectRandomWatch">Random Watch</b-button>
                             </b-col>
                             <b-col lg="6" cols="12" class="mt-2 mt-lg-0">
-                                <b-button class="h4 m-h2 bg-green white" id="addWatchButton" variant="default" @click="addNewWatch" size="" block>Add Watch</b-button>
+                                <b-button class="randomFont bg-green white" id="addWatchButton" variant="default" @click="addNewWatch" size="" block>Add Watch</b-button>
                             </b-col>
                         </b-row>
                         <b-row align-h="between" align-v="center" class="d-none d-lg-flex" no-gutters>
@@ -58,10 +60,10 @@
                         </b-row>
                         <b-row align-v="start" align-h="start" no-gutters class="mt-2">
                             <b-col cols="5" class="mx-auto px-1">
-                                <b-form-select id="categoryOptions" :options="sortCategories" v-model="sortCategory" @change="selectSortCategory"></b-form-select>
+                                <b-form-select class="h6 m-h3" id="categoryOptions" :options="sortCategories" v-model="sortCategory" @change="selectSortCategory"></b-form-select>
                             </b-col>
                             <b-col cols="7" class="mx-auto px-1">
-                                <b-form-select id="categoryOptions" :options="categoryOptions" v-model="categoryOption" @change="selectCategoryOption" :disabled="!sortCategory"></b-form-select>
+                                <b-form-select class="h6 m-h3" id="categoryOptions" :options="categoryOptions" v-model="categoryOption" @change="selectCategoryOption" :disabled="!sortCategory"></b-form-select>
                             </b-col>
                         </b-row>
                     </b-col>
@@ -154,19 +156,15 @@ export default {
     },
 
     toggleIsManagingCollection () {
+      this.resetCollectionFilter()
       this.$store.dispatch('toggleIsManagingCollection')
     },
 
     selectSortCategory (eventValue) {
       this.searchTermToFilterBy = ''
       this.sortCategory = eventValue
-      if (this.sortCategory == 'previous') {
-        this.$store.dispatch('viewingPreviousWatches', true)
-      } else {
-        this.$store.dispatch('viewingPreviousWatches', false)
-      }
-    
       this.categoryOption = null
+
       switch (eventValue) {
         case 'condition':
           this.categoryOptions = [
@@ -233,12 +231,16 @@ export default {
         category: sortCategory,
         option: categoryOption
       }
+      this.$store.dispatch('isTryingShuffleWhileManage', false) 
       this.$store.dispatch('getFilteredCollection', filterObj)
+        if (sortCategory != 'previous') {
+          this.$store.dispatch('viewingPreviousWatches', false)
+      }
     },
 
     filterBySearchTerm (eventValue) {
-    //   this.selectSortCategory()
-    if(eventValue !== null) {
+    if (eventValue) {
+        this.$store.dispatch('isTryingShuffleWhileManage', false) 
         this.$store.dispatch('getFilteredCollectionBySearchTerm', eventValue.toLowerCase())
       }
     },
@@ -256,7 +258,8 @@ export default {
     resetCollectionFilter () {
       this.selectSortCategory()
       this.$store.dispatch('viewingPreviousWatches', false)
-      this.$store.state.FilteredCollection = this.$store.state.Collection
+      this.$store.state.FilteredCollection = this.$store.state.Collection // TODO: BAD, Brent!
+      this.$store.dispatch('isTryingShuffleWhileManage', false) 
     }
 
   },
@@ -305,15 +308,40 @@ export default {
         padding: .25rem;
     }
 
+    .randomFont {
+        font-size: 1rem;
+        height: 2.35rem;
+    }
+
+    /* .btn {
+        height:2.75em;
+    } */
+
     .btn:focus {
         outline: none;
         border:none;
     }
 
-@media(max-width: 750px) {
+    @media(max-width: 750px) {
     #mobileRow {
         width: 100% !important;
     }
 
+    .randomFont {
+        font-size: .75rem;
+    }
+}
+
+@media(max-width: 750px) {
+    #mobileRow {
+        width: 100% !important;
+    }
+}
+
+
+@media(max-width: 550px) {
+    #mobileRow {
+        width: 100% !important;
+    }
 }
 </style>

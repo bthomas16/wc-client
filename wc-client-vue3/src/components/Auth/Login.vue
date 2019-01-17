@@ -29,7 +29,7 @@
                                         placeholder="Password">
                             </b-form-input>
                         </b-form-group>
-                        <b-row align-v="center" class="my-md-2 pt-md-3">
+                        <b-row align-v="center" class="my-md-3 pt-md-2">
                             <b-col cols="4">
                                 <b-button type="submit" variant="success" :disabled="!form.email || !form.password">Submit</b-button>
                             </b-col>

@@ -97,7 +97,7 @@ html, body {
 }
 
 .bg-red {
-    background-color:#ed553b;
+    background-color:#ed553b !important;
 }
 
 .brown {
@@ -208,6 +208,10 @@ html, body {
 
 .op-1 {
     opacity: .1
+}
+
+ul, li {
+    list-style: none;
 }
 
 .center {

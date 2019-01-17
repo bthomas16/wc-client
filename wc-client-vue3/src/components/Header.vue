@@ -13,10 +13,10 @@
         <b-nav-item><router-link to="/discover">Discover</router-link></b-nav-item>
         <!-- <b-nav-item><router-link to="/watch-news">Watch News</router-link></b-nav-item>  -->
         <b-nav-item><router-link to="/contact">Contact Us</router-link></b-nav-item>
-        <b-nav-item @click="logout" class="white d-block d-lg-none absolute t-0 r-0 r0 right" v-if="isAuthorized"><em class="grey">Logout</em></b-nav-item>
+        <b-nav-item @click="logout" class="white d-block d-lg-none absolute t-0 r-0 r0 right" v-if="isAuthorized">Logout</b-nav-item>
     </b-navbar-nav>
 
-    <b-nav-item @click="logout" class="d-none absolute d-lg-block r0 mr-md-4 my-0 white" v-if="isAuthorized" right><em class="grey">Logout</em></b-nav-item>
+    <b-nav-item @click="logout" class="d-none absolute d-lg-block r0 mr-md-4 my-0 white" v-if="isAuthorized" right>Logout</b-nav-item>
 
   </b-collapse>
 </b-navbar>

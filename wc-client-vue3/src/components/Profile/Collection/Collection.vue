@@ -53,7 +53,7 @@
             ref="seeMoreModal"
             id="see-more-modal">
             <div slot="modal-title" v-if="selectedWatch.name">{{ titleCase(selectedWatch.name) }}</div>
-            <div slot="modal-header-close" class="w-100 m-h2 mt-2 mt-md-1" @click="resetWatchFormAndModals">
+            <div slot="modal-header-close" class="w-100 m-h2 mt-2 mt-md-1 red" @click="resetWatchFormAndModals">
                 X
             </div>
             <see-more-modal
