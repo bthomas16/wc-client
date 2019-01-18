@@ -80,7 +80,7 @@
             size="lg">
             <div slot="modal-title" v-if="isAddingWatch">Adding Watch</div>
             <div slot="modal-title" v-if="isEditingExistingWatch">Editing {{titleCase(addWatch.name)}}</div>
-            <div slot="modal-header-close" class="w-100 m-h2 mt-2 mt-md-1 red" @click="resetWatchFormAndModals">
+            <div slot="modal-header-close" class="w-100 m-h2 mt-2 mt-md-1" @click="resetWatchFormAndModals">
                 X
             </div>
             <add-watch-modal

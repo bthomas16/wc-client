@@ -34,7 +34,7 @@
                                                 class="watchImg pointer h-100">
                                             </b-img>
                                         </b-col>
-                                        <b-col cols="12" md="7" class="d-none d-md-block m-0 bgBlue relative">
+                                        <b-col cols="12" md="7" class="d-none d-md-block m-0 bg-gray relative">
                                             <ul class="pl-1 pl-md-3 p-0 mb-1 absolute b-0 black bold left-align specs">
                                                 <li>{{truncatedWatchName(titleCase(watch.brand), currentTruncatedLength)}}</li>
                                                 <li>{{truncatedWatchName(titleCase(watch.name), currentTruncatedLength)}}</li>
