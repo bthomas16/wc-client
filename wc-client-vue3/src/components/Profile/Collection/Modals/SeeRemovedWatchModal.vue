@@ -21,7 +21,7 @@
             </b-col>
             <b-col cols="11" class="mt-2 mx-auto">
                 <ul class="p-0 mx-auto">
-                    <li v-if="removedWatchToSee.typeMoved">Watch removed reason:  <strong>{{removedWatchToSee.typeMoved}}</strong></li>
+                    <li v-if="removedWatchToSee.typeMoved">Watch removed reason:  <strong>{{MapTypeReason(removedWatchToSee.typeMoved)}}</strong></li>
                     <li v-if="removedWatchToSee.value">Watch Value: <strong>${{removedWatchToSee.value}}</strong></li>
                     <li v-if="removedWatchToSee.receivedBy">New watch recipient: <strong>{{removedWatchToSee.receivedBy}}</strong></li>
                     <li v-if="removedWatchToSee.receivedInReturn">Received in return: <strong>{{removedWatchToSee.receivedInReturn}}</strong></li>
@@ -35,7 +35,30 @@
 <script>
 export default {
   name: 'removedWatchModal',
-  props: ['removedWatchToSee']
+  props: ['removedWatchToSee'],
+  methods: {
+      MapTypeReason(value) {
+          let val;
+          switch(value) {
+              case 'trade_cash':
+                val = 'Trade + Cash'
+                break;
+              case 'trade':
+                val = 'Trade'
+                break;
+              case 'sale':
+                val = 'Sale'
+                break;
+              case 'gifted':
+                val = 'Gifted'
+                break;
+              case 'charity':
+                val = 'Charity'
+                break;
+          }
+          return val;
+      }
+  }
 }
 </script>
 
