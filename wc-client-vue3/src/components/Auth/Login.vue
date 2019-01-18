@@ -1,10 +1,10 @@
 <template>
-    <b-container>
-        <b-row>
-            <div class="card-text mx-auto w-100">
+    <b-container fluid>
+        <b-row no-gutters>
+            <b-col cols="11" md="12" class="mx-auto">
                 <b-alert show v-bind:variant="responseStyle" v-if="showAlert" class="p-1 my-md-0">{{responseMessage}}</b-alert>
                 <b-form @submit.prevent="onSubmit">
-                        <b-form-group id="exampleInputGroup1"
+                        <b-form-group
                         label="Email:"
                         label-for="email"
                         class="mt-md-2"
@@ -29,16 +29,16 @@
                                         placeholder="Password">
                             </b-form-input>
                         </b-form-group>
-                        <b-row align-v="center" class="my-md-2 pt-md-3">
+                        <b-row align-v="center">
                             <b-col cols="4">
-                                <b-button type="submit" variant="success" :disabled="!form.email || !form.password">Submit</b-button>
+                                <b-button type="submit" variant="default" class="bg-navy white" :disabled="!form.email || !form.password">Submit</b-button>
                             </b-col>
                             <b-col cols="8" class="right-align">
                                 <p class="h8 m-1">Not a user? <span class="link nowrap" @click="toggleAuthChild">Register Here</span></p>
                             </b-col>
                         </b-row>
                 </b-form>
-            </div>
+            </b-col>
         </b-row>
     </b-container>
 </template>
@@ -83,5 +83,11 @@ export default {
 </script>
 
 <style scoped>
+input {
+        border: none;
+        border-bottom: 1px solid gray;
+        outline: none;
+        border-radius: 0;
+    }
 
 </style>

@@ -2,7 +2,7 @@
     <b-container fluid>
         <b-row class="bg-darkgray p-2" no-gutters>
             <b-col cols="6">
-                <ul>
+                <ul class="white">
                     <li><router-link to="/discover">Discover Watches</router-link></li>
                     <li><router-link to="/contact">Contact Us</router-link></li>
                     <!-- <li>About Us</li> -->
@@ -39,6 +39,10 @@ export default {
 </script>
 
 <style scoped>
+    a {
+        color: white;
+    }
+    
     ul {
         padding: 0;
         margin: 0;
@@ -48,6 +52,7 @@ export default {
         padding: 0;
         margin: 0;
         list-style-type: none;
+        color: white !important;
     }
 
 </style>

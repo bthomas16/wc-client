@@ -1,7 +1,7 @@
 <template>
-    <b-container>
-        <b-row>
-            <div class="card-text mx-auto w-100">
+    <b-container fluid>
+        <b-row no-gutters>
+            <b-col cols="11" md="12" class="mx-auto">
                 <b-alert show v-bind:variant="responseStyle" v-if="showAlert" class="py-1 py-md-0 my-1">{{responseMessage}} <em v-if="isRefreshPage" @click="reloadPage"> - Try Again</em></b-alert>
                 <b-form @submit.prevent="onSubmit">
                     <b-form-group id="email"
@@ -61,17 +61,17 @@
                         </b-form-input>
                 </b-form-group>
                 <h6 class="red thin h7">{{passwordErrMsg}}</h6>
-                <b-row align-v="center" class="my-md-2 pt-md-3">
+                <b-row align-v="center">
                     <b-col cols="4">
-                        <b-button variant="success" @click="card=2" :disabled="form.password.length < 4" v-if="card == 1">Continue</b-button>
-                        <b-button variant="success" :disabled="!form.firstName || !form.lastName" type="submit" v-if="card == 2">Finish</b-button>
+                        <b-button variant="default" class="bg-navy white" @click="card=2" :disabled="form.password.length < 4" v-if="card == 1">Continue</b-button>
+                        <b-button variant="default" class="bg-navy white" :disabled="!form.firstName || !form.lastName" type="submit" v-if="card == 2">Finish</b-button>
                     </b-col>
                     <b-col cols="8" class="right-align">
                         <p class="h8 m-1">Already a user? <span class="link nowrap" @click="toggleAuthChild">Login Here</span></p>
                     </b-col>
                 </b-row>
             </b-form>
-        </div>
+        </b-col>
         </b-row>
 
     </b-container>
@@ -167,8 +167,8 @@ export default {
 }
 </script>
 
-<style fluid>
-.form-control:focus {
+<style scoped>
+/* .form-control:focus {
     border: none;
     outline: none !important;
 }
@@ -179,5 +179,11 @@ export default {
 
     .card {
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    } */
+    input {
+        border: none;
+        border-bottom: 1px solid gray;
+        outline: none;
+        border-radius: 0;
     }
 </style>

@@ -47,7 +47,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 /* .bg-header {
   background-color: rgba(86, 163, 166, .85)

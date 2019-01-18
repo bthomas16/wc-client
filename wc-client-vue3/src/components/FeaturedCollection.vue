@@ -1,8 +1,8 @@
 
 <template>
-    <b-container fluid>
+    <b-container fluid class="cf">
         <b-row no-gutters>
-            <p class="bg-lightgray p-1 p-lg-2 white h2 m-h1 nowrap w-100"><strong>Featured Collection</strong></p>
+            <p class="bg-light-blue p-1 p-lg-2 white h2 m-h1 nowrap w-100"><strong>Featured Collection</strong></p>
             <b-col cols="12" class="mt-lg-1">
                 <b-row no-gutters>
                     <b-col cols="6" md="4" v-for="watch in FeaturedWatches" :key="watch.id" class="pointer px-1 watchCard"  @click="selectWatch(watch)">
@@ -190,8 +190,10 @@ export default {
 </script>
 
 <style scoped>
-    .container-fluid {
-        height: 100vh;
+    .cf {
+        padding: 0 !important;
+        margin: 0;
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("http://localhost:8081/api/static-assets/tablebg.jpg");
     }
 
     .watchName {

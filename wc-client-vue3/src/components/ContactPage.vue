@@ -5,7 +5,7 @@
                 <p class="h2 white center">Watch Collecton</p>
                 <p class="h4 white center">Manage your current, past and future <strong>Watch SOC</strong> </p>
             </b-col>
-            <b-col cols="11" md="8" class="mx-auto mt-3 mt-md-4 p-0">
+            <b-col cols="11" md="8" class="mx-auto my-3 p-0">
                 <b-card>
                     <div slot="header">Contact Us!</div>
                     <b-row no-gutters >
@@ -80,6 +80,7 @@ export default {
     .devBackground {
         background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("http://localhost:8081/api/static-assets/tablebg.jpg");
         min-height: 100vh;
+        height: 100%;
         width: 100%;
         background-position: center;
         background-repeat:repeat;

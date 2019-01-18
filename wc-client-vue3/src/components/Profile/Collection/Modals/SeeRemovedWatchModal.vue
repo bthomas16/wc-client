@@ -10,9 +10,11 @@
                     :interval=0
                     :controls="removedWatchToSee.src.images.length > 1 ? true : false"
                     :indicators="removedWatchToSee.src.images.length > 1 ? true : false">
-                    <b-carousel-slide v-for="(image, index) in removedWatchToSee.src.images" :key="index" >
-                        <b-img slot="img"
-                        :src="image.src" alt="image slot" v-if="image" fluid>
+
+                    <b-carousel-slide
+                        v-for="image in removedWatchToSee.src.images" :key="image.order" class="watchImgWrapper">
+                        <b-img slot="img" class="watchImg"
+                        :src="image.src" alt="image slot" fluid>
                         </b-img>
                     </b-carousel-slide>
                 </b-carousel>
@@ -38,5 +40,16 @@ export default {
 </script>
 
 <style scoped>
+
+.watchImgWrapper {
+    width: 15rem;
+    height: 15rem;
+}
+
+.watchImg {
+    width: 100%;
+    height: auto;
+    object-fit: center;
+}
 
 </style>

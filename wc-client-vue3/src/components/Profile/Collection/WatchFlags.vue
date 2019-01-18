@@ -4,7 +4,7 @@
             <b-col cols="12" class="p-0 m-0">
                 <b-row no-gutters v-if="isShowFlags && !isManagingCollection">
                     <!-- Truncated Watch Name -->
-                    <p class="w-100 h5 m-h7 p-0 m-0"><strong>{{truncatedWatchName(titleCase(watch.name), currentTruncatedLength)}}</strong></p>
+                    <p class="d-block d-md-none w-100 h5 m-h7 p-0 m-0"><strong>{{truncatedWatchName(titleCase(watch.name), currentTruncatedLength)}}</strong></p>
 
                     <!-- FSOT STATUS -->
                     <b-col cols="6" class="bg-green" v-if="(watch.isForSale && !watch.isForTrade)">

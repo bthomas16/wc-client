@@ -8,10 +8,12 @@
                     <b-col cols="12" md="10" class="border-bottom"></b-col>
                     <b-col cols="12" md="10" class="px-2 px-md-0">
                         <b-row no-gutters align-h="between" align-v="center">
+                            <b-col cols="12">
+                                <strong v-if="isTryingShuffle" class="red" >*Can't organize while Managing Collection</strong>
+                            </b-col>
                             <b-col cols="12" md="6" class="left-align pointer gray bold h4 m-h2 my-1" v-if="isManagingCollection" >
-                                <strong class="green" @click="toggleIsManagingCollection">&#x2713;</strong>
-                                <strong class="ml-2" @click="resetCollectionFilter">Reset</strong>
-                                <strong v-if="isTryingShuffle" class="right red" >*Can't organize while Managing Collection</strong>
+                                <b-btn variant="outline-success" class="green" @click="toggleIsManagingCollection">Done</b-btn>
+                                <b-btn v-if="sortCategory || searchTermToFilterBy" variant="outline-secondary" class="ml-2" @click="resetCollectionFilter">Reset Filters</b-btn>
                             </b-col>
                         </b-row>
                     </b-col>
@@ -22,7 +24,7 @@
                     <b-col cols="4" md="5"  class="manage-btn-border px-2" >
                         <b-row align-v="start" align-h="center" id="watch-controls">
                             <b-col lg="6" cols="12" class="mx-auto center" >
-                                <b-button id="manageButton" variant="default" class="bg-light-blue white m-h4" block size="" @click="selectRandomWatch">Random Watch</b-button>
+                                <b-button id="manageButton" variant="default" class="bg-light-blue white randomWatch" block size="" @click="selectRandomWatch">Random Watch</b-button>
                             </b-col>
                             <b-col lg="6" cols="12" class="mt-2 mt-lg-0">
                                 <b-button class="h4 m-h2 bg-green white" id="addWatchButton" variant="default" @click="addNewWatch" size="" block>Add Watch</b-button>
@@ -58,10 +60,10 @@
                         </b-row>
                         <b-row align-v="start" align-h="start" no-gutters class="mt-2">
                             <b-col cols="5" class="mx-auto px-1">
-                                <b-form-select id="categoryOptions" :options="sortCategories" v-model="sortCategory" @change="selectSortCategory"></b-form-select>
+                                <b-form-select class="h8" id="categoryOptions" :options="sortCategories" v-model="sortCategory" @change="selectSortCategory"></b-form-select>
                             </b-col>
                             <b-col cols="7" class="mx-auto px-1">
-                                <b-form-select id="categoryOptions" :options="categoryOptions" v-model="categoryOption" @change="selectCategoryOption" :disabled="!sortCategory"></b-form-select>
+                                <b-form-select class="h8" id="categoryOptions" :options="categoryOptions" v-model="categoryOption" @change="selectCategoryOption" :disabled="!sortCategory"></b-form-select>
                             </b-col>
                         </b-row>
                     </b-col>
@@ -134,7 +136,7 @@ export default {
 
       sortCategory: null,
       sortCategories: [
-        { value: null, text: 'Sort By', disabled: true },
+        { value: null, text: 'Category', disabled: true },
         { value: 'condition', text: 'Condition' },
         { value: 'status', text: 'Status' },
         { value: 'style', text: 'Style' },
@@ -142,7 +144,7 @@ export default {
         { value: 'previous', text: 'Removed' }
       ],
 
-      categoryOptions: [{ value: null, text: 'Select Options', disabled: true }],
+      categoryOptions: [{ value: null, text: 'Option', disabled: true }],
       categoryOption: null
     }
   },
@@ -154,6 +156,7 @@ export default {
     },
 
     toggleIsManagingCollection () {
+      this.resetCollectionFilter()
       this.$store.dispatch('toggleIsManagingCollection')
     },
 
@@ -170,7 +173,7 @@ export default {
       switch (eventValue) {
         case 'condition':
           this.categoryOptions = [
-            { value: null, text: 'Select Condition', disabled: true },
+            { value: null, text: 'Condition', disabled: true },
             { value: 8, text: '8-10' },
             { value: 5, text: '5-7' },
             { value: 1, text: '0-4' }
@@ -178,7 +181,7 @@ export default {
           break
         case 'status':
           this.categoryOptions = [
-            { value: null, text: 'Select Status', disabled: true },
+            { value: null, text: 'Status', disabled: true },
             { value: 'keeper', text: 'Keeper' },
             { value: 'sale', text: 'For Sale' },
             { value: 'trade', text: 'For Trade' },
@@ -187,7 +190,7 @@ export default {
           break
         case 'style':
           this.categoryOptions = [
-            { value: null, text: 'Select Style', disabled: true },
+            { value: null, text: 'Style', disabled: true },
             { value: 'diver', text: 'Diver' },
             { value: 'dress', text: 'Dress' },
             { value: 'chronograph', text: 'Chronograph' },
@@ -256,7 +259,7 @@ export default {
     resetCollectionFilter () {
       this.selectSortCategory()
       this.$store.dispatch('viewingPreviousWatches', false)
-      this.$store.state.FilteredCollection = this.$store.state.Collection
+      this.$store.state.FilteredCollection = this.$store.state.Collection //TODO: NOT THIS
     }
 
   },
@@ -301,7 +304,35 @@ export default {
 }
 </script>
 <style scoped>
-    .form-control {
+
+    .randomWatch {
+        font-size: 1rem;
+    }
+
+    .btn {
+        height: 2.325rem;
+    }
+
+    @media(max-width: 900px) {
+        .randomWatch {
+        font-size: .85rem;
+        }
+    }
+
+    @media(max-width: 400px) {
+        .randomWatch {
+        font-size: .75rem;
+        }
+    }
+
+     @media(max-width: 350px) {
+        .randomWatch {
+        font-size: .6rem;
+        }
+    }
+
+
+    /* .form-control {
         padding: .25rem;
     }
 
@@ -315,5 +346,5 @@ export default {
         width: 100% !important;
     }
 
-}
+} */
 </style>

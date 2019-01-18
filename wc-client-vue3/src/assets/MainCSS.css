@@ -97,7 +97,7 @@ html, body {
 }
 
 .bg-red {
-    background-color:#ed553b;
+    background-color:#ed553b !important;
 }
 
 .brown {
@@ -113,7 +113,7 @@ html, body {
 }
 
 .bg-navy {
-    background-color:#173f5f
+    background-color:#173f5f !important;
 }
 
 .green{
@@ -134,7 +134,7 @@ html, body {
 }
 
 .bg-light-yellow {
-    background-color: #BDB76B	 !important;
+    background-color: #BDB76B !important;
 }
 
 .light-blue {
@@ -142,7 +142,7 @@ html, body {
 }
 
 .bg-light-blue {
-    background-color: #20639b;
+    background-color: #20639b !important;
 }
 
 .gray {
@@ -208,6 +208,10 @@ html, body {
 
 .op-1 {
     opacity: .1
+}
+
+ul, li {
+    list-style: none;
 }
 
 .center {

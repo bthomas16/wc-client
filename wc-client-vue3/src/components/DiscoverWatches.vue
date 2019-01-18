@@ -2,7 +2,10 @@
 <template>
     <b-container fluid :class="env == 'development' ? 'devBackground' : 'background'">
         <b-row no-gutters align-h="center">
-            <b-col cols="12" md="5" class="infoBox bg-black white op-4 p-2 p-md-4 order-2 order-md-1">
+            <b-col cols="12" class="p-0 mt-0">
+                <featured-collection></featured-collection>
+            </b-col>
+            <b-col cols="12" class="infoBox bg-black white op-4 p-2 p-md-4">
                 <b-row no-gutters>
                     <p class="ml-md-1 h4 w-100">Learn About Our Featured Brands</p>
                     <b-col>
@@ -17,7 +20,7 @@
                     <b-col class="p-0">
                         <p class="h3">{{currentWatchInfo.brand}}</p>
                         <p v-if="currentWatchInfo.siteLink"><a target="_blank" class="pointer" :href="currentWatchInfo.siteLink">Shop {{currentWatchInfo.brand}}</a></p>
-                        <p class="h5" v-for="(line, index) in currentWatchInfo.description" :key="index">
+                        <p v-for="(line, index) in currentWatchInfo.description" :key="index">
                             {{line}}
                         </p>
                         <p class="h5 pointer" v-if="currentWatchInfo.siteLink"><a :href="currentWatchInfo.siteLink" target="_blank">Learn More</a></p>
@@ -28,9 +31,6 @@
                         </b-row>
                     </b-col>
                 </b-row>
-            </b-col>
-            <b-col cols="12" md="7" class="order-1 order-md-2 p-0 mt-0">
-                <featured-collection></featured-collection>
             </b-col>
         </b-row>
     </b-container>
@@ -69,10 +69,6 @@ export default {
 </script>
 
 <style scoped>
-    .infoBox {
-        min-height: 100vh;
-    }
-
     .devBackground {
         background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("http://localhost:8081/api/static-assets/tablebg.jpg");
         height: auto;
@@ -90,6 +86,6 @@ export default {
         background-repeat:repeat;
         background-size: cover;
         /* position: relative; */
-    }
+    } 
 
 </style>
