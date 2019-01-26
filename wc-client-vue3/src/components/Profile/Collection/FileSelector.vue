@@ -48,6 +48,7 @@ export default {
       this.$emit('isS3UploadingEvent', this.isS3Uploading)
       this.$store.dispatch('uploadImagesToAwsS3', files)
         .then(data => {
+            // data = array of s3 image objects
           this.$emit('setImagesOnAddWatch', data)
           this.isS3Uploading = false
           this.$emit('isS3UploadingEvent', this.isS3Uploading)

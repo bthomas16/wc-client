@@ -25,13 +25,13 @@
                     </b-col>
                 </b-row>
                 <b-row no-gutters v-if="isManagingCollection && isShowEditFlags && !IsViewingPreviousWatches">
-                    <b-col cols="6" v-if="isManagingCollection"  class="p-0 m-0 nowrap bg-red">
-                        <p id="removeIcon" class="h6 center p-1 pointer z4 white" @click="removeWatchModal(watch)"><strong class="h5 mb-0">X</strong></p>
+                    <b-col cols="6" v-if="isManagingCollection"  class="p-1 m-0 nowrap bg-red">
+                        <p id="removeIcon" class="center h8 m-0 pointer z4 white bold" @click="removeWatchModal(watch)">X</p>
                     </b-col>
                     <b-col cols="6" v-if="env == 'development'" class="bg-light-blue p-1 m-0 nowrap">
                         <p id="editIconD" class="h6 center p-2 pointer z4 white" @click="editWatch(watch)"></p>
                     </b-col>
-                    <b-col cols="6"  class="bg-light-blue p-0 m-0 nowrap" v-else>
+                    <b-col cols="6" v-else  class="bg-light-blue p-1 m-0 nowrap">
                         <p id="editIconP" class="h6 center p-2 pointer z4 white" @click="editWatch(watch)"></p>
                     </b-col>
                 </b-row>
@@ -109,10 +109,10 @@ export default {
           val = 8
           break
         case 'md':
-          val = 18
+          val = 12
           break
         case 'lg':
-          val = 22
+          val = 18
           break
         default:
           val = 8
@@ -137,21 +137,21 @@ export default {
     }
 
     #editIcon, #removeIcon {
-        height: 1.75em;
+        height: 1.5em;
     }
 
     #editIconD {
         background-image: url('http://localhost:8081/api/static-assets/editIcon1.png');
         background-position: center;
         background-repeat: no-repeat;
-        background-size: 1.5em;
+        background-size: 1.25em;
      }
 
      #editIconP {
         background-image: url('/api/static-assets/editIcon1.png');
         background-position: center;
         background-repeat: no-repeat;
-        background-size: 1.5em;
+        background-size: 1.25em;
      }
 
      .flag {

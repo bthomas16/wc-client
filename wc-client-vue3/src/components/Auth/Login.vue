@@ -1,7 +1,7 @@
 <template>
     <b-container fluid>
         <b-row no-gutters>
-            <b-col cols="11" md="12" class="mx-auto">
+            <b-col cols="11" class="mx-auto">
                 <b-alert show v-bind:variant="responseStyle" v-if="showAlert" class="p-1 my-md-0">{{responseMessage}}</b-alert>
                 <b-form @submit.prevent="onSubmit">
                         <b-form-group
@@ -63,13 +63,13 @@ export default {
       this.showAlert = false
       console.log('submitting', this.form)
       this.$store.dispatch('login', this.form).then((res) => {
-        console.log('hello res', res)
         if (res.isSuccess) {
           this.$router.push({ path: '/profile' })
           this.showAlert = false
         } else {
           this.showAlert = true
           this.responseStyle = 'danger'
+          this.$emit('ToggleShowingAlert', true)          
           this.responseMessage = res.message
         }
       })

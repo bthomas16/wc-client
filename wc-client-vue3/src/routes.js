@@ -20,6 +20,11 @@ export const routes = [
     name: 'discover',
     component: () => import(/* webpackChunkName: "DiscoverWatches" */ './components/DiscoverWatches.vue')
   },
+  {
+    path: '/watch',
+    name: 'watchShare',
+    component: () => import(/* webpackChunkName: "DiscoverWatches" */ './components/WatchShare.vue')
+  },
   // {
   //     path: '/watch-news',
   //     name: 'watchNews',

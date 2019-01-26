@@ -23,7 +23,7 @@
                         <strong>{{User.firstName}}'s Collection</strong>
                     </b-col>
                     <b-col cols="12" md="7" lg="6" class="p-0 m-0 center m-left-align mt-2 mt-md-0">
-                        <p cols="12" class="mb-1 mb-md-0 m-h2 h4 left-align m-left-align w-75 mw-100" @click="OpenWotdSeeMore(WOTD.id)"><em>Watch of The Day: </em><span class="bold pointer">{{WOTD.name}}</span> <strong></strong> </p>
+                        <p cols="12" class="mb-1 mb-md-0 m-h2 h4 left-align m-left-align w-75 mw-100" @click="OpenWotdSeeMore(WOTD.id)">Watch of The Day: <span class="bold pointer">{{titleCase(WOTD.name)}}</span> <strong></strong> </p>
                         <p class="my-0 m-h2 mt-0 h4 left-align m-left-align w-75 mw-100">Total Value: <strong class="green">${{getCollectionTotalValue}}</strong> </p>
                     </b-col>
                 </b-row>
@@ -33,13 +33,22 @@
                     v-on:selectRandomWatch="SelectRandomWatch">
                 </manage-collection>
 
-                <watch-collection
-                    v-if="Collection.length"
+
+                
+                <draggable-watch-collection
+                    v-if="isDragToOrganize"
                     @selectWatch="selectWatch"
                     @editWatchModal="editWatchModal"
                     @orderChanged="orderChanged"
                     :Collection="Collection">
-                </watch-collection>
+                </draggable-watch-collection>
+                <non-draggable-watch-collection
+                    v-else-if="!isDragToOrganize"
+                    @selectWatch="selectWatch"
+                    @editWatchModal="editWatchModal"
+                    @orderChanged="orderChanged"
+                    :Collection="Collection">
+                </non-draggable-watch-collection>
                 <b-col v-else class="center w-100 mt-4">
                     No watches found
                 </b-col>
@@ -52,7 +61,7 @@
         <b-modal
             ref="seeMoreModal"
             id="see-more-modal">
-            <div slot="modal-title" v-if="selectedWatch.name">{{ titleCase(selectedWatch.name) }}</div>
+            <div slot="modal-title" class="h-100 breakWord h4" v-if="selectedWatch.name">{{ titleCase(selectedWatch.name) }}</div>
             <div slot="modal-header-close" class="w-100 m-h2 mt-2 mt-md-1" @click="resetWatchFormAndModals">
                 X
             </div>
@@ -79,7 +88,7 @@
             ref="addWatchModal"
             size="lg">
             <div slot="modal-title" v-if="isAddingWatch">Adding Watch</div>
-            <div slot="modal-title" v-if="isEditingExistingWatch">Editing {{titleCase(addWatch.name)}}</div>
+            <div slot="modal-title" v-if="isEditingExistingWatch" class="h4">Editing {{titleCase(addWatch.name)}}</div>
             <div slot="modal-header-close" class="w-100 m-h2 mt-2 mt-md-1" @click="resetWatchFormAndModals">
                 X
             </div>
@@ -124,7 +133,8 @@
 import axios from 'axios'
 import SeeMoreModal from './Modals/SeeMoreModal.vue'
 import AddWatchModal from './Modals/AddWatchModal.vue'
-import WatchCollection from './WatchCollection.vue'
+import DraggableWatchCollection from './DraggableWatchCollection.vue'
+import NonDraggableWatchCollection from './NonDraggableWatchCollection.vue'
 import ManageCollection from './ManageCollection.vue'
 import { setTimeout } from 'timers'
 
@@ -132,7 +142,8 @@ export default {
   components: {
     seeMoreModal: SeeMoreModal,
     addWatchModal: AddWatchModal,
-    watchCollection: WatchCollection,
+    draggableWatchCollection: DraggableWatchCollection,
+    nonDraggableWatchCollection: NonDraggableWatchCollection,
     manageCollection: ManageCollection
   },
   data () {
@@ -283,6 +294,14 @@ export default {
         splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1)
       }
       return splitStr.join(' ')
+    },
+
+    titleCase (str) {
+      var splitStr = str.toLowerCase().split(' ')
+      for (var i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1)
+      }
+      return splitStr.join(' ')
     }
   },
 
@@ -314,11 +333,9 @@ export default {
         return this.$store.state.User
       },
 
-      // getWatchOfTheDay() {
-      //     let watchCollection = this.$store.getters.getCollection;
-      //     let randomId = Math.floor(Math.random() * Math.floor(watchCollection.length))
-      //     return watchCollection[randomId].name;
-      // },
+      isDragToOrganize () {
+          return this.$store.state.isDragToOrganize
+      },
 
       Collection () {
         if (this.isManagingCollection) {
@@ -362,6 +379,10 @@ export default {
 </script>
 
 <style scoped>
+.breakWord {
+    word-wrap: break-word;
+    width: 100%;
+}
     .dropdown {
         font-size: .5em;
     }

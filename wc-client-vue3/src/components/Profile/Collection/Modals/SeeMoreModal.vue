@@ -13,7 +13,7 @@
                     <b-carousel-slide
                         v-for="image in selectedWatch.src.images" :key="image.order" class="watchImgWrapper">
                         <b-img slot="img" class="watchImg"
-                        :src="image.src" alt="image slot" fluid>
+                        :src="image.src" alt="image slot" thumbnail fluid>
                         </b-img>
                     </b-carousel-slide>
                 </b-carousel>
@@ -195,6 +195,7 @@ export default {
 <style scoped>
 .container-fluid {
     height: auto !important;
+    word-wrap: break-word;
 }
 
 li {

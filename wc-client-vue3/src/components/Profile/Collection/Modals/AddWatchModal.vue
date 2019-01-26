@@ -660,7 +660,7 @@ export default {
     setImagesOnAddWatch (images) {
       images.forEach(image => {
         let imageObjToPush = {
-          src: image.Location,
+          src: image.Location, // s3 bucket url path
           order: image.order
         }
         this.addWatch.src.images.push(imageObjToPush)

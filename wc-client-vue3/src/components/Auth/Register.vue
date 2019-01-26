@@ -1,7 +1,7 @@
 <template>
     <b-container fluid>
         <b-row no-gutters>
-            <b-col cols="11" md="12" class="mx-auto">
+            <b-col cols="11" class="mx-auto">
                 <b-alert show v-bind:variant="responseStyle" v-if="showAlert" class="py-1 py-md-0 my-1">{{responseMessage}} <em v-if="isRefreshPage" @click="reloadPage"> - Try Again</em></b-alert>
                 <b-form @submit.prevent="onSubmit">
                     <b-form-group id="email"
@@ -38,19 +38,23 @@
                     <b-form-group id="names"
                         v-if="card == 2"
                         label="First Name:"
-                        label-for="First Name">
+                        label-for="First Name"
+                        class="mt-md-2"
+                        description="First Name">
                         <b-form-input id="firstName"
                                     type="text"
                                     v-model="form.firstName"
                                     required
                                     autocomplete="off"
+                                    
                                     placeholder="First Name">
                         </b-form-input>
                     </b-form-group>
                     <b-form-group id="credentials"
                         v-if="card == 2"
                         label="Last Name:"
-                        label-for="lastName">
+                        label-for="lastName"
+                        class="mt-md-3">
                         <b-form-input id="password"
                                     type="text"
                                     v-model="form.lastName"
@@ -114,11 +118,15 @@ export default {
             this.responseMessage = res.message
             this.responseStyle = 'danger'
             this.isRefreshPage = res.isRefreshPage
+          this.$emit('ToggleShowingAlert', true)          
+            
           }
         }).catch(err => {
           this.showAlert = true
           this.responseMessage = err.message
           this.responseStyle = 'danger'
+          this.$emit('ToggleShowingAlert', true)          
+          
         })
     },
 

@@ -1,6 +1,6 @@
 
 <template>
-    <b-container fluid class="cf">
+    <b-container fluid :class="env == 'development' ? 'devBackgroundFeatured' : 'backgroundFeatured'">
         <b-row no-gutters>
             <p class="bg-light-blue p-1 p-lg-2 white h2 m-h1 nowrap w-100"><strong>Featured Collection</strong></p>
             <b-col cols="12" class="mt-lg-1">
@@ -54,6 +54,7 @@ export default {
     return {
       selectedWatch: {},
       ROOT_API: process.env.VUE_APP_ROOT_API,
+      env: process.env.NODE_ENV,
       TITLE: process.env.VUE_APP_TITLE,
       FeaturedWatches: [
         {
@@ -190,7 +191,13 @@ export default {
 </script>
 
 <style scoped>
-    .cf {
+    .backgroundFeatured {
+        padding: 0 !important;
+        margin: 0;
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("/api/static-assets/tablebg.jpg");
+    }
+
+    .devBackgroundFeatured {
         padding: 0 !important;
         margin: 0;
         background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("http://localhost:8081/api/static-assets/tablebg.jpg");

@@ -1,62 +1,61 @@
 <template>
     <b-container fluid>
-        <draggable  v-model="Collection" @start="startDrag" @end="endDrag" class="py-2" :options="addWatchDragOptions">
-            <transition-group name="swap-list">
-                <b-col :cols="smSizeCard" :md="mdSizeCard" class="dropdzone left p-half" v-for="watch in Collection" :key="watch.id" :id="watch.id">
-                    <b-row align-v="start" align-h="around" class="watch mb-1" :class="drag && (draggingId  != watch.id) ? 'bg-light-green' : ''" no-gutters>
-                        <watch-flags
-                            :watch="watch"
-                            :isShowFlags="isShowFlags"
-                            :isShowEditFlags="isShowEditFlags"
-                            :isManagingCollection="isManagingCollection"
-                            v-on:editWatch="editWatch"
-                            v-on:removeWatchModal="removeWatchModal"
-                            v-on:removedWatchModal="removedWatchModal">
-                        </watch-flags>
+            <b-col :cols="smSizeCard" :md="mdSizeCard" class="left p-half" v-for="watch in Collection" :key="watch.id" :id="watch.id">
+                <b-row align-v="start" align-h="around" class="watch mb-1" no-gutters>
+                    <!-- // Share Flag -->
+                    <share-flag :watchId="watch.id"></share-flag>
+                    
+                    <watch-flags
+                        :watch="watch"
+                        :isShowFlags="isShowFlags"
+                        :isShowEditFlags="isShowEditFlags"
+                        :isManagingCollection="isManagingCollection"
+                        v-on:editWatch="editWatch"
+                        v-on:removeWatchModal="removeWatchModal"
+                        v-on:removedWatchModal="removedWatchModal">
+                    </watch-flags>
 
-                        <!-- // WATCH // -->
-                        <b-col cols="12" class="watch-wrapper order-1 box-shadow p-0">
-                            <b-row class="center " align-v="center" align-h="start" no-gutters>
-                                <b-col cols="12">
-                                    <b-row no-gutters>
-                                        <b-img 
-                                            v-if="!isViewingPreviousWatches" 
-                                            :src="isFavoriteWatch(watch.id) ? fullHeart : emptyHeart"
-                                            @click="favoriteToggle(watch.id)"
-                                                class="pointer absolute r-0 r0 mr-1 right-align right" 
-                                                :class="currentCardSize == 'sm' ? 'smallHeartIcon' : 'heartIcon'">
-                                            </b-img>
-                                        <b-col cols="12" md="5" class="m-0" :class="(currentCardSize == 'sm') ? 'watchImgWrapper_Sm' : (currentCardSize == 'md') ? 'watchImgWrapper_Md' : (currentCardSize == 'lg') ? 'watchImgWrapper_Lg' : 'watchImgWrapper_Sm'">
-                                            <b-img
-                                                v-if="watch.src.images[0]"
-                                                @click="isViewingPreviousWatches ?  removedWatchModal(watch) : selectWatch(watch)"
-                                                :src="watch.src.images[0].src"
-                                                class="watchImg pointer h-100">
-                                            </b-img>
-                                        </b-col>
-                                        <b-col cols="12" md="7" class="d-none d-md-block m-0 bg-gray relative">
-                                            <ul class="pl-1 pl-md-3 p-0 mb-1 absolute b-0 black bold left-align specs">
-                                                <li>{{truncatedWatchName(titleCase(watch.brand), currentTruncatedLength)}}</li>
-                                                <li>{{truncatedWatchName(titleCase(watch.name), currentTruncatedLength)}}</li>
-                                                <li v-if="watch.sizeWidth && currentCardSize != 'sm'">{{watch.sizeWidth}}</li>
-                                                <li v-if="currentCardSize != 'sm'">{{watch.movement}}</li>
-                                            </ul>
-                                        </b-col>
-                                    </b-row>
-                                    
-                                </b-col>
-                            </b-row>
-                        </b-col>
-                    </b-row>
-                </b-col>
-            </transition-group>
-        </draggable>
+                    <!-- // WATCH // -->
+                    <b-col cols="12" class="watch-wrapper order-1 box-shadow p-0">
+                        <b-row class="center " align-v="center" align-h="start" no-gutters>
+                            <b-col cols="12">
+                                <b-row no-gutters>
+                                    <b-img 
+                                        v-if="!isViewingPreviousWatches" 
+                                        :src="isFavoriteWatch(watch.id) ? fullHeart : emptyHeart"
+                                        @click="favoriteToggle(watch.id)"
+                                            class="pointer absolute r-0 r0 mr-1 right-align right" 
+                                            :class="currentCardSize == 'sm' ? 'smallHeartIcon' : 'heartIcon'">
+                                        </b-img>
+                                    <b-col cols="12" md="5" class="m-0" :class="(currentCardSize == 'sm') ? 'watchImgWrapper_Sm' : (currentCardSize == 'md') ? 'watchImgWrapper_Md' : (currentCardSize == 'lg') ? 'watchImgWrapper_Lg' : 'watchImgWrapper_Sm'">
+                                        <b-img
+                                            v-if="watch.src.images[0]"
+                                            @click="isViewingPreviousWatches ?  removedWatchModal(watch) : selectWatch(watch)"
+                                            :src="watch.src.images[0].src"
+                                            class="watchImg pointer h-100">
+                                        </b-img>
+                                    </b-col>
+                                    <b-col cols="12" md="7" class="d-none d-md-block m-0 bg-gray relative">
+                                        <ul class="pl-1 pl-md-3 p-0 mb-1 absolute b-0 black bold left-align specs">
+                                            <li>{{truncatedWatchName(titleCase(watch.brand), currentTruncatedLength)}}</li>
+                                            <li>{{truncatedWatchName(titleCase(watch.name), currentTruncatedLength)}}</li>
+                                            <li v-if="watch.sizeWidth && currentCardSize != 'sm'">{{watch.sizeWidth}}</li>
+                                            <li v-if="currentCardSize != 'sm'">{{watch.movement}}</li>
+                                        </ul>
+                                    </b-col>
+                                </b-row>
+                                
+                            </b-col>
+                        </b-row>
+                    </b-col>
+                </b-row>
+            </b-col>
 
         <b-modal
             id="remove-watch-modal"
             ref="removeWatchModal"
             size="lg">
-            <b-row slot="modal-title" no-gutters v-if="watchToRemove">Removing &nbsp; <strong>{{ titleCase(watchToRemove.name)}}</strong></b-row>
+            <b-row slot="modal-title" no-gutters class="h4" v-if="watchToRemove">Removing &nbsp; <strong>{{ titleCase(watchToRemove.name)}}</strong></b-row>
             <div slot="modal-header-close" class="w-100 m-h2 mt-2 mt-md-1" @click="resetReasonsWatchMoved">X</div>
             <remove-watch-modal :watchToRemove="watchToRemove" :reasonsWatchMoved="reasonsWatchMoved"></remove-watch-modal>
             <b-row slot="modal-footer" class="p-2" no-gutters>
@@ -68,7 +67,7 @@
             id="removed-watch-modal"
             ref="removedWatchModal"
             size="lg" lazy>
-            <b-row slot="modal-title" no-gutters v-if="removedWatchToSee"><span class="gray">Removed</span>   <strong> &nbsp;{{ titleCase(removedWatchToSee.name)}}</strong></b-row>
+            <b-row slot="modal-title" no-gutters v-if="removedWatchToSee"><span class="gray h4">Removed</span>   <strong> &nbsp;{{ titleCase(removedWatchToSee.name)}}</strong></b-row>
             <div slot="modal-header-close" class="w-100 m-h2 mt-2 mt-md-1">X</div>
              <removed-watch-modal :removedWatchToSee="removedWatchToSee"></removed-watch-modal>
         </b-modal>
@@ -81,23 +80,20 @@ import draggable from 'vuedraggable'
 import RemoveWatchModal from './Modals/RemoveWatchModal.vue'
 import SeeRemovedWatchModal from './Modals/SeeRemovedWatchModal.vue'
 import WatchFlags from './WatchFlags.vue'
+import ShareFlag from './ShareFlag.vue'
 
 export default {
-  name: 'watchCollection',
+  name: 'nonDraggableWatchCollection',
   components: {
     draggable,
     removedWatchModal: SeeRemovedWatchModal,
     removeWatchModal: RemoveWatchModal,
-    watchFlags: WatchFlags
+    watchFlags: WatchFlags,
+    shareFlag: ShareFlag
   },
 
   data () {
     return {
-      addWatchDragOptions: {
-        dropzoneSelector: '.dropzone',
-        draggableSelector: '.watch',
-        showDropzoneAreas: true
-      },
       ROOT_API: process.env.VUE_APP_ROOT_API,
       drag: false,
       emptyHeart: process.env.VUE_APP_ROOT_API + '/api/static-assets/empty-heart.png',
@@ -457,13 +453,6 @@ export default {
         .border-xl{
             border: none;
         }
-
-        /* .watchImg {
-            width: 100%;
-            min-height: 6rem;
-            object-fit: cover;
-
-        } */
     }
 
     @media(min-width: 768px) and (max-width: 1000px) {
@@ -520,37 +509,6 @@ export default {
         .heartIcon {
             width: 22.5px;
         }
-    }
-
-/* ANIMATIONS */
-
-/* .bounce {
-  animation: pulse .5s;
-}
-
-@keyframes pulse {
-  100% {
-    transform: scale(1.2);
-  }
-} */
-
-    .dropZone[aria-dropeffect="move"]  {
-        border-color:#68b;
-        background-color: red;
-    }
-      .dropZone[aria-dropeffect="move"] .watch-wrapper {
-        background-color: #C0D8E0;
-    }
-     .dropZone[aria-dropeffect="move"]:focus,
-    .dropZone[aria-dropeffect="move"].dragover
-    {
-    outline:none;
-    box-shadow:0 0 0 1px #fff, 0 0 0 3px #68b;
-    }
-     .watch[aria-grabbed="true"] .watch-wrapper
-    {
-    background:lightgreen;
-    color:#fff;
     }
 
 </style>

@@ -4,9 +4,9 @@
             <b-col>
 
                 <!-- Button to manage collection Collection -->
-                <b-row class=" mb-2 mb-md-2 relative" no-gutters align-h="center">
+                <b-row class="mb-2 mb-md-2 relative" no-gutters align-h="center">
                     <b-col cols="12" md="10" class="border-bottom"></b-col>
-                    <b-col cols="12" md="10" class="px-2 px-md-0">
+                    <b-col cols="12" md="10" class="px-1 px-md-0">
                         <b-row no-gutters align-h="between" align-v="center">
                             <b-col cols="12">
                                 <strong v-if="isTryingShuffle" class="red" >*Can't organize while Managing Collection</strong>
@@ -21,17 +21,17 @@
 
             <!-- FILTER & SORT WATCH ARRAY -->
                 <b-row ref="sortFilterId" class="px-0 px-md-2" align-v="start" align-h="center" v-if="isManagingCollection" no-gutters>
-                    <b-col cols="4" md="5"  class="manage-btn-border px-2" >
-                        <b-row align-v="start" align-h="center" id="watch-controls">
-                            <b-col lg="6" cols="12" class="mx-auto center" >
-                                <b-button id="manageButton" variant="default" class="bg-light-blue white randomWatch" block size="" @click="selectRandomWatch">Random Watch</b-button>
+                    <b-col cols="4" md="5"  class="manage-btn-border px-1 px-md-2" >
+                        <b-row align-v="start" align-h="center" id="watch-controls" no-gutters class="px-md-2">
+                            <b-col lg="6" cols="12" class="mx-auto center px-md-2 p-0" >
+                                <b-button id="manageButton" variant="default" class="bg-light-blue white randomWatch center " block size="" @click="selectRandomWatch">Random Watch</b-button>
                             </b-col>
-                            <b-col lg="6" cols="12" class="mt-2 mt-lg-0">
-                                <b-button class="h4 m-h2 bg-green white" id="addWatchButton" variant="default" @click="addNewWatch" size="" block>Add Watch</b-button>
+                            <b-col lg="6" cols="12" class="mt-2 mt-lg-0 px-md-2 p-0">
+                                <b-button class=" bg-green white addWatchClass" id="addWatchButton" variant="default" @click="addNewWatch" size="" block>Add Watch</b-button>
                             </b-col>
                         </b-row>
                         <b-row align-h="between" align-v="center" class="d-none d-lg-flex" no-gutters>
-                            <b-col cols="2">
+                            <b-col cols="5">
                                 <b-col cols="12" class="mt-2 mt-md-3 nowrap">
                                     <b-form-checkbox
                                         id="toggleFlags"
@@ -92,23 +92,37 @@
                 <b-row v-if="!isManagingCollection" no-gutters>
                     <b-col class="mx-auto" cols="11" md="8">
                         <b-btn variant="default" class="white my-0 bg-light-blue" size="sm" @click="toggleIsManagingCollection" block>Manage Collection</b-btn>
-                    </b-col>
-                </b-row>
-                <b-row no-gutters align-v="center" align-h="between" id="mobileRow" class="w-75 mx-auto px-3 px-md-5 mt-md-2" v-if="!isManagingCollection">
-                    <b-col cols="4" md="auto" class="mt-1 mt-md-0 left-align left nowrap">
-                        <b-form-checkbox
-                            id="toggleFlags"
-                            v-model="isShowFlags"
-                            :value="true"
-                            :unchecked-value="false">
-                            <span class="m-h3" v-if="!isShowFlags">Show Flags</span>
-                            <span class="m-h3" v-else>Hide Flags</span>
-                        </b-form-checkbox>
-                    </b-col>
-                    <b-col cols="8" md="auto" class="nowrap">
-                        <button :class="currentCardSize == 'sm' ? 'btn m-2 bg-navy white border' : 'btn bg-darkgray m-2'" variant="primary" size="sm" @click="sizeCardToUse('sm')">sm</button>
-                        <button :class="currentCardSize == 'md' ? 'btn m-2 bg-navy white border' : 'btn bg-darkgray m-2'" variant="primary" size="sm" @click="sizeCardToUse('md')">md</button>
-                        <button :class="currentCardSize == 'lg' ? 'btn m-2 bg-navy white border' : 'btn bg-darkgray m-2'" variant="primary" size="sm" @click="sizeCardToUse('lg')">lg</button>
+                        <b-row no-gutters align-v="center" align-h="between" id="mobileRow" class="mx-auto mt-md-2 flagWidth" v-if="!isManagingCollection">
+                            <b-col cols="6"> 
+                                <b-row no-gutters>
+                                    <b-col cols="12" md="6" class="mt-1 mt-md-0 left-align left nowrap">
+                                        <b-form-checkbox
+                                            id="toggleFlags"
+                                            v-model="isShowFlags"
+                                            :value="true"
+                                            :unchecked-value="false">
+                                            <span class="m-h3" v-if="!isShowFlags">Show Flags</span>
+                                            <span class="m-h3" v-else>Hide Flags</span>
+                                        </b-form-checkbox>
+                                    </b-col>
+                                    <b-col cols="12" md="6" class="mt-1 mt-md-0 left-align left nowrap">
+                                        <b-form-checkbox
+                                            id="toggleDragToOrganize"
+                                            v-model="isDragToOrganize"
+                                            :value="true"
+                                            :unchecked-value="false">
+                                            <span class="m-h3" v-if="!isDragToOrganize">Enable Watch Drag</span>
+                                            <span class="m-h3" v-else>Disable Watch Drag</span>
+                                        </b-form-checkbox>
+                                    </b-col>
+                                </b-row>
+                            </b-col>
+                            <b-col cols="6" md="auto" class="nowrap">
+                                <button :class="currentCardSize == 'sm' ? 'btn  bg-navy white border' : 'btn bg-darkgray m-1'" variant="primary" size="sm" @click="sizeCardToUse('sm')">sm</button>
+                                <button :class="currentCardSize == 'md' ? 'btn  bg-navy white border' : 'btn bg-darkgray m-1'" variant="primary" size="sm" @click="sizeCardToUse('md')">md</button>
+                                <button :class="currentCardSize == 'lg' ? 'btn  bg-navy white border' : 'btn bg-darkgray m-1'" variant="primary" size="sm" @click="sizeCardToUse('lg')">lg</button>
+                            </b-col>
+                        </b-row>
                     </b-col>
                 </b-row>
             </b-col>
@@ -133,7 +147,6 @@ export default {
       styleToFilterBy: '',
       statusToFilterBy: '',
       searchTermToFilterBy: '',
-
       sortCategory: null,
       sortCategories: [
         { value: null, text: 'Category', disabled: true },
@@ -150,9 +163,7 @@ export default {
   },
   methods: {
     sizeCardToUse (val) {
-      this.$store.dispatch('sizeCardToUse', val).then(() => {
-
-      })
+      this.$store.dispatch('sizeCardToUse', val)
     },
 
     toggleIsManagingCollection () {
@@ -292,6 +303,16 @@ export default {
       }
     },
 
+    isDragToOrganize: {
+      get () {
+        return this.$store.state.isDragToOrganize
+      },
+      set (value) {
+          console.log(value)
+        this.$store.dispatch('toggleIsDragToOrganize', value)
+      }
+    },
+
     currentCardSize () {
       return this.$store.state.CurrentCardSize
     },
@@ -305,29 +326,38 @@ export default {
 </script>
 <style scoped>
 
-    .randomWatch {
+    /* .flagWidth {
+        width: 75%;
+    } */
+
+    .randomWatch, .addWatchClass {
         font-size: 1rem;
     }
+    
 
     .btn {
         height: 2.325rem;
     }
 
     @media(max-width: 900px) {
-        .randomWatch {
+        .randomWatch, .addWatchClass {
         font-size: .85rem;
         }
+
+        /* .flagWidth {
+            width: 100%;
+        } */
     }
 
     @media(max-width: 400px) {
-        .randomWatch {
+        .randomWatch, .addWatchClass {
         font-size: .75rem;
         }
     }
 
      @media(max-width: 350px) {
-        .randomWatch {
-        font-size: .6rem;
+        .randomWatch, .addWatchClass {
+        font-size: .7rem;
         }
     }
 

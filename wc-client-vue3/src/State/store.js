@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import UtilityMethod from './utilityMethods.js'
+import UtilityMethod from './StoreUtilityMethods.js'
+import Utilities from '../Utilities/LoadImageOrientation.js'
 
 Vue.use(Vuex)
 
@@ -61,6 +62,8 @@ const TOGGLE_IS_SHOW_FLAGS = 'TOGGLE_IS_SHOW_FLAGS'
 
 const TOGGLE_IS_SHOW_EDIT_FLAGS = 'TOGGLE_IS_SHOW_EDIT_FLAGS'
 
+const TOGGLE_IS_DRAG_TO_ORGANIZE = 'TOGGLE_IS_DRAG_TO_ORGANIZE'
+
 const SERVER_VALIDATION_ERROR = 'SERVER_VALIDATION_ERROR'
 
 const FILTERING = 'FILTERING'
@@ -97,6 +100,7 @@ const state =
   isViewingPreviousWatches: false,
   isShowFlags: true,
   isShowEditFlags: true,
+  isDragToOrganize: true,
   isUserLoaded: false,
   isCollectionLoaded: false,
   selectedWatch: {},
@@ -224,6 +228,10 @@ const mutations =
 
   [TOGGLE_IS_SHOW_EDIT_FLAGS] (state, value) {
     state.isShowEditFlags = value
+  },
+
+  [TOGGLE_IS_DRAG_TO_ORGANIZE] (state, value) {
+    state.isDragToOrganize = value
   },
 
   [FILTERING] (state, value) {
@@ -578,6 +586,11 @@ const actions =
     context.commit(TOGGLE_IS_SHOW_EDIT_FLAGS, value)
   },
 
+  toggleIsDragToOrganize (context, value) {
+    // NO LOADING NEEDED
+    context.commit(TOGGLE_IS_DRAG_TO_ORGANIZE, value)
+  },
+
   getFilteredCollection (context, filterObj) {
     axios({
       method: 'GET',
@@ -626,8 +639,8 @@ const actions =
   },
 
   uploadImagesToAwsS3 (context, images) {
-    // context.commit(LOADING)
     let imagesFormData = new FormData()
+
     for (var i = 0; i < images.length; i++) {
       let image = images[i]
       imagesFormData.append('images[' + i + ']', image)
@@ -764,6 +777,24 @@ const actions =
     }).then(res => {
       context.commit(NOT_LOADING)
       return res.data.collection
+    }).catch(err => {
+      console.log(err)
+      context.commit(NOT_LOADING)
+    })
+  },
+
+  getWatchShareById (context, watchId) {
+    context.commit(LOADING)
+    console.log('soup')
+    return axios({
+      method: 'GET',
+      url: '/api/watch-share/by-watchid',
+      params: {
+        watchId
+      }
+    }).then(res => {
+      context.commit(NOT_LOADING)
+      return res.data.watch
     }).catch(err => {
       console.log(err)
       context.commit(NOT_LOADING)
